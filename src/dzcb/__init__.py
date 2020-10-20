@@ -93,6 +93,13 @@ class Talkgroup(Contact):
 
     all_talkgroups_by_id = {}
 
+    @property
+    def name_with_timeslot(self):
+        ts = str(self.timeslot.value)
+        if self.name.endswith(ts) and not self.name.startswith("TAC"):
+            return self.name
+        return "{} {}".format(self.name, ts)
+
     @classmethod
     def from_table_row(cls, tr):
         td_name, td_id, td_ts = tr.find_all("td")[:3]
@@ -130,12 +137,12 @@ def pnwdigital_query_repeaters():
 
 def write_talkgroup_matrix(repeaters, fh):
     headers = ["Zone Name", "Comment", "Power", "RX Freq", "TX Freq", "Color Code"]
-    headers.extend(sorted(tg.name for tg in Talkgroup.all_talkgroups_by_id.values()))
+    headers.extend(sorted(tg.name_with_timeslot for tg in Talkgroup.all_talkgroups_by_id.values()))
     dw = csv.DictWriter(fh, headers, restval="-")
     dw.writeheader()
     for r in repeaters:
         rdict = {
-            "Zone Name": r.name,
+            "Zone Name": "{} {}".format(r.location, r.name),
             "Comment": "",
             "Power": "high",
             "RX Freq": "??",
@@ -143,5 +150,5 @@ def write_talkgroup_matrix(repeaters, fh):
             "Color Code": "1",
         }
         for tg in r.talkgroups:
-            rdict[tg.name] = str(tg.timeslot.value)
+            rdict[tg.name_with_timeslot] = str(tg.timeslot.value)
         dw.writerow(rdict)
