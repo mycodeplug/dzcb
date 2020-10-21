@@ -7,6 +7,7 @@ import csv
 import enum
 from importlib_resources import files
 import logging
+import re
 
 import attr
 from bs4 import BeautifulSoup
@@ -27,6 +28,9 @@ def read_shortcodes(filename="pnwdigital_site_shortcode.csv"):
         ).read_text().splitlines()
     )
 
+PNWDIGITAL_REPEATER_INFO_REX = re.compile(
+    r"([0-9.]+).*([+-])([0-9.]+).*Mhz.*CC([0-9])"
+)
 
 PNWDIGITAL_REPEATERS = "http://pnwdigital.net/repeaters.html"
 PNWDIGITAL_REPEATERS_CACHED = files(dzcb.data).joinpath("pnwdigital", "repeaters.html")
@@ -36,6 +40,25 @@ PNWDIGITAL_SITES_CACHED = files(dzcb.data).joinpath("pnwdigital", "tgquery.html"
 PNWDIGITAL_TGQ = "http://pnwdigital.net/sv/tgshow3.php"
 PNWDIGITAL_TGQ_CACHED = lambda site_id: files(dzcb.data).joinpath("pnwdigital", "{}.html".format(site_id))
 REPEATERBOOK_EXPORT = "https://www.repeaterbook.com/repeaters/downloads/csv/index.php?func=proxX&features%5B0%5D=FM&lat=46.13819885&long=-122.93800354&distance=50&Dunit=m&band1=14&band2=4&call=&use=OPEN&status_id=1&order=distance_calc,%20state_id,%20`call`%20ASC"
+
+def wordset(dr):
+    s = set(w.lower() for w in dr.name.split() + dr.city.split("/") + dr.city.split() + [dr.state] if w)
+    if "heights" in s:
+        s.add("hts")
+    if "columbia" in s:
+        s.add("columb")
+    if "westhills" in s:
+        s.add("west")
+        s.add("hills")
+    if "mountain" in s:
+        s.add("mtn")
+    if "e" in s:
+        s.add("east")
+    if "megler" in s:
+        s.add("chinook")
+    if "s." in s:
+        s.add("south")
+    return s
 
 
 @attr.s
@@ -48,7 +71,7 @@ class DigitalRepeater:
     offset = attr.ib()
     color_code = attr.ib()
     _site_id = attr.ib()
-    talkgroups = attr.ib(factory=list)
+    talkgroups = attr.ib(factory=list, repr=False)
 
     @classmethod
     def from_option_tag(cls, o):
@@ -67,8 +90,69 @@ class DigitalRepeater:
         ]
 
     @classmethod
+    def from_table_row(cls, tr):
+        state, city_location, description, info = tr.find_all("td")[:4]
+        city, _, location = city_location.text.strip().replace("\n", "").replace("\t", "").replace("\xa0", "").rpartition("-")
+        city = city.strip()
+        location = location.strip()
+        info_raw = info.text.strip().replace("\n", "")
+        info_match = PNWDIGITAL_REPEATER_INFO_REX.search(info_raw)
+        if not info_match:
+            raise RuntimeError("Cannot make sense of {!r}".format(info_raw))
+        dr = cls(
+            name=location,
+            code=None,
+            city=city, state=state.text.strip(),
+            frequency=info_match.group(1),
+            offset=float(info_match.group(2) + info_match.group(3)),
+            color_code=info_match.group(4),
+            site_id=None
+        )
+        return dr
+
+
+    @classmethod
+    def from_repeaters_html(cls, html):
+        """
+        Parse /repeaters.html for:
+          State, City, Location, Frequency, Color Code
+        """
+        soup = BeautifulSoup(html, features="html.parser")
+        return [
+            DigitalRepeater.from_table_row(tr)
+            for tr in soup.table.find_all("tr")[1:-2]
+        ]
+
+    @classmethod
     def from_cache_all(cls):
-        return cls.from_html(PNWDIGITAL_SITES_CACHED.read_text())
+        repeaters = cls.from_repeaters_html(PNWDIGITAL_REPEATERS_CACHED.read_text())
+        sites = cls.from_html(PNWDIGITAL_SITES_CACHED.read_text())
+        repeater_names = tuple((wordset(r), r) for r in repeaters)
+        best_match = {}
+        for s in sites:
+            # silly matching algorithm to correlate names
+            s_name = wordset(s)
+            words_in_common = (0, None)
+            for r_name, r in repeater_names:
+                common = len(s_name.intersection(r_name))
+                if common > words_in_common[0]:
+                    words_in_common = (common, r)
+            match = words_in_common[1]
+            if match is None:
+                print("{} doesn't match".format(s.name))
+                continue
+            if match.name in best_match and best_match[match.name][0] >= words_in_common[0]:
+                print("{} isn't the best match".format(s.name))
+                continue
+            best_match[match.name] = (words_in_common[0], words_in_common[1], s)
+            print("Matched {} {} to {}".format(s.name, s.city, match.name))
+        repeaters = []
+        for _, r, s in best_match.values():
+            r.talkgroups = s.talkgroups
+            r._site_id = s._site_id
+            r.code = PNWDIGITAL_SHORTCODES.get(r._site_id, "UNKNOWN")
+            repeaters.append(r)
+        return repeaters
 
     def download_talkgroup_html(self):
         return requests.get(PNWDIGITAL_TGQ, params={"site": self._site_id})
