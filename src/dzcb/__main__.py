@@ -1,4 +1,4 @@
-from . import DigitalRepeater, pnwdigital_query_repeaters, write_talkgroup_matrix
+from . import DigitalRepeater, write_talkgroup_matrix
 
 import sys
 

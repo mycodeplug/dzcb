@@ -15,15 +15,35 @@ import requests
 # cached data for testing
 import dzcb.data
 
+def read_shortcodes(filename="pnwdigital_site_shortcode.csv"):
+
+    def parse_line(line):
+        site_id, shortcode = line.strip().split(",", 2)
+        return int(site_id), shortcode
+    
+    return dict(
+        parse_line(l) for l in files(dzcb.data).joinpath(
+            filename
+        ).read_text().splitlines()
+    )
+
+
+PNWDIGITAL_REPEATERS = "http://pnwdigital.net/repeaters.html"
+PNWDIGITAL_REPEATERS_CACHED = files(dzcb.data).joinpath("pnwdigital", "repeaters.html")
+PNWDIGITAL_SHORTCODES = read_shortcodes()
 PNWDIGITAL_SITES = "http://pnwdigital.net/sv/tgquery.php"
+PNWDIGITAL_SITES_CACHED = files(dzcb.data).joinpath("pnwdigital", "tgquery.html")
 PNWDIGITAL_TGQ = "http://pnwdigital.net/sv/tgshow3.php"
+PNWDIGITAL_TGQ_CACHED = lambda site_id: files(dzcb.data).joinpath("pnwdigital", "{}.html".format(site_id))
 REPEATERBOOK_EXPORT = "https://www.repeaterbook.com/repeaters/downloads/csv/index.php?func=proxX&features%5B0%5D=FM&lat=46.13819885&long=-122.93800354&distance=50&Dunit=m&band1=14&band2=4&call=&use=OPEN&status_id=1&order=distance_calc,%20state_id,%20`call`%20ASC"
 
 
 @attr.s
 class DigitalRepeater:
     name = attr.ib()
-    location = attr.ib()
+    code = attr.ib()
+    state = attr.ib()
+    city = attr.ib()
     frequency = attr.ib()
     offset = attr.ib()
     color_code = attr.ib()
@@ -32,9 +52,9 @@ class DigitalRepeater:
 
     @classmethod
     def from_option_tag(cls, o):
-        dr = cls(name=None, location=o.string.strip(), frequency=None, offset=None, color_code=None, site_id=int(o["value"].strip()))
+        dr = cls(name=None, code=None, city=o.string.strip(), state=None, frequency=None, offset=None, color_code=None, site_id=int(o["value"].strip()))
         # XXX: read from cache for testing
-        dr.populate_talkgroups_from_html(files(dzcb.data).joinpath('{}.html'.format(dr._site_id)).read_text())
+        dr.populate_talkgroups_from_html(PNWDIGITAL_TGQ_CACHED(dr._site_id).read_text())
         return dr
 
     @classmethod
@@ -48,7 +68,7 @@ class DigitalRepeater:
 
     @classmethod
     def from_cache_all(cls):
-        return cls.from_html(files(dzcb.data).joinpath('repeaters.html').read_text())
+        return cls.from_html(PNWDIGITAL_SITES_CACHED.read_text())
 
     def download_talkgroup_html(self):
         return requests.get(PNWDIGITAL_TGQ, params={"site": self._site_id})
@@ -132,6 +152,10 @@ class Channel:
 
 
 def pnwdigital_query_repeaters():
+    return requests.get(PNWDIGITAL_REPEATERS)
+
+
+def pnwdigital_query_sites():
     return requests.get(PNWDIGITAL_SITES)
 
 
@@ -142,7 +166,7 @@ def write_talkgroup_matrix(repeaters, fh):
     dw.writeheader()
     for r in repeaters:
         rdict = {
-            "Zone Name": "{} {}".format(r.location, r.name),
+            "Zone Name": "{} {} {}".format(r.city, r.name, r._site_id),
             "Comment": "",
             "Power": "high",
             "RX Freq": "??",
