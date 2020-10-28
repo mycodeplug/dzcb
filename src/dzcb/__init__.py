@@ -103,7 +103,7 @@ class DigitalRepeater:
             name=location,
             code=None,
             city=city, state=state.text.strip(),
-            frequency=info_match.group(1),
+            frequency=float(info_match.group(1)),
             offset=float(info_match.group(2) + info_match.group(3)),
             color_code=info_match.group(4),
             site_id=None
@@ -231,8 +231,18 @@ class Talkgroup(Contact):
 class Channel:
     repeater = attr.ib()
     talkgroup = attr.ib()
-    timeslot = attr.ib()
-    rx_list = attr.ib()
+
+
+@attr.s
+class Zone:
+    channels_a = attr.ib(factory=list)
+    channels_b = attr.ib(factory=list)
+
+
+@attr.s
+class Codeplug:
+    contacts = attr.ib(factory=list)
+    channels = attr.ib(factory=list)
 
 
 def pnwdigital_query_repeaters():
@@ -248,14 +258,14 @@ def write_talkgroup_matrix(repeaters, fh):
     headers.extend(sorted(tg.name_with_timeslot for tg in Talkgroup.all_talkgroups_by_id.values()))
     dw = csv.DictWriter(fh, headers, restval="-")
     dw.writeheader()
-    for r in repeaters:
+    for r in sorted(repeaters, key=lambda k: k.code):
         rdict = {
-            "Zone Name": "{} {} {}".format(r.city, r.name, r._site_id),
-            "Comment": "",
+            "Zone Name": "{} {}".format(r.code, r.city),
+            "Comment": "{} {}".format(r.name, r._site_id),
             "Power": "high",
-            "RX Freq": "??",
-            "TX Freq": "??",
-            "Color Code": "1",
+            "RX Freq": str(r.frequency),
+            "TX Freq": str(r.frequency + r.offset),
+            "Color Code": str(r.color_code),
         }
         for tg in r.talkgroups:
             rdict[tg.name_with_timeslot] = str(tg.timeslot.value)
