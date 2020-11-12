@@ -410,9 +410,7 @@ class Channel:
     def from_repeater(cls, repeater):
         return [
             cls(
-                Name="{} {} {}".format(tg.name_with_timeslot, tg.CallID, repeater.code)[
-                    :NAME_MAX
-                ],
+                Name="{} {}".format(tg.name_with_timeslot[:NAME_MAX-4], repeater.code[:3]),
                 ContactName=tg.Name,
                 RxFrequency=str(repeater.frequency),
                 TxFrequencyOffset=str(repeater.offset),
