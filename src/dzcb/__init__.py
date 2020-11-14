@@ -43,6 +43,8 @@ PNWDIGITAL_TGQ_CACHED = lambda site_id: files(dzcb.data).joinpath(
 )
 REPEATERBOOK_EXPORT = "https://www.repeaterbook.com/repeaters/downloads/csv/index.php?func=proxX&features%5B0%5D=FM&lat=46.13819885&long=-122.93800354&distance=50&Dunit=m&band1=14&band2=4&call=&use=OPEN&status_id=1&order=distance_calc,%20state_id,%20`call`%20ASC"
 PNWDIGITAL_REPEATER_EXCLUDE = ["900"]
+# These talkgroups are removed until the TG list is 32 channels or less
+TALKGROUP_LIST_OVERFLOW = ["Michigan 1", "Ontario 2" "PS1-DNU", "PS2-DNU", "SNARS 1~2", "USA 2", "Worldwide 2", "TAC Eng 123", "WW English 2"]
 
 
 def wordset(dr):
@@ -83,8 +85,49 @@ class DigitalRepeater:
     frequency = attr.ib()
     offset = attr.ib()
     color_code = attr.ib()
-    _site_id = attr.ib()
+    power = attr.ib(default="High")
+    _site_id = attr.ib(default=None)
     talkgroups = attr.ib(factory=list, repr=False)
+
+    @classmethod
+    def from_acb_csv(cls, digital_repeaters_csv, talkgroups_csv):
+        talkgroups_by_name = {}
+        with open(talkgroups_csv, "r") as tg_csv:
+            for tg_name, tg_id in csv.reader(tg_csv):
+                if tg_name not in talkgroups_by_name:
+                    talkgroups_by_name[tg_name] = Contact(
+                        Name=tg_name,
+                        CallID=tg_id,
+                    )
+        with open(digital_repeaters_csv, "r") as dr:
+            csvr = csv.DictReader(dr)
+            for r in csvr:
+                del r["Comment"]
+                name, code = r.pop("Zone Name").split(";")
+                frequency = float(r.pop("RX Freq"))
+                offset = float(r.pop("TX Freq")) - frequency
+                color_code=r.pop("Color Code")
+                power=r.pop("Power")
+                talkgroups = []
+                for tg_name, timeslot in r.items():
+                    if timeslot.strip() == "-":
+                        continue
+                    try:
+                        talkgroups.append(Talkgroup.from_contact(talkgroups_by_name[tg_name], Timeslot(int(timeslot))))
+                    except ValueError:
+                        print("Ignoring ValueError from {}:{}".format(tg_name, timeslot))
+                repeater = cls(
+                    name=name,
+                    code=code,
+                    state=None,
+                    city=None,
+                    frequency=frequency,
+                    offset=offset,
+                    color_code=color_code,
+                    power=power,
+                    talkgroups=sorted(talkgroups, key=lambda tg: tg.Name),
+                )
+                yield repeater
 
     @classmethod
     def from_option_tag(cls, o):
@@ -226,7 +269,8 @@ class DigitalRepeater:
 
     @property
     def zone_name(self):
-        name = "{} {} {}".format(self.code, self.city, self.name)
+        code_city = "{} {}".format(self.code, self.city) if self.city else self.code
+        name = "{} {}".format(code_city, self.name)
         # shorten names for channel display
         for old, new in self.name_replacements.items():
             name = name.replace(old, new)
@@ -297,6 +341,12 @@ class Talkgroup(Contact):
         for old, new in self.name_replacements.items():
             name = name.replace(old, new)
         return name
+
+    @classmethod
+    def from_contact(cls, contact, timeslot):
+        fields = attr.asdict(contact)
+        fields["timeslot"] = timeslot
+        return cls(**fields)
 
     @classmethod
     def from_table_row(cls, tr):
@@ -407,19 +457,27 @@ class Channel:
             return 25
 
     @classmethod
-    def from_repeater(cls, repeater):
+    def from_repeater(cls, repeater, channel_per_talkgroup=True):
+        if channel_per_talkgroup:
+            talkgroups = repeater.talkgroups
+            gen_name = lambda tg: "{} {}".format(tg.name_with_timeslot[:NAME_MAX-4], repeater.code[:3]),
+        else:
+            # OpenGD77 uses RxList to determine channel talkgroups
+            talkgroups = (Talkgroup(Name="N/A", CallID=9998, timeslot=Timeslot.ONE), )
+            gen_name = lambda tg: "{} {}".format(repeater.code[:3], repeater.name)
         return [
             cls(
-                Name="{} {}".format(tg.name_with_timeslot[:NAME_MAX-4], repeater.code[:3]),
+                Name=gen_name(tg),
                 ContactName=tg.Name,
-                RxFrequency=str(repeater.frequency),
-                TxFrequencyOffset=str(repeater.offset),
+                RxFrequency=repeater.frequency,
+                TxFrequencyOffset=repeater.offset,
+                Power=repeater.power,
                 ColorCode=repeater.color_code,
                 RepeaterSlot=tg.timeslot.value,
-                GroupList="{} TS {}".format(repeater.code, tg.timeslot.value),
+                GroupList="{} TS".format(repeater.code),
                 ScanList=repeater.zone_name[:NAME_MAX],
             )
-            for tg in repeater.talkgroups
+            for tg in talkgroups
         ]
 
     def to_dict(self):
@@ -445,15 +503,24 @@ class Codeplug:
     zones = attr.ib(factory=list)
 
     @classmethod
-    def from_repeaters(cls, repeaters):
+    def from_repeaters(cls, repeaters, channel_per_talkgroup=True, single_zone_name=None):
+        """
+        :param repeaters: sequence of DigitalRepeater instances
+        :param channel_per_talkgroup: if True, create one channel for each talkgroup
+        :param single_zone_name: if given, put all channels in a zone with this name
+
+        On radios like the GD77, it doesn't make sense to have multiple zones and channels
+        because talkgroup selection is facilitated on a per-channel basis
+        """
         contacts = set()
         channels = list()
         grouplists = list()
         scanlists = list()
         zones = list()
+        single_zone_channels = list()
         for r in repeaters:
             contacts.update(r.talkgroups)
-            zone_channels = Channel.from_repeater(r)
+            zone_channels = Channel.from_repeater(r, channel_per_talkgroup=channel_per_talkgroup)
             channels.extend(zone_channels)
             channel_names_1 = [
                 c.Name
@@ -467,17 +534,9 @@ class Codeplug:
             ]
             grouplists.append(
                 GroupList(
-                    Name="{} TS 1".format(r.code),
+                    Name="{} TS".format(r.code),
                     Contact=[
-                        tg.Name for tg in r.talkgroups if tg.timeslot == Timeslot.ONE
-                    ],
-                )
-            )
-            grouplists.append(
-                GroupList(
-                    Name="{} TS 2".format(r.code),
-                    Contact=[
-                        tg.Name for tg in r.talkgroups if tg.timeslot == Timeslot.TWO
+                        tg.Name for tg in r.talkgroups
                     ],
                 )
             )
@@ -487,11 +546,23 @@ class Codeplug:
                     Channel=channel_names_1 + channel_names_2,
                 )
             )
+            if single_zone_name is None:
+                zones.append(
+                    Zone(
+                        Name=r.zone_name[:NAME_MAX],
+                        ChannelA=channel_names_1 + channel_names_2,
+                        ChannelB=channel_names_2 + channel_names_1,
+                    )
+                )
+            else:
+                single_zone_channels.extend(zone_channels)
+        if single_zone_name is not None:
+            # single zone for the whole repeater network
             zones.append(
                 Zone(
-                    Name=r.zone_name[:NAME_MAX],
-                    ChannelA=channel_names_1 + channel_names_2,
-                    ChannelB=channel_names_2 + channel_names_1,
+                    Name=single_zone_name,
+                    ChannelA=single_zone_channels,
+                    ChannelB=[],
                 )
             )
         return cls(
@@ -516,6 +587,91 @@ class Codeplug:
             )
         )
         return json.dumps(cp_dict, indent=2)
+
+    def to_gb3gf_opengd77_csv(self, output_dir):
+        # Channels.csv, Contacts.csv, TG_List.csv, Zones.csv
+        with open("{}/Contacts.csv".format(output_dir), "w") as f:
+            csvw = csv.DictWriter(f, ["Contact Name", "ID", "ID Type", "TS Override"], delimiter=";")
+            csvw.writeheader()
+            for tg in self.contacts:
+                csvw.writerow({
+                    "Contact Name": tg.Name,
+                    "ID": tg.CallID,
+                    "ID Type": tg.CallType,
+                    "TS Override": tg.timeslot.value,
+                })
+        channel_fields = [
+            "Channel Number",
+            "Channel Name",
+            "Channel Type",
+            "Rx Frequency",
+            "Tx Frequency",
+            "Colour Code",
+            "Timeslot",
+            "Contact",
+            "TG List",
+            "RX Tone",
+            "TX Tone",
+            "Power",
+            "Bandwidth",
+            "Squelch",
+            "Rx Only",
+            "Zone Skip",
+            "All Skip",
+            "TOT",
+            "VOX",
+        ]
+        with open("{}/Channels.csv".format(output_dir), "w") as f:
+            csvw = csv.DictWriter(f, channel_fields, delimiter=";")
+            csvw.writeheader()
+            for ix, channel in enumerate(self.channels):
+                csvw.writerow({
+                    "Channel Number": ix+1,
+                    "Channel Name": channel.Name,
+                    "Channel Type": channel.ChannelMode,
+                    "Rx Frequency": channel.RxFrequency,
+                    "Tx Frequency": channel.RxFrequency + channel.TxFrequencyOffset,
+                    "Colour Code": channel.ColorCode or "None",
+                    "Timeslot": 1,
+                    "Contact": channel.ContactName or "N/A",
+                    "TG List": channel.GroupList or "None",
+                    "RX Tone": channel.CtcssDecode or "None",
+                    "TX Tone": channel.CtcssEncode or "None",
+                    "Power": channel.Power,
+                    "Bandwidth": str(channel.Bandwidth) + "KHz",
+                    "Squelch": "Disabled",
+                    "Rx Only": channel.value_replacements[channel.RxOnly],
+                    "Zone Skip": "No",
+                    "All Skip": "No",
+                    "TOT": channel.Tot,
+                    "VOX": channel.value_replacements[channel.Vox],
+                })
+        tg_fields = ["TG List Name"] + ["Contact {}".format(x) for x in range(1, 33)]
+        with open("{}/TG_Lists.csv".format(output_dir), "w") as f:
+            csvw = csv.DictWriter(f, tg_fields, delimiter=";")
+            csvw.writeheader()
+            for gl in self.grouplists:
+                tg_list = {"TG List Name": gl.Name}
+                contacts = list(gl.Contact)
+                remove_tgs = list(reversed(TALKGROUP_LIST_OVERFLOW))
+                # remove some talkgroups to get under the limit
+                while len(contacts) > 32:
+                    try:
+                        contacts.remove(remove_tgs.pop())
+                    except ValueError:
+                        pass
+                for ix, tg in enumerate(contacts):
+                    tg_list["Contact {}".format(ix + 1)] = tg
+                csvw.writerow(tg_list)
+        zone_fields = ["Zone Name"] + ["Channel {}".format(x) for x in range(1, 81)]
+        with open("{}/Zones.csv".format(output_dir), "w") as f:
+            csvw = csv.DictWriter(f, zone_fields, delimiter=";")
+            csvw.writeheader()
+            for zone in self.zones:
+                row = {"Zone Name": zone.Name}
+                for ix, ch in enumerate(zone.ChannelA + zone.ChannelB):
+                    row["Channel {}".format(ix + 1)] = ch.Name
+                csvw.writerow(row)
 
 
 def pnwdigital_query_repeaters():
