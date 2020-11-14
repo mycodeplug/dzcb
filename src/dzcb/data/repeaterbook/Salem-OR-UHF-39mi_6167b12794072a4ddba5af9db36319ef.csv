@@ -1,0 +1,62 @@
+Freq,Tone,Location,ST/PR,County,Call,Use,Miles,Bearing 
+441.97500+,100.0,"Corvallis West Marys Peak",OR,Benton,W7CQZ,OPEN,39.5,SW
+442.30000+,162.2,"Corvallis Good Sam Hospital",OR,Benton,N8GFO,OPEN,25.9,SSW
+442.67500+,100.0,"Newberg Parrett Mountain",OR,Yamhill,AH6LE,OPEN,25.8,NNE
+442.07500+,103.5,"Oregon City Boynton Standpipe Water Tower",OR,Clackamas,W7ZRS,OPEN,35.3,NE
+443.42500+,107.2,"Sherwood ",OR,Yamhill,KR7IS,OPEN,30.1,NNE
+443.47500+,167.9,"Clackamas Mt Scott",OR,Clackamas,WB7QIW,OPEN,42.5,NNE
+443.55000+,100.0,"Portland Garden Home",OR,Multnomah,K7GDS,OPEN,38.6,NNE
+440.35000+,127.3,"Portland Stonehenge Tower",OR,Multnomah,KB7OYI,OPEN,41.2,NNE
+440.70000+,77.0,"Molalla Molalla Fire District 73",OR,Clackamas,W7DTV,OPEN,26.4,E
+442.27500+,107.2,"Sherwood ",OR,Washington,KJ7IY,OPEN,30.1,NNE
+442.55000+,114.8,"Newberg Bald Peak",OR,Yamhill,WA7RGO,OPEN,24.8,N
+442.52500+,107.2,"Aloha Cooper Mountain",OR,Washington,KA7OSM,OPEN,36.3,NNE
+442.87500+,107.2,"Sandy ",OR,Clackamas,KJ7IY,OPEN,49.1,NE
+443.15000+,107.2,"Clackamas Mt Scott",OR,Clackamas,KJ7IY,OPEN,42.5,NNE
+443.35000+,156.7,"Aloha ",OR,Washington,NM7B,OPEN,39.0,NNE
+443.65000+,100.0,"Laurelwood Bald Peak",OR,Yamhill,K7AUO,OPEN,31.3,N
+443.45000+,123.0,"Salem ",OR,Marion,KC7CFS,OPEN,6.1,S
+441.27500+,100.0,"Salem Prospect Hill",OR,Marion,W7SRA,OPEN,7.4,SW
+444.97500+,100.0,"Albany ",OR,Linn,KD6VLR,OPEN,23.4,SSW
+443.72500+,186.2,"Salem Prospect Hill",OR,Marion,W7SRA,OPEN,7.4,SW
+444.25000+,100.0,"Silverton Silver Falls",OR,Marion,W7SAA,OPEN,17.0,ESE
+444.95000+,100.0,"Salem Silver Creek Falls",OR,Marion,WA7ABU,OPEN,13.1,E
+440.90000+,118.8,"Hebo Mt Hebo",OR,Tillamook,W7GC,OPEN,39.8,WNW
+441.25000+,118.8,"Hebo Mt Hebo",OR,Tillamook,W7LI,OPEN,39.9,WNW
+441.30000+,100.0,"Hebo Mt Hebo",OR,Tillamook,W7EM,OPEN,39.8,WNW
+441.80000+,114.8,"McMinnville Eola Hill",OR,Yamhill,W7YAM,OPEN,12.1,NNW
+441.70000+,186.2,"Salem Popcorn Hill",OR,Marion,K7UN,OPEN,0.0,N
+442.70000+,100.0,"Portland OHSU",OR,Multnomah,K7LTA,OPEN,42.0,NNE
+442.65000+,100.0,"Portland Council Crest",OR,Multnomah,K7LJ,OPEN,41.1,NNE
+442.57500+,123.0,"Sherwood ",OR,Washington,K7REA,OPEN,30.1,NNE
+444.45000+,131.8,"Canby ",OR,Clackamas,K7CFD,OPEN,27.8,NE
+442.92500+,107.2,"Colton ",OR,Clackamas,WB7DZG,OPEN,33.2,E
+443.07500+,167.9,"Hebo Mt Hebo",OR,Tillamook,WB7QIW,OPEN,39.8,WNW
+442.50000+,100.0,"Salem ",OR,Marion,KE7DLA,OPEN,0.0,N
+442.85000+,167.9,"Scio Rodgers Mountain",OR,Linn,KA7ENW,OPEN,21.9,SE
+441.62500+,146.2,"Gresham Walters Hill",OR,Multnomah,KE7AWR,OPEN,47.9,NE
+441.40000+,88.5,"Colton Goat Mountain",OR,Clackamas,WB6EGS,OPEN,38.3,E
+443.17500+,88.5,"Salem CCC",OR,Marion,AD7ET,OPEN,0.1,E
+440.42500+,D125,"Corvallis Mary's Peak",OR,Benton,K7LNK,OPEN,39.5,SW
+442.90000+,123.0,"Canby ",OR,Clackamas,WB7QAZ,OPEN,30.4,NE
+440.60000+,103.5,"Lyons McCulley Mountain",OR,Linn,KG7MKW,OPEN,23.9,SE
+443.05000+,100.0,"Corvallis Elmers",OR,Benton,W7OSU,OPEN,28.5,SSW
+441.17500+,77.0,"Salem Prospect Hill",OR,Marion,W7DTV,OPEN,7.6,SSW
+443.75000+,100.0,"Newberg Chehalem Ridge",OR,Washington,K7RPT,OPEN,28.3,N
+440.17500+,110.9,"Tigard Bull Mountain",OR,Washington,KF7TTS,OPEN,34.4,NNE
+440.27500+,107.2,"Salem ",OR,Marion,AC7RF,OPEN,0.0,N
+441.65000+,107.2,"West Linn West Linn Ridge",OR,Clackamas,WA7DRO,OPEN,35.8,NE
+444.75000+,123.0,"Beaverton ",OR,Washington,WB7CRT,OPEN,39.2,NNE
+446.27500x,167.9,"Gresham ",OR,Multnomah,N7DOD,OPEN,48.5,NE
+442.45000+,D125,"Salem Eagle Crest",OR,Polk,AB7BS,OPEN,6.0,WNW
+443.12500+,77.0,"Sweet Home Marks Ridge",OR,Linn,KG7BZ,OPEN,40.4,SSE
+442.60000+,D023,"Brownsville Washburn Heights",OR,Linn,KB7KUB,OPEN,38.0,S
+444.30000+,82.5,"Lake Oswego ",OR,Clackamas,WA7LO,OPEN,37.5,NNE
+443.27500+,167.9,"Portland Healy Heights",OR,Multnomah,KA7AGH,OPEN,41.2,NNE
+444.60000+,100.0,"Beavercreek ",OR,Clackamas,WA7ABU,OPEN,35.0,NE
+444.10000+,136.5,"Salem West Salem Hills",OR,Polk,W6WHD,OPEN,1.9,W
+442.82500+,123.0,"Wilamina ",OR,Polk,W7GRT,OPEN,23.9,WNW
+441.92500+,107.2,"Salem West Hills",OR,Polk,W6WHD,OPEN,2.6,NW
+440.05000+,100.0,"Salem ",OR,Marion,K7RTL,OPEN,0.0,W
+441.72500+,77.0,"Corvallis ",OR,Benton,AB7BS,OPEN,28.4,SSW
+444.52500+,136.5,"Tualatin ",OR,Washington,KJ7ECQ,OPEN,32.5,NNE
