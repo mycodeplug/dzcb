@@ -77,15 +77,33 @@ def wordset(dr):
 
 
 @attr.s
-class DigitalRepeater:
+class Frequency:
     name = attr.ib()
     code = attr.ib()
-    state = attr.ib()
-    city = attr.ib()
     frequency = attr.ib()
-    offset = attr.ib()
-    color_code = attr.ib()
     power = attr.ib(default="High")
+
+
+@attr.s
+class Repeater(Frequency):
+    state = attr.ib(default=None)
+    city = attr.ib(default=None)
+    offset = attr.ib(default=None)
+
+
+@attr.s
+class AnalogRepeater(Repeater):
+    ctcss_encode = attr.ib(default=None)
+    ctcss_decode = attr.ib(default=None)
+
+    @classmethod
+    def from_repeaterbook_proximity(cls, repeaterbook_csv):
+        pass
+
+
+@attr.s
+class DigitalRepeater(Repeater):
+    color_code = attr.ib(default=1)
     _site_id = attr.ib(default=None)
     talkgroups = attr.ib(factory=list, repr=False)
 
