@@ -1,7 +1,9 @@
 """
 dzcb.pnwdigital - cache data from PNWDigital.net
 """
+import argparse
 from pathlib import Path
+import os
 import tempfile
 from zipfile import ZipFile
 
@@ -43,3 +45,11 @@ def cache_repeaters(output_dir):
         (Path(output_dir) / TALKGROUPS_FILENAME).write_bytes(
             zf.read(zip_talkgroups_filename[0])
         )
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("output_dir")
+    args = parser.parse_args()
+    if not os.path.exists(args.output_dir):
+        os.makedirs(args.output_dir)
+    cache_repeaters(args.output_dir)
