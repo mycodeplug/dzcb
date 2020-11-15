@@ -1,7 +1,14 @@
 """
 dzcb.repeaterbook - export CSV from Repeaterbook, convert to K7ABD format
 """
+import argparse
+import contextlib
+import csv
+import hashlib
 from pathlib import Path
+import os
+import sys
+import time
 
 from bs4 import BeautifulSoup
 import requests
@@ -75,7 +82,7 @@ def cache_zones_with_proximity(input_csv, output_dir):
         for name, slug, url, filename in proximity_zones(input_csv):
             resp = session.get(url)
             resp.raise_for_status()
-            (Path(output_dir) / filename, "w").write_text(resp.text)
+            (Path(output_dir) / filename).write_text(resp.text)
             sys.stderr.write(".")
             time.sleep(0.25)
 
@@ -125,3 +132,17 @@ def zones_to_k7abd(input_csv, input_dir, output_dir):
                         "TX Prohibit": "Off",
                     }
                 )
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("proximity_csv_file", type=argparse.FileType("r"))
+    parser.add_argument("output_dir")
+    parser.add_argument("--cache-dir", default="/tmp/cache_dir")
+    args = parser.parse_args()
+    if not os.path.exists(args.cache_dir):
+        os.makedirs(args.cache_dir)
+    if not os.path.exists(args.output_dir):
+        os.makedirs(args.output_dir)
+    proximity_csv = args.proximity_csv_file.read().splitlines()
+    cache_zones_with_proximity(proximity_csv, args.cache_dir)
+    zones_to_k7abd(proximity_csv, args.cache_dir, args.output_dir)
