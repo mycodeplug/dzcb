@@ -1,0 +1,55 @@
+Zone,Channel Name,Bandwidth,Power,RX Freq,TX Freq,CTCSS Decode,CTCSS Encode,TX Prohibit
+Seattle WA VHF 45mi,WW7PSR Seattle C,25K,High,146.96,146.36,103.5,103.5,Off
+Seattle WA VHF 45mi,W7SRZ Seattle Be,25K,High,146.9,146.3,103.5,103.5,Off
+Seattle WA VHF 45mi,W7DX Seattle Wes,25K,High,147.0,146.4,103.5,103.5,Off
+Seattle WA VHF 45mi,W7AW Seattle Wes,25K,High,145.13,144.53,103.5,103.5,Off
+Seattle WA VHF 45mi,W7MIR Mercer Isl,25K,High,147.16,147.76,146.2,146.2,Off
+Seattle WA VHF 45mi,K7LWH Kirkland R,25K,High,145.49,144.89000000000001,103.5,103.5,Off
+Seattle WA VHF 45mi,W7WWI Issaquah T,25K,High,147.08,147.68,110.9,110.9,Off
+Seattle WA VHF 45mi,K7SLB Bellevue C,25K,High,146.475,147.075,110.9,110.9,Off
+Seattle WA VHF 45mi,KC7IYE Redmond ,25K,High,145.31,144.71,103.5,103.5,Off
+Seattle WA VHF 45mi,NC7G Seatac  Sea,25K,High,146.66,146.06,103.5,103.5,Off
+Seattle WA VHF 45mi,K6RFK Woodinvill,25K,High,147.34,147.94,100.0,100.0,Off
+Seattle WA VHF 45mi,WA7DEM Lynnwood ,25K,High,146.78,146.18,162.2,162.2,Off
+Seattle WA VHF 45mi,K7TGU Issaquah ,25K,High,146.425,147.025,,,Off
+Seattle WA VHF 45mi,N7IG Port Orchar,25K,High,145.39,144.79,88.5,88.5,Off
+Seattle WA VHF 45mi,W7ZLJ Olalla ,25K,High,145.35,144.75,103.5,103.5,Off
+Seattle WA VHF 45mi,K7CST Kent ,25K,High,147.32,147.92,103.5,103.5,Off
+Seattle WA VHF 45mi,KD7WDG Silverdal,25K,High,145.43,144.83,88.5,88.5,Off
+Seattle WA VHF 45mi,K7NWS Issaquah W,25K,High,145.33,144.73000000000002,179.9,179.9,Off
+Seattle WA VHF 45mi,K7PF Issaquah Ti,25K,High,146.88,146.28,,,Off
+Seattle WA VHF 45mi,KC7RAS Issaquah ,25K,High,147.1,147.7,123.0,123.0,Off
+Seattle WA VHF 45mi,WA7FW Federal Wa,25K,High,146.76,146.16,103.5,103.5,Off
+Seattle WA VHF 45mi,WA7FW Federal Wa,25K,High,147.04,147.64,103.5,103.5,Off
+Seattle WA VHF 45mi,K7LED Issaquah T,25K,High,146.82,146.22,103.5,103.5,Off
+Seattle WA VHF 45mi,KF7NPL Maple Val,25K,High,147.26,147.85999999999999,103.5,103.5,Off
+Seattle WA VHF 45mi,KE7GFZ Carnation,25K,High,145.59,146.19,162.2,162.2,Off
+Seattle WA VHF 45mi,K7SYE Auburn ,25K,High,147.24,147.84,123.0,123.0,Off
+Seattle WA VHF 45mi,WW7RA Bremerton ,25K,High,146.62,146.02,103.5,103.5,Off
+Seattle WA VHF 45mi,W7DK Tacoma Ch 2,25K,High,145.21,144.61,141.3,141.3,Off
+Seattle WA VHF 45mi,KB7CNN Edgewood ,25K,High,146.64,146.04,103.5,103.5,Off
+Seattle WA VHF 45mi,W7DK Tacoma ,25K,High,147.28,147.88,103.5,103.5,Off
+Seattle WA VHF 45mi,K7HW Tacoma ,25K,High,146.94,146.34,103.5,103.5,Off
+Seattle WA VHF 45mi,W2ZT Everett ,25K,High,145.39,144.79,123.0,123.0,Off
+Seattle WA VHF 45mi,KC7SAR North Ben,25K,High,145.11,144.51000000000002,127.3,127.3,Off
+Seattle WA VHF 45mi,N7NFY Lynnwood ,25K,High,146.8,146.20000000000002,136.5,136.5,Off
+Seattle WA VHF 45mi,K7NP University ,25K,High,145.29,144.69,114.8,114.8,Off
+Seattle WA VHF 45mi,WA7LAW Everett ,25K,High,147.18,147.78,103.5,103.5,Off
+Seattle WA VHF 45mi,W7AVM Langley Wh,25K,High,147.22,147.82,127.3,127.3,Off
+Seattle WA VHF 45mi,KD7VMK North Ben,25K,High,146.92,146.32,103.5,103.5,Off
+Seattle WA VHF 45mi,NM7E Belfair ,25K,High,145.17,144.57,103.5,103.5,Off
+Seattle WA VHF 45mi,WB7DVN Eldon ,25K,High,146.45,147.04999999999998,,,Off
+Seattle WA VHF 45mi,K7MMI Enumclaw B,25K,High,146.98,146.38,131.8,131.8,Off
+Seattle WA VHF 45mi,WB7DOB Enumclaw ,25K,High,147.14,147.73999999999998,123.0,123.0,Off
+Seattle WA VHF 45mi,N3KPU Graham ,25K,High,145.23,144.63,146.2,146.2,Off
+Seattle WA VHF 45mi,W7AAO Enumclaw G,25K,High,145.37,144.77,136.5,136.5,Off
+Seattle WA VHF 45mi,WB7DOB Buckley T,25K,High,147.3,147.9,88.5,88.5,Off
+Seattle WA VHF 45mi,WB7VYA Granite F,25K,High,146.92,146.32,123.0,123.0,Off
+Seattle WA VHF 45mi,W7JCR Port Towns,25K,High,145.15,144.55,114.8,114.8,Off
+Seattle WA VHF 45mi,WC7I Lacey ,25K,High,146.8,146.20000000000002,97.4,97.4,Off
+Seattle WA VHF 45mi,W7PIG Camano Isl,25K,High,147.36,147.96,127.3,127.3,Off
+Seattle WA VHF 45mi,N7SK Shelton Wat,25K,High,146.72,146.12,103.5,103.5,Off
+Seattle WA VHF 45mi,W7AVM Coupeville,25K,High,146.86,146.26000000000002,127.3,127.3,Off
+Seattle WA VHF 45mi,NT7H Olympia wat,25K,High,147.36,147.96,103.5,103.5,Off
+Seattle WA VHF 45mi,N7EHP Tumwater ,25K,High,147.12,147.72,173.8,173.8,Off
+Seattle WA VHF 45mi,K7CPR Olympia Ca,25K,High,145.47,144.87,100.0,100.0,Off

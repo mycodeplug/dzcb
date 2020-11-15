@@ -1,0 +1,11 @@
+Zone,Channel Name,Bandwidth,Power,RX Freq,TX Freq,CTCSS Decode,CTCSS Encode,TX Prohibit
+Astoria OR UHF 30mi,W7BU Astoria ,25K,High,444.85,449.85,118.8,118.8,Off
+Astoria OR UHF 30mi,W7BU Chinook Meg,25K,High,440.925,445.925,118.8,118.8,Off
+Astoria OR UHF 30mi,NM7R Chinook Meg,25K,High,444.925,449.925,82.5,82.5,Off
+Astoria OR UHF 30mi,NM7R Long Beach ,25K,High,444.8,449.8,118.8,118.8,Off
+Astoria OR UHF 30mi,NM7R Naselle Nas,25K,High,440.675,445.675,118.8,118.8,Off
+Astoria OR UHF 30mi,N7PIR Seaside ,25K,High,443.875,448.875,100.0,100.0,Off
+Astoria OR UHF 30mi,WA6TTR Astoria N,25K,High,444.5,449.5,118.8,118.8,Off
+Astoria OR UHF 30mi,N7XAC Lebam KO P,25K,High,441.675,446.675,118.8,118.8,Off
+Astoria OR UHF 30mi,K7PP Raymond K.O,25K,High,441.3,446.3,123.0,123.0,Off
+Astoria OR UHF 30mi,W7EM Manzanita A,25K,High,440.175,445.175,100.0,100.0,Off

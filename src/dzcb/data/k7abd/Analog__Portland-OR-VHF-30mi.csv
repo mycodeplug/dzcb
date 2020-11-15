@@ -1,0 +1,30 @@
+Zone,Channel Name,Bandwidth,Power,RX Freq,TX Freq,CTCSS Decode,CTCSS Encode,TX Prohibit
+Portland OR VHF 30mi,K7LJ Portland Co,25K,High,145.23,144.63,Off,Off,Off
+Portland OR VHF 30mi,KE7AWR Portland ,25K,High,146.7,146.1,100.0,100.0,Off
+Portland OR VHF 30mi,K7RPT Portland S,25K,High,147.04,147.64,100.0,100.0,Off
+Portland OR VHF 30mi,N7EXH Portland K,25K,High,146.98,146.38,D023,D023,Off
+Portland OR VHF 30mi,N7EXH Portland S,25K,High,145.31,144.71,123.0,123.0,Off
+Portland OR VHF 30mi,W7AC Portland Sk,25K,High,147.14,147.73999999999998,107.2,107.2,Off
+Portland OR VHF 30mi,K7LJ Portland Mt,25K,High,145.39,144.79,100.0,100.0,Off
+Portland OR VHF 30mi,K7RPT Cedar Mill,25K,High,147.38,147.98,100.0,100.0,Off
+Portland OR VHF 30mi,W7LT Clackamas M,25K,High,146.94,146.34,Off,Off,Off
+Portland OR VHF 30mi,WB7QIW Clackamas,25K,High,147.28,147.88,167.9,167.9,Off
+Portland OR VHF 30mi,W7LT Clackamas M,25K,High,147.18,147.78,103.5,103.5,Off
+Portland OR VHF 30mi,KJ7IY Clackamas ,25K,High,146.8,146.20000000000002,107.2,107.2,Off
+Portland OR VHF 30mi,N7QQU Aloha Coop,25K,High,147.36,147.96,107.2,107.2,Off
+Portland OR VHF 30mi,KR7IS Sherwood ,25K,High,145.47,144.87,107.2,107.2,Off
+Portland OR VHF 30mi,KE7DC North Plai,25K,High,145.45,144.85,136.5,136.5,Off
+Portland OR VHF 30mi,AB7F Vancouver L,25K,High,145.37,144.77,123.0,123.0,Off
+Portland OR VHF 30mi,W7AIA Camas Livi,25K,High,147.24,147.84,94.8,94.8,Off
+Portland OR VHF 30mi,K7BPR Hockinson ,25K,High,147.08,147.68,107.2,107.2,Off
+Portland OR VHF 30mi,K7WWG Newberg Ch,25K,High,146.9,146.3,127.3,127.3,Off
+Portland OR VHF 30mi,KB7PSM Newberg C,25K,High,145.11,144.51000000000002,103.5,103.5,Off
+Portland OR VHF 30mi,AH6LE Beavercree,25K,High,146.92,146.32,107.2,107.2,Off
+Portland OR VHF 30mi,W7LT Vancouver L,25K,High,146.84,146.24,Off,Off,Off
+Portland OR VHF 30mi,N7EI Warren McNu,25K,High,146.68,146.08,114.8,114.8,Off
+Portland OR VHF 30mi,W7DG Woodland Fi,25K,High,147.3,147.9,114.8,114.8,Off
+Portland OR VHF 30mi,N7LF Corbett Loo,25K,High,145.41,144.81,100.0,100.0,Off
+Portland OR VHF 30mi,KJ7IY Colton ,25K,High,145.43,144.83,107.2,107.2,Off
+Portland OR VHF 30mi,W7OTV Colton Goa,25K,High,146.96,146.36,127.3,127.3,Off
+Portland OR VHF 30mi,W7VER Vernonia C,25K,High,145.25,144.65,114.8,114.8,Off
+Portland OR VHF 30mi,K7RTL Amity Eola,25K,High,145.21,144.61,110.9,110.9,Off

@@ -1,0 +1,48 @@
+Zone,Channel Name,Bandwidth,Power,RX Freq,TX Freq,CTCSS Decode,CTCSS Encode,TX Prohibit
+Burlington WA UHF 45mi,K7OET Mount Vern,25K,High,444.35,449.35,100.0,100.0,Off
+Burlington WA UHF 45mi,NC7Q Mount Verno,25K,High,444.625,449.625,103.5,103.5,Off
+Burlington WA UHF 45mi,WA7ZUS Lyman Lym,25K,High,444.5,449.5,103.5,103.5,Off
+Burlington WA UHF 45mi,W7UMH Lyman Lyma,25K,High,442.4,447.4,107.2,107.2,Off
+Burlington WA UHF 45mi,W7PSE Anacortes ,25K,High,441.725,446.725,103.5,103.5,Off
+Burlington WA UHF 45mi,W7ECG Bellingham,25K,High,442.25,447.25,156.7,156.7,Off
+Burlington WA UHF 45mi,WA7SV Bellingham,25K,High,442.75,447.75,103.5,103.5,Off
+Burlington WA UHF 45mi,W7PIG Camano Isl,25K,High,441.05,446.05,103.5,103.5,Off
+Burlington WA UHF 45mi,N7FYU Bellingham,25K,High,441.925,446.925,103.5,103.5,Off
+Burlington WA UHF 45mi,N7XCG Arlington ,25K,High,440.4,445.4,123.0,123.0,Off
+Burlington WA UHF 45mi,K7SKW Bellingham,25K,High,443.75,448.75,103.5,103.5,Off
+Burlington WA UHF 45mi,K7SKW Bellingham,25K,High,443.65,448.65,103.5,103.5,Off
+Burlington WA UHF 45mi,N7NFY Arlington ,25K,High,443.225,448.225,103.5,103.5,Off
+Burlington WA UHF 45mi,K7SKW Orcas Isla,25K,High,444.05,449.05,103.5,103.5,Off
+Burlington WA UHF 45mi,N7JN Orcas Islan,25K,High,443.45,448.45,103.5,103.5,Off
+Burlington WA UHF 45mi,KD7KAB Lopez Isl,25K,High,443.475,448.475,77.0,77.0,Off
+Burlington WA UHF 45mi,N7KN Greenbank W,25K,High,441.425,446.425,110.9,110.9,Off
+Burlington WA UHF 45mi,W7ECG Ferndale ,25K,High,442.825,447.825,156.7,156.7,Off
+Burlington WA UHF 45mi,K7MLR Marysville,25K,High,444.2,449.2,D172,D172,Off
+Burlington WA UHF 45mi,W7BPD Kendall Su,25K,High,440.375,445.375,131.8,131.8,Off
+Burlington WA UHF 45mi,W7UFI Darrington,25K,High,443.875,448.875,103.5,103.5,Off
+Burlington WA UHF 45mi,AA7MI Nordland M,25K,High,440.725,445.725,114.8,114.8,Off
+Burlington WA UHF 45mi,WA7LAW Everett ,25K,High,444.575,449.575,103.5,103.5,Off
+Burlington WA UHF 45mi, Darrington Gold,25K,High,444.3,449.3,103.5,103.5,Off
+Burlington WA UHF 45mi,W7BPD Blaine ,25K,High,440.375,445.375,107.2,107.2,Off
+Burlington WA UHF 45mi,WA7DEM Snohomish,25K,High,442.975,447.975,103.5,103.5,Off
+Burlington WA UHF 45mi,KG7QPU Snohomish,25K,High,443.9,448.9,151.4,151.4,Off
+Burlington WA UHF 45mi,VA7NFR Langley A,25K,High,440.1,445.1,114.8,114.8,Off
+Burlington WA UHF 45mi,N7NFY Sequim Bly,25K,High,442.8,447.8,123.0,123.0,Off
+Burlington WA UHF 45mi,NW7DR Edmonds ,25K,High,444.725,449.725,123.0,123.0,Off
+Burlington WA UHF 45mi,VE7RLY Langley ,25K,High,443.975,448.975,,,Off
+Burlington WA UHF 45mi,WR7DS Mill Creek,25K,High,442.725,447.725,D172,D172,Off
+Burlington WA UHF 45mi,KC7EQO Sequim Bl,25K,High,442.1,447.1,100.0,100.0,Off
+Burlington WA UHF 45mi,K6MBY Sequim ,25K,High,444.9,449.9,131.8,131.8,Off
+Burlington WA UHF 45mi,KA6WIN Sequim ,25K,High,444.75,449.75,100.0,100.0,Off
+Burlington WA UHF 45mi,AF7DX Sequim ,25K,High,444.275,449.275,100.0,100.0,Off
+Burlington WA UHF 45mi,KO6I Sequim Bell,25K,High,442.05,447.05,103.5,103.5,Off
+Burlington WA UHF 45mi,VE7RMH Langley ,25K,High,441.375,446.375,,,Off
+Burlington WA UHF 45mi,W7SKY Sultan ,25K,High,444.125,449.125,103.5,103.5,Off
+Burlington WA UHF 45mi,KJ1U Point Rober,25K,High,443.3,448.3,100.0,100.0,Off
+Burlington WA UHF 45mi,KD7VMK Darringto,25K,High,442.8,447.8,,,Off
+Burlington WA UHF 45mi,W7EAR Gold Bar ,25K,High,442.175,447.175,103.5,103.5,Off
+Burlington WA UHF 45mi,W7PSE Sequim May,25K,High,442.425,447.425,103.5,103.5,Off
+Burlington WA UHF 45mi,WB0CZA Sequim Ma,25K,High,441.125,446.125,123.0,123.0,Off
+Burlington WA UHF 45mi,VE7EPP Delta ,25K,High,442.35,447.35,,,Off
+Burlington WA UHF 45mi,VE7EPP Delta ,25K,High,443.35,448.35,127.3,127.3,Off
+Burlington WA UHF 45mi,VE7RDE Delta ,25K,High,444.425,449.425,107.2,107.2,Off
