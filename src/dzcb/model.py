@@ -83,10 +83,10 @@ class Talkgroup(Contact):
     @property
     def name_with_timeslot(self):
         ts = str(self.timeslot)
-        if self.Name.endswith(ts) and not self.Name.startswith("TAC"):
-            name = self.Name
+        if self.name.endswith(ts) and not self.name.startswith("TAC"):
+            name = self.name
         else:
-            name = "{} {}".format(self.Name, ts)
+            name = "{} {}".format(self.name, ts)
         return name
 
     @classmethod
@@ -113,7 +113,6 @@ class Channel:
     """Common channel attributes"""
 
     name = attr.ib(validator=attr.validators.instance_of(str))
-    code = attr.ib(validator=attr.validators.instance_of(str))
     frequency = attr.ib(validator=attr.validators.instance_of(float), converter=float)
     offset = attr.ib(
         default=None,
@@ -121,7 +120,7 @@ class Channel:
     )
     power = attr.ib(
         default=Power.HIGH,
-        validator=attr.validators.instance_of(float),
+        validator=attr.validators.instance_of(Power),
         converter=Power.from_any,
     )
     bandwidth = attr.ib(
@@ -129,6 +128,7 @@ class Channel:
         validator=attr.validators.instance_of(float),
         converter=float,
     )
+    code = attr.ib(default=None, validator=attr.validators.optional(attr.validators.instance_of(str)))
 
 
 @attr.s
@@ -150,34 +150,17 @@ class DigitalChannel(Channel):
         """
         Return a channel per talkgroup based on this channel's settings
         """
-        name = "{} {}".format(tg.name_with_timeslot[: NAME_MAX - 4], repeater.code[:3])
-        return [attr.evolve(self, name=name,talkgroup=tg, static_talkgroups=[]) for tg in talkgroups]
-
-        # this stuff _might_ be useful for expanding a channel
-        if channel_per_talkgroup:
-            talkgroups = repeater.talkgroups
-            gen_name = lambda tg: "{} {}".format(
-                tg.name_with_timeslot[: NAME_MAX - 4], repeater.code[:3]
-            )
-        else:
-            # OpenGD77 uses RxList to determine channel talkgroups
-            talkgroups = (Talkgroup(Name="N/A", CallID=9998, timeslot=Timeslot.ONE),)
-            gen_name = lambda tg: "{} {}".format(repeater.code[:3], repeater.name)
         return [
-            cls(
-                name=gen_name(tg),
-                ContactName=tg.Name,
-                RxFrequency=repeater.frequency,
-                TxFrequencyOffset=repeater.offset,
-                Power=repeater.power,
-                ColorCode=repeater.color_code,
-                RepeaterSlot=tg.timeslot.value,
-                GroupList="{} TS".format(repeater.code),
-                ScanList=repeater.zone_name[:NAME_MAX],
-            )
-            for tg in talkgroups
+            attr.evolve(
+                self,
+                name="{} {}".format(
+                    tg.name_with_timeslot[: NAME_MAX - 4],
+                    (self.code if self.code else self.name)[:3],
+                ),
+                talkgroup=tg,
+                static_talkgroups=[]
+            ) for tg in talkgroups
         ]
-
 
     @property
     def zone_name(self):
@@ -247,7 +230,7 @@ class Codeplug:
                 continue
             if not ch.static_talkgroups:
                 continue
-            zone_channels = ch.expand_talkgroups(ch.static_talkgroups)
+            zone_channels = ch.from_talkgroups(ch.static_talkgroups)
             channel_names = [zc.name for zc in zone_channels]
             zones.append(
                 Zone(
@@ -257,3 +240,10 @@ class Codeplug:
                 )
             )
             channels.extend(zone_channels)
+        return type(self)(
+            contacts=list(self.contacts),
+            channels=channels,
+            grouplists=list(self.grouplists),
+            scanlists=list(self.scanlists),
+            zones=zones,
+        )

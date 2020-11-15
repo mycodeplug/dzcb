@@ -27,7 +27,7 @@ import os
 from dzcb.model import AnalogChannel, Codeplug, Contact, DigitalChannel, GroupList, ScanList, Talkgroup, Zone
 
 
-def Talkgroup_map_from_csv(talkgroups_csv):
+def Talkgroups_map_from_csv(talkgroups_csv):
     talkgroups_by_name = {}
     for tg_name, tg_id in csv.reader(talkgroups_csv):
         talkgroups_by_name.setdefault(
@@ -39,9 +39,10 @@ def Talkgroup_map_from_csv(talkgroups_csv):
         )
     return talkgroups_by_name
 
-def Codeplug_from_zone_dicts(zones):
+
+def Codeplug_from_zone_dicts(zone_dicts):
     """
-    :param zones: dict of ZoneName -> [DigitalChannel, AnalogChannel, etc... ]
+    :param zone_dicts: dict of ZoneName -> [DigitalChannel, AnalogChannel, etc... ]
     """
     contacts = set()
     channels = list()
@@ -53,22 +54,22 @@ def Codeplug_from_zone_dicts(zones):
         contacts.update(ch.static_talkgroups)
         ch.grouplist = GroupList(
             name="{} TGS".format(ch.code),
-            contacts=[tg.Name for tg in ch.static_talkgroups],
+            contacts=[tg.name for tg in ch.static_talkgroups],
         )
         grouplists.append(ch.grouplist)
 
     all_channels = {}
-    for zname, channels in zones.items():
+    for zname, zchannels in zone_dicts.items():
         channel_names = []
-        for ch in channels:
+        for ch in zchannels:
             if isinstance(ch, DigitalChannel):
                 if ch.static_talkgroups:
                     update_static_talkgroups(ch)
                 if ch.talkgroup:
-                    contacts.update(ch.talkgroup)
-            if ch.Name not in all_channels:
-                all_channels[ch.Name] = ch
-            channel_names.append(ch.Name)
+                    contacts.add(ch.talkgroup)
+            if ch.name not in all_channels:
+                all_channels[ch.name] = ch
+            channel_names.append(ch.name)
         zscanlist = ScanList(
             name=zname,
             channels=channel_names,
@@ -85,11 +86,11 @@ def Codeplug_from_zone_dicts(zones):
         )
     channels.extend(all_channels.values())
     return Codeplug(
-        contacts=sorted(list(contacts), key=lambda c: c.Name),
+        contacts=sorted(list(contacts), key=lambda c: c.name),
         channels=channels,
         grouplists=grouplists,
         scanlists=scanlists,
-        zones=sorted(zones, key=lambda z: z.Name),
+        zones=sorted(zones, key=lambda z: z.name),
     )
 
 
@@ -155,7 +156,7 @@ def DigitalRepeaters_from_k7abd_csv(digital_repeaters_csv, talkgroups_by_name):
             offset=offset,
             color_code=color_code,
             power=power,
-            static_talkgroups=sorted(talkgroups, key=lambda tg: tg.Name),
+            static_talkgroups=sorted(talkgroups, key=lambda tg: tg.name),
         )
         yield repeater
 
@@ -172,7 +173,7 @@ def DigitalChannels_from_k7abd_csv(digital_others_csv, talkgroups_by_name):
     csvr = csv.DictReader(digital_others_csv)
     for r in csvr:
         _ = r.pop("Comment", None)
-        zname, found, code = r.pop("Zone Name").partition(";")
+        zname, found, code = r.pop("Zone Name", r.pop("Zone")).partition(";")
         name = r.pop("Channel Name")
         frequency = float(r.pop("RX Freq"))
         offset = round(float(r.pop("TX Freq")) - frequency, 1)
@@ -182,8 +183,7 @@ def DigitalChannels_from_k7abd_csv(digital_others_csv, talkgroups_by_name):
         talkgroup = Talkgroup.from_contact(
             talkgroups_by_name[tg_name], r.pop("TimeSlot"),
         )
-                )
-        zones.set_default(zname, []).append(
+        zones.setdefault(zname, []).append(
             DigitalChannel(
                 name=name,
                 code=code or None,
@@ -193,6 +193,7 @@ def DigitalChannels_from_k7abd_csv(digital_others_csv, talkgroups_by_name):
                 power=power,
                 talkgroup=talkgroup,
             )
+        )
     return zones
 
 
@@ -213,7 +214,7 @@ def Codeplug_from_k7abd(input_dir):
         # XXX: potential bug here if talkgroup definitions differ between files
         all_talkgroups_by_name.update(talkgroups[name])
     for p in d.glob("Digital-Others__*.csv"):
-        zones.update(DigitalChannels_from_k7abd_csv(p.read_text().splitlines()), all_talkgroups_by_name)
+        zones.update(DigitalChannels_from_k7abd_csv(p.read_text().splitlines(), all_talkgroups_by_name))
     for p in d.glob("Digital-Repeaters__*.csv"):
         zname = p.name.replace("Digital-Repeaters__", "").replace(".csv", "")
         zones[zname] = tuple(DigitalRepeaters_from_k7abd_csv(p.read_text().splitlines(), talkgroups[zname]))
