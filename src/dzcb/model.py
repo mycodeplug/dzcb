@@ -246,9 +246,9 @@ class Codeplug:
                 channels=channel_names,
             )
             scanlists.append(zscanlist)
-            for ch in zone_channels:
-                if ch.scanlist is None:
-                    ch.scanlist = zscanlist
+            for zch in zone_channels:
+                if zch.scanlist is None:
+                    zch.scanlist = zscanlist
             zones.append(
                 Zone(
                     name=ch.name,
