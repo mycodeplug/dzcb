@@ -75,8 +75,9 @@ def Codeplug_from_zone_dicts(zone_dicts):
             channels=channel_names,
         )
         scanlists.append(zscanlist)
-        for ch in channels:
-            ch.scanlist = zscanlist
+        for ch in zchannels:
+            if ch.scanlist is None:
+                ch.scanlist = zscanlist
         zones.append(
             Zone(
                 name=zname,
@@ -89,7 +90,7 @@ def Codeplug_from_zone_dicts(zone_dicts):
         contacts=sorted(list(contacts), key=lambda c: c.name),
         channels=channels,
         grouplists=grouplists,
-        scanlists=scanlists,
+        scanlists=sorted(list(scanlists), key=lambda s: s.name),
         zones=sorted(zones, key=lambda z: z.name),
     )
 
