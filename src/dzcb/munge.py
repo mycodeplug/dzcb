@@ -11,7 +11,6 @@ Talkgroup_Channel_name_replacements = {
     "Hawaii": "HI",
     "Idaho": "ID",
     "Montana": "MT",
-    "North America": "NA",
     "Oregon": "OR",
     "Utah": "UT",
     "Washington": "WA",
@@ -21,10 +20,8 @@ Talkgroup_Channel_name_replacements = {
 def channel_name(ch_name, max_length):
     # Replace Long strings with shorter ones
     replacements = Talkgroup_Channel_name_replacements.copy()
-    while len(ch_name) > max_length:
-        if not replacements:
-            break
-        ch_name = ch_name.replace(*replacements.popitem())
+    for find, repl in replacements.items():
+        ch_name = ch_name.replace(find, repl)
 
     
     # Truncate the channel name (try to preserve the tail  characters
