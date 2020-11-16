@@ -3,6 +3,20 @@ Write series of CSV files acceptable for import into gb3gf codeplug tool
 
 Ex: OpenGD77
 """
+import csv
+
+from dzcb.model import AnalogChannel, DigitalChannel
+import dzcb.munge
+
+# These talkgroups are removed until the TG list is 32 channels or less
+TALKGROUP_LIST_OVERFLOW = ["Michigan 1", "Ontario 2" "PS1-DNU", "PS2-DNU", "SNARS 1~2", "USA 2", "Worldwide 2", "TAC Eng 123", "WW English 2"]
+NAME_MAX = 16
+
+value_replacements = {
+    None: "None",
+    False: "No",
+    True: "Yes",
+}
 
 def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
     # Channels.csv, Contacts.csv, TG_List.csv, Zones.csv
@@ -14,10 +28,10 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
         for tg in cp.contacts:
             csvw.writerow(
                 {
-                    "Contact Name": tg.Name,
-                    "ID": tg.CallID,
-                    "ID Type": tg.CallType,
-                    "TS Override": tg.timeslot.value,
+                    "Contact Name": tg.name,
+                    "ID": tg.dmrid,
+                    "ID Type": str(tg.kind),
+                    "TS Override": str(tg.timeslot),
                 }
             )
     channel_fields = [
@@ -45,36 +59,49 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
         csvw = csv.DictWriter(f, channel_fields, delimiter=";")
         csvw.writeheader()
         for ix, channel in enumerate(cp.channels):
-            csvw.writerow(
+            if isinstance(channel, AnalogChannel):
+                d = {
+                    "Channel Type": "Analog",
+                    "RX Tone": channel.tone_decode or "None",
+                    "TX Tone": channel.tone_encode or "None",
+                    "Colour Code": "None",
+                    "Contact": "N/A",
+                    "TG List": "None",
+                }
+            else:
+                d = {
+                    "Channel Type": "Digital",
+                    "RX Tone": "None",
+                    "TX Tone": "None",
+                    "Colour Code": channel.color_code,
+                    "Contact": channel.talkgroup.name if channel.talkgroup else "N/A",
+                    "TG List": channel.grouplist.name if channel.grouplist else "None",
+                }
+            d.update(
                 {
                     "Channel Number": ix + 1,
-                    "Channel Name": channel.Name,
-                    "Channel Type": channel.ChannelMode,
-                    "Rx Frequency": channel.RxFrequency,
-                    "Tx Frequency": channel.RxFrequency + channel.TxFrequencyOffset,
-                    "Colour Code": channel.ColorCode or "None",
+                    "Channel Name": dzcb.munge.channel_name(channel.name, NAME_MAX),
+                    "Rx Frequency": channel.frequency,
+                    "Tx Frequency": channel.frequency + channel.offset,
                     "Timeslot": 1,
-                    "Contact": channel.ContactName or "N/A",
-                    "TG List": channel.GroupList or "None",
-                    "RX Tone": channel.CtcssDecode or "None",
-                    "TX Tone": channel.CtcssEncode or "None",
-                    "Power": channel.Power,
-                    "Bandwidth": str(channel.Bandwidth) + "KHz",
-                    "Squelch": "Disabled",
-                    "Rx Only": channel.value_replacements[channel.RxOnly],
+                    "Power": str(channel.power),
+                    "Bandwidth": str(channel.bandwidth) + "KHz",
+                    "Squelch": str(channel.squelch) if channel.squelch else "Disabled",
+                    "Rx Only": value_replacements[channel.rx_only],
                     "Zone Skip": "No",
                     "All Skip": "No",
-                    "TOT": channel.Tot,
-                    "VOX": channel.value_replacements[channel.Vox],
+                    "TOT": 90,
+                    "VOX": "No",
                 }
             )
+            csvw.writerow(d)
     tg_fields = ["TG List Name"] + ["Contact {}".format(x) for x in range(1, 33)]
     with open("{}/TG_Lists.csv".format(output_dir), "w") as f:
         csvw = csv.DictWriter(f, tg_fields, delimiter=";")
         csvw.writeheader()
         for gl in cp.grouplists:
-            tg_list = {"TG List Name": gl.Name}
-            contacts = list(gl.Contact)
+            tg_list = {"TG List Name": gl.name}
+            contacts = list(gl.contacts)
             remove_tgs = list(reversed(TALKGROUP_LIST_OVERFLOW))
             # remove some talkgroups to get under the limit
             while len(contacts) > 32:
@@ -90,11 +117,11 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
         csvw = csv.DictWriter(f, zone_fields, delimiter=";")
         csvw.writeheader()
         for zone in cp.zones:
-            row = {"Zone Name": zone.Name}
-            for ix, ch in enumerate(zone.ChannelA + zone.ChannelB):
+            row = {"Zone Name": zone.name}
+            for ix, ch in enumerate(zone.unique_channels):
                 if ix + 1 > 80:
-                    print("Zone {} exceeds 80 channels".format(zone.Name))
+                    print("Zone {} exceeds 80 channels".format(zone.name))
                     break
-                row["Channel {}".format(ix + 1)] = ch
+                row["Channel {}".format(ix + 1)] = dzcb.munge.channel_name(ch, NAME_MAX)
             csvw.writerow(row)
 

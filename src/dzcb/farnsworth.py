@@ -3,6 +3,9 @@ import json
 import attr
 
 from dzcb.model import AnalogChannel, Contact, DigitalChannel, GroupList, ScanList, Zone
+import dzcb.munge
+
+NAME_MAX = 16
 
 value_replacements = {
     None: "None",
@@ -13,19 +16,19 @@ value_replacements = {
 Contact_name_map = dict(
     name="Name",
     dmrid="CallID",
-    kind="CallType"
-}
+    kind="CallType",
+)
 
 def Contact_to_dict(c):
     d = dict(
-        CallReceiveTone=False,
+        CallReceiveTone="No",
     )
     d.update({
         Contact_name_map[k]: value_replacements.get(v, str(v))
         for k, v in attr.asdict(c).items()
         if k in attr.fields_dict(Contact)
     })
-   return d
+    return d
 
 
 GroupList_name_maps = dict(
@@ -34,19 +37,20 @@ GroupList_name_maps = dict(
 )
 
 def GroupList_to_dict(g):
-    return {
+    d = {
         GroupList_name_maps[k]: v
         for k, v in attr.asdict(g).items()
         if k in attr.fields_dict(GroupList)
     }
-
-ScanList_name_maps = dict(
-    name="Name",
-    channels="Channel",
-)
+    return d
 
 def ScanList_to_dict(s):
-    d = dict(
+    return dict(
+        Name=s.name,
+        Channel=[
+            dzcb.munge.channel_name(ch, NAME_MAX)
+            for ch in s.channels
+        ],
         # Default settings
         PriorityChannel1="Selected",
         PriorityChannel2="Selected",
@@ -54,12 +58,6 @@ def ScanList_to_dict(s):
         SignallingHoldTime="500",
         TxDesignatedChannel="Selected",
     )
-    d.update({
-        ScanList_name_maps[k]: v
-        for k, v in attr.asdict(s).items()
-        if k in attr.fields_dict(ScanList)
-    })
-    return d
 
 
 DefaultChannel = dict(
@@ -114,7 +112,9 @@ AnalogChannel_name_maps = dict(
     frequency="RxFrequency",
     offset="TxFrequencyOffset",
     power="Power",
+    rx_only="RxOnly",
     bandwidth="Bandwidth",
+    squelch="Squelch",
     tone_encode="CtcssEncode",
     tone_decode="CtcssDecode",
 )
@@ -126,10 +126,21 @@ def AnalogChannel_to_dict(c):
         "ChannelMode": "Analog",
     })
     d.update({
-        AnalogChannel_name_map[k]:  value_replacements.get(v, str(v))
+        AnalogChannel_name_maps[k]: v
         for k, v in attr.asdict(c).items()
-        if k in attr.fields_dict(AnalogChannel)
+        if k in attr.fields_dict(AnalogChannel) and k in AnalogChannel_name_maps
     })
+    d["Name"] = dzcb.munge.channel_name(d["Name"], NAME_MAX)
+    if d["CtcssEncode"]:
+        if d["CtcssEncode"].startswith("D"):
+            d["CtcssEncode"] += "N"
+    else:
+        d["CtcssEncode"] = "None"
+    if d["CtcssDecode"]:
+        if d["CtcssDecode"].startswith("D"):
+            d["CtcssDecode"] += "N"
+    else:
+        d["CtcssDecode"] = "None"
     return d
 
 
@@ -138,6 +149,7 @@ DigitalChannel_name_maps = dict(
     frequency="RxFrequency",
     offset="TxFrequencyOffset",
     power="Power",
+    rx_only="RxOnly",
     bandwidth="Bandwidth",
     color_code="Color Code",
 )
@@ -147,35 +159,46 @@ def DigitalChannel_to_dict(c):
     d = DefaultChannel.copy()
     d.update({
         "ChannelMode": "Digital",
-        "RepeaterSlot": str(c.talkgroup.timeslot),
+        "RepeaterSlot": str(c.talkgroup.timeslot) if c.talkgroup else 1,
+        "ContactName": str(c.talkgroup.name) if c.talkgroup else "Parrot 1",
+        "GroupList": str(c.grouplist.name) if c.grouplist else None,
+        "ScanList": str(c.scanlist.name) if c.scanlist else None,
     })
     d.update({
-        DigitalChannel_name_map[k]:  value_replacements.get(v, str(v))
+        DigitalChannel_name_maps[k]: v
         for k, v in attr.asdict(c).items()
-        if k in attr.fields_dict(DigitalChannel)
+        if k in attr.fields_dict(DigitalChannel) and k in DigitalChannel_name_maps
     })
+    d["Name"] = dzcb.munge.channel_name(d["Name"], NAME_MAX)
     return d
 
 
+Channel_value_replacements = {
+    None: "None",
+    False: "Off",
+    True: "On",
+}
+
+
 def Channel_to_dict(c):
+    d = None
     if isinstance(c, AnalogChannel):
-        return AnalogChannel_to_dict(c)
+        d = AnalogChannel_to_dict(c)
     elif isinstance(c, DigitalChannel):
-        return DigitalChannel_to_dict(c)
-    raise ValueError("Unknown type: {}".format(c))
+        d = DigitalChannel_to_dict(c)
+    if d is None:
+        raise ValueError("Unknown type: {}".format(c))
+    return {
+        k: Channel_value_replacements.get(v, str(v))
+        for k, v in d.items()
+    }
 
-
-Zone_name_maps = dict(
-    name="Name",
-    channels_a="ChannelA",
-    channels_b="ChannelB",
-)
 
 def Zone_to_dict(z):
     return {
-        Zone_name_maps[k]: v
-        for k, v in attr.asdict(z).items()
-        if k in attr.fields_dict(Zone)
+        "Name": dzcb.munge.zone_name(z.name, NAME_MAX),
+        "ChannelA": [dzcb.munge.channel_name(ch, NAME_MAX) for ch in z.channels_a],
+        "ChannelB": [dzcb.munge.channel_name(ch, NAME_MAX) for ch in z.channels_b],
     }
 
 

@@ -96,16 +96,10 @@ class Talkgroup(Contact):
         return cls(**fields)
 
 
-class Power(enum.Enum):
+class Power(ConvertibleEnum):
     LOW = "Low"
     MED = "Medium"
     HIGH = "High"
-
-    @classmethod
-    def from_any(cls, v):
-        if isinstance(v, cls):
-            return v
-        return cls(v)
 
 
 @attr.s
@@ -123,10 +117,9 @@ class Channel:
         validator=attr.validators.instance_of(Power),
         converter=Power.from_any,
     )
-    bandwidth = attr.ib(
-        default=25,
-        validator=attr.validators.instance_of(float),
-        converter=float,
+    rx_only = attr.ib(
+        default=False,
+        validator=attr.validators.instance_of(bool)
     )
     code = attr.ib(default=None, validator=attr.validators.optional(attr.validators.instance_of(str)))
 
@@ -135,10 +128,25 @@ class Channel:
 class AnalogChannel(Channel):
     tone_encode = attr.ib(default=None)
     tone_decode = attr.ib(default=None)
+    # configurable bandwidth for analog (technically should be enum)
+    bandwidth = attr.ib(
+        default=25,
+        validator=attr.validators.instance_of(float),
+        converter=float,
+    )
+    # configurable squelch for analog
+    squelch = attr.ib(
+        default=2,
+        validator=attr.validators.instance_of(int),
+        converter=int,
+    )
 
 
 @attr.s
 class DigitalChannel(Channel):
+    # fixed bandwidth for digital
+    bandwidth = 12.5
+    squelch = 0
     color_code = attr.ib(default=1)
     grouplist = attr.ib(default=None)
     scanlist = attr.ib(default=None)
@@ -203,8 +211,8 @@ class Zone:
 
     @property
     def unique_channels(self):
-        channels = list(channels_a)
-        for ch in channels_b:
+        channels = list(self.channels_a)
+        for ch in self.channels_b:
             if ch not in channels:
                 channels.append(ch)
         return channels
