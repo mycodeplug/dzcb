@@ -124,6 +124,10 @@ def AnalogChannel_to_dict(c):
     d = DefaultChannel.copy()
     d.update({
         "ChannelMode": "Analog",
+        "ScanList": dzcb.munge.zone_name(
+            str(c.scanlist.name),
+            NAME_MAX,
+        ) if c.scanlist else None,
     })
     d.update({
         AnalogChannel_name_maps[k]: v
