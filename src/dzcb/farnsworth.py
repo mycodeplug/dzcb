@@ -46,7 +46,7 @@ def GroupList_to_dict(g):
 
 def ScanList_to_dict(s):
     return dict(
-        Name=s.name,
+        Name=dzcb.munge.zone_name(s.name, NAME_MAX),
         Channel=[
             dzcb.munge.channel_name(ch, NAME_MAX)
             for ch in s.channels
@@ -162,7 +162,10 @@ def DigitalChannel_to_dict(c):
         "RepeaterSlot": str(c.talkgroup.timeslot) if c.talkgroup else 1,
         "ContactName": str(c.talkgroup.name) if c.talkgroup else "Parrot 1",
         "GroupList": str(c.grouplist.name) if c.grouplist else None,
-        "ScanList": str(c.scanlist.name) if c.scanlist else None,
+        "ScanList": dzcb.munge.zone_name(
+            str(c.scanlist.name),
+            NAME_MAX,
+        ) if c.scanlist else None,
     })
     d.update({
         DigitalChannel_name_maps[k]: v
