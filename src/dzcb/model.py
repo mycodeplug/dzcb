@@ -121,6 +121,7 @@ class Channel:
         default=False,
         validator=attr.validators.instance_of(bool)
     )
+    scanlist = attr.ib(default=None)
     code = attr.ib(default=None, validator=attr.validators.optional(attr.validators.instance_of(str)))
 
 
@@ -149,7 +150,6 @@ class DigitalChannel(Channel):
     squelch = 0
     color_code = attr.ib(default=1)
     grouplist = attr.ib(default=None)
-    scanlist = attr.ib(default=None)
     talkgroup = attr.ib(default=None, validator=attr.validators.optional(attr.validators.instance_of(Talkgroup)))
     # a list of other static talkgroups, which form the basis of an RX/scan list
     static_talkgroups = attr.ib(factory=list)
@@ -233,6 +233,7 @@ class Codeplug:
         """
         zones = list(self.zones)
         channels = list(self.channels)
+        scanlists = list(self.scanlists)
         for ch in self.channels:
             if not isinstance(ch, DigitalChannel):
                 continue
@@ -240,6 +241,14 @@ class Codeplug:
                 continue
             zone_channels = ch.from_talkgroups(ch.static_talkgroups)
             channel_names = [zc.name for zc in zone_channels]
+            zscanlist = ScanList(
+                name=ch.name,
+                channels=channel_names,
+            )
+            scanlists.append(zscanlist)
+            for ch in zone_channels:
+                if ch.scanlist is None:
+                    ch.scanlist = zscanlist
             zones.append(
                 Zone(
                     name=ch.name,
@@ -252,6 +261,6 @@ class Codeplug:
             contacts=list(self.contacts),
             channels=channels,
             grouplists=list(self.grouplists),
-            scanlists=list(self.scanlists),
+            scanlists=scanlists,
             zones=zones,
         )
