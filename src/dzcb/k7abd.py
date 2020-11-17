@@ -135,6 +135,9 @@ def DigitalRepeaters_from_k7abd_csv(digital_repeaters_csv, talkgroups_by_name):
         _ = r.pop("Comment", None)
         zname, found, code = r.pop("Zone Name").partition(";")
         frequency = float(r.pop("RX Freq"))
+        if not frequency:
+            print("Excluding repeater {} with no frequency".format(zname))
+            continue
         offset = round(float(r.pop("TX Freq")) - frequency, 1)
         color_code = r.pop("Color Code")
         power = r.pop("Power")
@@ -218,5 +221,8 @@ def Codeplug_from_k7abd(input_dir):
         zones.update(DigitalChannels_from_k7abd_csv(p.read_text().splitlines(), all_talkgroups_by_name))
     for p in d.glob("Digital-Repeaters__*.csv"):
         zname = p.name.replace("Digital-Repeaters__", "").replace(".csv", "")
-        zones[zname] = tuple(DigitalRepeaters_from_k7abd_csv(p.read_text().splitlines(), talkgroups[zname]))
+        # merge Talkgroup files, but prefer talkgroup names from this zone
+        tg_csv = all_talkgroups_by_name.copy()
+        tg_csv.update(talkgroups[zname])
+        zones[zname] = tuple(DigitalRepeaters_from_k7abd_csv(p.read_text().splitlines(), tg_csv))
     return Codeplug_from_zone_dicts(zones)
