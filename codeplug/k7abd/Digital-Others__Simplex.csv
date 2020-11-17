@@ -1,0 +1,19 @@
+Zone,Channel Name,Power,RX Freq,TX Freq,Color Code,Talk Group,TimeSlot,Call Type,TX Permit
+Simplex D VHF,SP V01 145.790,High,145.79,145.79,1,Simplex 99,1,Group Call,Always
+Simplex D VHF,SP V02 145.510,High,145.51,145.51,1,Simplex 99,1,Group Call,Always
+Simplex D UHF,SP U01 441.000,High,441,441,1,Simplex 99,1,Group Call,Always
+Simplex D UHF,SP U02 446.5,High,446.5,446.5,1,Simplex 99,1,Group Call,Always
+Simplex D UHF,SP U03 446.075,High,446.075,446.075,1,Simplex 99,1,Group Call,Always
+Simplex D UHF,SP U04 433.45,High,433.45,433.45,1,Simplex 99,1,Group Call,Always
+Simplex D UHF,SP U05 430.4125,Low,430.4125,430.4125,1,Simplex 99,1,Group Call,Always
+Simplex D UHF,SP U06 439.4125,Low,439.4125,439.4125,1,Simplex 99,1,Group Call,Always
+Simplex D UHF,SP U07 430.425,Low,430.425,430.425,1,Simplex 99,1,Group Call,Always
+Simplex D UHF,SP U08 439.425,Low,439.425,439.425,1,Simplex 99,1,Group Call,Always
+Simplex DR UHF,R U09 430.4375,Low,430.4375,439.4375,1,Local 1,1,Group Call,Same Color Code
+Simplex DR UHF,R U10 430.450,Low,430.45,439.45,1,Local 1,1,Group Call,Same Color Code
+Simplex DR UHF,R U11 430.4625,Low,430.4625,439.4625,1,Local 1,1,Group Call,Same Color Code
+Simplex DR UHF,R U12 430.475,Low,430.475,439.475,1,Local 1,1,Group Call,Same Color Code
+Simplex DR UHF,R U09R 430.4375,Low,439.4375,430.4375,1,Local 1,1,Group Call,Same Color Code
+Simplex DR UHF,R U10R 430.450,Low,439.45,430.45,1,Local 1,1,Group Call,Same Color Code
+Simplex DR UHF,R U11R 430.4625,Low,439.4625,430.4625,1,Local 1,1,Group Call,Same Color Code
+Simplex DR UHF,R U12R 430.475,Low,439.475,430.475,1,Local 1,1,Group Call,Same Color Code
