@@ -137,7 +137,7 @@ class AnalogChannel(Channel):
     )
     # configurable squelch for analog
     squelch = attr.ib(
-        default=2,
+        default=1,
         validator=attr.validators.instance_of(int),
         converter=int,
     )
