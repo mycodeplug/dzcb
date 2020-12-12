@@ -20,11 +20,11 @@ REPEATERBOOK_LOGIN = (
 )
 REPEATERBOOK_EXPORT = (
     "https://www.repeaterbook.com/repeaters/downloads/csv/index.php?"
-    "func=proxX&features%5B0%5D=FM&"
+    "func=prox&features%5B0%5D=FM&"
     "lat={lat}&long={lon}&"
     "distance={distance}&Dunit={dunit}&"
     "band1={band1}&band2={band2}&"
-    "call=&use=OPEN&status_id=1&order=distance_calc,%20`call`%20ASC"
+    "call=&use=OPEN&status_id=1&order=distance_calc,%20state_id,%20`call`%20ASC"
 )
 
 
@@ -72,6 +72,7 @@ def proximity_zones(proximity_zones_csv):
         name = zone.pop("name")
         slug = name.replace(" ", "-").replace(",", "")
         url = REPEATERBOOK_EXPORT.format(**zone)
+        print(url)
         md5urlhash = hashlib.md5(url.encode("utf-8")).hexdigest()
         filename = "{}_{}.csv".format(slug, md5urlhash)
         yield (name, slug, url, filename)
