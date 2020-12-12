@@ -18,6 +18,24 @@ value_replacements = {
     True: "Yes",
 }
 
+
+def filter_zones(zones, order=None):
+    if order is None:
+        order=[
+            # XXX: for the quick of it quick of it
+            "PNWDigital",
+            "Hotspot",
+            "Local",
+            "SeattleDMR",
+            "Longview WA VHF 35mi",
+            "Longview WA UHF 35mi",
+            "Simplex A VHF",
+            "Simplex A UHF",
+            "Simplex D VHF",
+            "Simplex D UHF",
+        ]
+    return dzcb.munge.ordered(zones, order, key=lambda z: z.name)
+
 def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
     # Channels.csv, Contacts.csv, TG_List.csv, Zones.csv
     with open("{}/Contacts.csv".format(output_dir), "w") as f:
@@ -82,10 +100,10 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
                     "Channel Number": ix + 1,
                     "Channel Name": dzcb.munge.channel_name(channel.name, NAME_MAX),
                     "Rx Frequency": channel.frequency,
-                    "Tx Frequency": channel.frequency + channel.offset,
+                    "Tx Frequency": round(channel.frequency + channel.offset, 5),
                     "Timeslot": 1,
                     "Power": str(channel.power),
-                    "Bandwidth": str(channel.bandwidth) + "KHz",
+                    "Bandwidth": "25KHz" if channel.bandwidth == 25 else "12.5KHz",
                     "Squelch": str(channel.squelch) if channel.squelch else "Disabled",
                     "Rx Only": value_replacements[channel.rx_only],
                     "Zone Skip": "No",
@@ -116,7 +134,7 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
     with open("{}/Zones.csv".format(output_dir), "w") as f:
         csvw = csv.DictWriter(f, zone_fields, delimiter=";")
         csvw.writeheader()
-        for zone in cp.zones:
+        for zone in filter_zones(cp.zones):
             row = {"Zone Name": zone.name}
             for ix, ch in enumerate(zone.unique_channels):
                 if ix + 1 > 80:
