@@ -9,7 +9,7 @@ from zipfile import ZipFile
 
 import requests
 
-PNWDIGITAL_REPEATERS = "http://www.pnwdigital.net/sv/PNW_Digital_Repeaters.zip"
+PNWDIGITAL_REPEATERS = "http://www.pnwdigital.net/files/acb/PNW_Digital_Repeaters.zip"
 REPEATER_FILENAME = "Digital-Repeaters__PNWDigital.csv"
 TALKGROUPS_FILENAME = "Talkgroups__PNWDigital.csv"
 
