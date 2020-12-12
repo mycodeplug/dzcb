@@ -138,6 +138,9 @@ def DigitalRepeaters_from_k7abd_csv(digital_repeaters_csv, talkgroups_by_name):
         if not frequency:
             print("Excluding repeater {} with no frequency".format(zname))
             continue
+        if 148 < frequency < 430:
+            print("XXX: Excluding repeater {} with frequency {}".format(zname, frequency))
+            continue
         offset = round(float(r.pop("TX Freq")) - frequency, 1)
         color_code = r.pop("Color Code")
         power = r.pop("Power")
