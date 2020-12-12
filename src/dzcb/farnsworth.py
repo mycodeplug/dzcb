@@ -145,6 +145,7 @@ def AnalogChannel_to_dict(c):
             d["CtcssDecode"] += "N"
     else:
         d["CtcssDecode"] = "None"
+    d["Bandwidth"] = d["Bandwidth"].replace(".0", "")
     return d
 
 
@@ -209,6 +210,23 @@ def Zone_to_dict(z):
     }
 
 
+def filter_zones(zones, order=None):
+    if order is None:
+        order=[
+            # XXX: for the quick of it quick of it
+            "Longview/Rainier",
+            "DPHS Static",
+            "DPHS Wide",
+            "Longview WA VHF 35mi",
+            "Longview WA UHF 35mi",
+            "Simplex A VHF",
+            "Simplex A UHF",
+            "Simplex D VHF",
+            "Simplex D UHF",
+        ]
+    return dzcb.munge.ordered(zones, order, key=lambda z: z.name)
+
+
 def Codeplug_to_json(cp, based_on=None):
     cp_dict = {}
     if based_on is not None:
@@ -219,7 +237,7 @@ def Codeplug_to_json(cp, based_on=None):
             Channels=[Channel_to_dict(c) for c in cp.channels],
             GroupLists=[GroupList_to_dict(c) for c in cp.grouplists],
             ScanLists=[ScanList_to_dict(c) for c in cp.scanlists],
-            Zones=[Zone_to_dict(c) for c in cp.zones],
+            Zones=[Zone_to_dict(c) for c in filter_zones(cp.zones)],
         )
     )
     return json.dumps(cp_dict, indent=2)
