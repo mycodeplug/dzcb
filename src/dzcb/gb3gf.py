@@ -9,7 +9,7 @@ from dzcb.model import AnalogChannel, DigitalChannel
 import dzcb.munge
 
 # These talkgroups are removed until the TG list is 32 channels or less
-TALKGROUP_LIST_OVERFLOW = ["Michigan 1", "Ontario 2" "PS1-DNU", "PS2-DNU", "SNARS 1~2", "USA 2", "Worldwide 2", "TAC Eng 123", "WW English 2"]
+TALKGROUP_LIST_OVERFLOW = ["Michigan 1", "Ontario 2", "PS1-DNU", "PS2-DNU", "SNARS 1~2", "USA 2", "Worldwide 2", "TAC Eng 123", "WW English 2", "SoCal 2", "Audio Test 2"]
 NAME_MAX = 16
 
 value_replacements = {
