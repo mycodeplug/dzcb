@@ -145,7 +145,7 @@ def AnalogChannel_to_dict(c):
             d["CtcssDecode"] += "N"
     else:
         d["CtcssDecode"] = "None"
-    d["Bandwidth"] = d["Bandwidth"].replace(".0", "")
+    d["Bandwidth"] = str(round(d["Bandwidth"], 1)).replace(".0", "")
     return d
 
 
