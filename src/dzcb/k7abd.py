@@ -105,6 +105,7 @@ def Analog_from_csv(analog_repeaters_csv):
         frequency = float(r["RX Freq"])
         offset = round(float(r["TX Freq"]) - frequency, 1)
         power = r["Power"]
+        bandwidth = r["Bandwidth"].rstrip("K")
         tone_encode = r["CTCSS Decode"] if r["CTCSS Decode"] != "Off" else None
         tone_decode = r["CTCSS Encode"] if r["CTCSS Encode"] != "Off" else None
         zones.setdefault(zname, []).append(
@@ -116,6 +117,7 @@ def Analog_from_csv(analog_repeaters_csv):
                 tone_encode=tone_encode,
                 tone_decode=tone_decode,
                 power=power,
+                bandwidth=bandwidth,
             )
         )
     return zones
