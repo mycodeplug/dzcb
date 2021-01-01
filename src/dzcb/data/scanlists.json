@@ -1,26 +1,4 @@
 {
-    "Poplar Scan": [
-        "Longview/Rainier",
-        "DPHS Static",
-        "DPHS Wide",
-        "W7DG Longview ",
-        "N7EI Deer Island",
-        "W7BU Astoria Nic",
-        "W7BU Astoria Wic",
-        "K7RPT Astoria Wi",
-        "KJ7IY Timber ",
-        "WA7UHD Chehalis ",
-        "N3EG Longview Co",
-        "AB7F Longview ",
-        "W7OTV Colton Goa",
-        "SP U01 441.000",
-        "SP U02 446.5",
-        "SP V01 145.790",
-        "SP V02 145.510",
-        "GMRS 1 (15)",
-        "GMRS 4 (18)",
-        "FM 146.52"
-    ],
     "Simplex Scan": [
         "SP U01 441.000",
         "SP U02 446.5",
