@@ -228,7 +228,7 @@ class ScanList:
     def from_names(cls, name, channel_names):
         channels = []
         for cn in channel_names:
-            channel = Channel._all_channels.get(cn)
+            channel = Channel._short_names.get(cn, Channel._all_channels.get(cn))
             if channel is None:
                 print(
                     "ScanList {!r} references unknown channel {!r}, ignoring".format(
@@ -299,6 +299,13 @@ class Codeplug:
     grouplists = attr.ib(factory=list)
     scanlists = attr.ib(factory=list)
     zones = attr.ib(factory=list)
+
+    def __attrs_post_init__(self):
+        # prune any channels which are not in a zone
+        all_channels = []
+        for z in self.zones:
+            all_channels.extend(z.unique_channels)
+        self.channels = [ch for ch in self.channels if ch in all_channels]
 
     def order_zones(self, zone_order=None, exclude_zones=None):
         if zone_order is None:
