@@ -1,4 +1,5 @@
 import json
+import time
 
 import attr
 
@@ -47,22 +48,19 @@ def GroupList_to_dict(g):
 def ScanList_to_dict(s):
     return dict(
         Name=dzcb.munge.zone_name(s.name, NAME_MAX),
-        Channel=[
-            dzcb.munge.channel_name(ch, NAME_MAX)
-            for ch in s.channels
-        ],
+        Channel=[ch.short_name for ch in s.channels],
         # Default settings
         PriorityChannel1="Selected",
-        PriorityChannel2="Selected",
-        PrioritySampleTime="750",
-        SignallingHoldTime="500",
-        TxDesignatedChannel="Selected",
+        PriorityChannel2="None",
+        PrioritySampleTime="2000",
+        SignallingHoldTime="200",
+        TxDesignatedChannel="Last Active Channel",
     )
 
 
 DefaultChannel = dict(
     AdmitCriteria="Color code",
-    AllowTalkaround=True,
+    AllowTalkaround=False,
     Autoscan=False,
     ColorCode=1,
     ContactName=None,
@@ -100,7 +98,7 @@ DefaultChannel = dict(
     SendGPSInfo=False,
     Squelch=0,
     Talkaround=False,
-    Tot=90,
+    Tot=120,
     TotRekeyDelay=0,
     TxRefFrequency="Medium",
     TxSignallingSystem=False,
@@ -124,17 +122,14 @@ def AnalogChannel_to_dict(c):
     d = DefaultChannel.copy()
     d.update({
         "ChannelMode": "Analog",
-        "ScanList": dzcb.munge.zone_name(
-            str(c.scanlist.name),
-            NAME_MAX,
-        ) if c.scanlist else None,
+        "ScanList": dzcb.munge.zone_name(c.scanlist, NAME_MAX)
     })
     d.update({
         AnalogChannel_name_maps[k]: v
         for k, v in attr.asdict(c).items()
         if k in attr.fields_dict(AnalogChannel) and k in AnalogChannel_name_maps
     })
-    d["Name"] = dzcb.munge.channel_name(d["Name"], NAME_MAX)
+    d["Name"] = c.short_name
     if d["CtcssEncode"]:
         if d["CtcssEncode"].startswith("D"):
             d["CtcssEncode"] += "N"
@@ -167,17 +162,14 @@ def DigitalChannel_to_dict(c):
         "RepeaterSlot": str(c.talkgroup.timeslot) if c.talkgroup else 1,
         "ContactName": str(c.talkgroup.name) if c.talkgroup else "Parrot 1",
         "GroupList": str(c.grouplist.name) if c.grouplist else None,
-        "ScanList": dzcb.munge.zone_name(
-            str(c.scanlist.name),
-            NAME_MAX,
-        ) if c.scanlist else None,
+        "ScanList": dzcb.munge.zone_name(c.scanlist, NAME_MAX)
     })
     d.update({
         DigitalChannel_name_maps[k]: v
         for k, v in attr.asdict(c).items()
         if k in attr.fields_dict(DigitalChannel) and k in DigitalChannel_name_maps
     })
-    d["Name"] = dzcb.munge.channel_name(d["Name"], NAME_MAX)
+    d["Name"] = c.short_name
     return d
 
 
@@ -205,39 +197,35 @@ def Channel_to_dict(c):
 def Zone_to_dict(z):
     return {
         "Name": dzcb.munge.zone_name(z.name, NAME_MAX),
-        "ChannelA": [dzcb.munge.channel_name(ch, NAME_MAX) for ch in z.channels_a],
-        "ChannelB": [dzcb.munge.channel_name(ch, NAME_MAX) for ch in z.channels_b],
+        "ChannelA": [ch.short_name for ch in z.channels_a],
+        "ChannelB": [ch.short_name for ch in z.channels_b],
     }
-
-
-def filter_zones(zones, order=None):
-    if order is None:
-        order=[
-            # XXX: for the quick of it quick of it
-            "Longview/Rainier",
-            "DPHS Static",
-            "DPHS Wide",
-            "Longview WA VHF 35mi",
-            "Longview WA UHF 35mi",
-            "Simplex A VHF",
-            "Simplex A UHF",
-            "Simplex D VHF",
-            "Simplex D UHF",
-        ]
-    return dzcb.munge.ordered(zones, order, key=lambda z: z.name)
 
 
 def Codeplug_to_json(cp, based_on=None):
     cp_dict = {}
     if based_on is not None:
         cp_dict = json.load(based_on)
+    # determine supported frequency range from BasicInformation
+    ranges = []
+    basic_info = cp_dict.get("BasicInformation", {})
+    if "LowFrequency" in basic_info:
+        ranges.append((basic_info["LowFrequency"], basic_info["HighFrequency"]))
+    elif "LowFrequencyA" in basic_info:
+        ranges.append((basic_info["LowFrequencyA"], basic_info["HighFrequencyA"]))
+        ranges.append((basic_info["LowFrequencyB"], basic_info["HighFrequencyB"]))
+    if ranges:
+        cp = cp.filter_frequency_range(*ranges)
     cp_dict.update(
         dict(
             Contacts=[Contact_to_dict(c) for c in cp.contacts],
             Channels=[Channel_to_dict(c) for c in cp.channels],
             GroupLists=[GroupList_to_dict(c) for c in cp.grouplists],
             ScanLists=[ScanList_to_dict(c) for c in cp.scanlists],
-            Zones=[Zone_to_dict(c) for c in filter_zones(cp.zones)],
+            Zones=[Zone_to_dict(c) for c in cp.zones],
         )
     )
+    # Set the programming date in intro text
+    general_settings = cp_dict.setdefault("GeneralSettings", {})
+    general_settings["IntroScreenLine1"] = time.strftime("%Y-%m-%d")
     return json.dumps(cp_dict, indent=2)

@@ -44,8 +44,10 @@ def filter_zones(zones, order=None):
     return dzcb.munge.ordered(zones, order, key=lambda z: z.name)
 
 def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
+    # filter down to supported frequency ranges
+    cp = cp.filter_frequency_range((136.0, 174.0), (400.0, 480.0))
     # Channels.csv, Contacts.csv, TG_List.csv, Zones.csv
-    with open("{}/Contacts.csv".format(output_dir), "w") as f:
+    with open("{}/Contacts.csv".format(output_dir), "w", newline='') as f:
         csvw = csv.DictWriter(
             f, ["Contact Name", "ID", "ID Type", "TS Override"], delimiter=";"
         )
@@ -80,7 +82,7 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
         "TOT",
         "VOX",
     ]
-    with open("{}/Channels.csv".format(output_dir), "w") as f:
+    with open("{}/Channels.csv".format(output_dir), "w", newline='') as f:
         csvw = csv.DictWriter(f, channel_fields, delimiter=";")
         csvw.writeheader()
         for ix, channel in enumerate(cp.channels):
@@ -105,7 +107,7 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
             d.update(
                 {
                     "Channel Number": ix + 1,
-                    "Channel Name": dzcb.munge.channel_name(channel.name, NAME_MAX),
+                    "Channel Name": channel.short_name,
                     "Rx Frequency": channel.frequency,
                     "Tx Frequency": round(channel.frequency + channel.offset, 5),
                     "Timeslot": 1,
@@ -121,7 +123,7 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
             )
             csvw.writerow(d)
     tg_fields = ["TG List Name"] + ["Contact {}".format(x) for x in range(1, 33)]
-    with open("{}/TG_Lists.csv".format(output_dir), "w") as f:
+    with open("{}/TG_Lists.csv".format(output_dir), "w", newline='') as f:
         csvw = csv.DictWriter(f, tg_fields, delimiter=";")
         csvw.writeheader()
         n_grouplists = len(cp.grouplists)
@@ -142,17 +144,19 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
                 tg_list["Contact {}".format(ix + 1)] = tg
             csvw.writerow(tg_list)
     zone_fields = ["Zone Name"] + ["Channel {}".format(x) for x in range(1, 81)]
-    with open("{}/Zones.csv".format(output_dir), "w") as f:
+    with open("{}/Zones.csv".format(output_dir), "w", newline='') as f:
         csvw = csv.DictWriter(f, zone_fields, delimiter=";")
         csvw.writeheader()
-        # XXX: Make this more general
-        f.write(POPLAR_SCAN)
-        for zone in filter_zones(cp.zones):
+        zone_names = [z.name for z in cp.zones]
+        # OpenGD77 doesn't have scanlist, so simulate it with separate zones
+        write_zones = [sl for sl in cp.scanlists if sl.name not in zone_names]
+        write_zones.extend(cp.zones)
+        for zone in write_zones:
             row = {"Zone Name": zone.name}
             for ix, ch in enumerate(zone.unique_channels):
                 if ix + 1 > 80:
                     print("Zone {} exceeds 80 channels".format(zone.name))
                     break
-                row["Channel {}".format(ix + 1)] = dzcb.munge.channel_name(ch, NAME_MAX)
+                row["Channel {}".format(ix + 1)] = ch.short_name
             csvw.writerow(row)
 

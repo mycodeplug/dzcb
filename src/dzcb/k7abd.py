@@ -24,6 +24,8 @@ import csv
 from pathlib import Path
 import os
 
+import attr
+
 from dzcb.model import AnalogChannel, Codeplug, Contact, DigitalChannel, GroupList, ScanList, Talkgroup, Zone
 
 
@@ -52,37 +54,37 @@ def Codeplug_from_zone_dicts(zone_dicts):
 
     def update_static_talkgroups(ch):
         contacts.update(ch.static_talkgroups)
-        ch.grouplist = GroupList(
+        grouplist = GroupList(
             name="{} TGS".format(ch.code),
             contacts=[tg.name for tg in ch.static_talkgroups],
         )
-        grouplists.append(ch.grouplist)
+        grouplists.append(grouplist)
+        return attr.evolve(ch, grouplist=grouplist)
 
     all_channels = {}
     for zname, zchannels in zone_dicts.items():
-        channel_names = []
+        updated_channels = []
         for ch in zchannels:
             if isinstance(ch, DigitalChannel):
                 if ch.static_talkgroups:
-                    update_static_talkgroups(ch)
+                    ch = update_static_talkgroups(ch)
                 if ch.talkgroup:
                     contacts.add(ch.talkgroup)
-            if ch.name not in all_channels:
-                all_channels[ch.name] = ch
-            channel_names.append(ch.name)
+            if ch.scanlist is None:
+                ch = attr.evolve(ch, scanlist=zname)
+            if ch.short_name not in all_channels:
+                all_channels[ch.short_name] = ch
+            updated_channels.append(ch)
         zscanlist = ScanList(
             name=zname,
-            channels=channel_names,
+            channels=updated_channels,
         )
         scanlists.append(zscanlist)
-        for ch in zchannels:
-            if ch.scanlist is None:
-                ch.scanlist = zscanlist
         zones.append(
             Zone(
                 name=zname,
-                channels_a=channel_names,
-                channels_b=channel_names,
+                channels_a=updated_channels,
+                channels_b=updated_channels,
             )
         )
     channels.extend(all_channels.values())
@@ -139,9 +141,6 @@ def DigitalRepeaters_from_k7abd_csv(digital_repeaters_csv, talkgroups_by_name):
         frequency = float(r.pop("RX Freq"))
         if not frequency:
             print("Excluding repeater {} with no frequency".format(zname))
-            continue
-        if 148 < frequency < 430:
-            print("XXX: Excluding repeater {} with frequency {}".format(zname, frequency))
             continue
         offset = round(float(r.pop("TX Freq")) - frequency, 1)
         color_code = r.pop("Color Code")
