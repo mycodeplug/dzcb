@@ -1,0 +1,73 @@
+{
+    "zone": {
+        "default": [
+            "PNWDigital",
+            "Hotspot",
+            "Local",
+            "SeattleDMR",
+            "Longview WA VHF 35mi",
+            "Longview WA UHF 35mi",
+            "Simplex A VHF",
+            "Simplex A UHF",
+            "Simplex D VHF",
+            "Simplex D UHF"
+        ],
+        "expanded": [
+            "Longview/Rainier",
+            "DPHS Static",
+            "DPHS Wide",
+            "Longview WA VHF 35mi",
+            "Longview WA UHF 35mi",
+            "Simplex A VHF",
+            "Simplex A UHF",
+            "Simplex D VHF",
+            "Simplex D UHF"
+        ],
+        "exclude_expanded": [
+            "PNWDigital",
+            "Hotspot",
+            "Local",
+            "SeattleDMR",
+            "MM/Peter 430",
+            "MM/Otis 430",
+            "MM/Bridget 430",
+            "MM/Suzy 430",
+            "MM/RexX 2Slot",
+            "MM/Wes 430",
+            "Biggs/Juniper Pt",
+            "Bordmn/GolG",
+            "Bremerton/Gold",
+            "Coeur d'Alene",
+            "IssaquahTiger",
+            "Lewiston ID",
+            "Newberg/MtnTopRd",
+            "Poteros/Goat Mtn",
+            "Prineville/Town",
+            "Saint Maries ID",
+            "Sultan/Haystack",
+            "BC:Whisler/Black",
+            "BC:NewWstmnstr",
+            "BC:Vancouver/Sey",
+            "BC:Squamish",
+            "BC:W.Vancvr/Ambl",
+            "Tacoma/Ruston",
+            "Tulalip/Tulalip",
+            "Gresham/Hospital",
+            "BM Port Townsend",
+            "CC Port Angeles",
+            "CC Sequim",
+            "Sequim KC7EQO",
+            "BM Ferndale",
+            "BM Scappoose"
+        ]
+    },
+    "static_talkgroup": [
+        "Oregon 1",
+        "Washington 1",
+        "Washington 2",
+        "Cascades 1",
+        "Local 1",
+        "Local 2",
+        "Parrot 1"
+    ]
+}

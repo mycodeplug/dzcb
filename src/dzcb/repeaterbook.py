@@ -92,7 +92,7 @@ def zones_to_k7abd(input_csv, input_dir, output_dir):
     for name, slug, url, filename in proximity_zones(input_csv):
         in_file = Path(input_dir) / filename
         out_file = Path(output_dir) / "Analog__{}.csv".format(slug)
-        with open(in_file, "r") as inp, open(out_file, "w") as out:
+        with open(in_file, "r") as inp, open(out_file, "w", newline='') as out:
             csvr = csv.DictReader(inp)
             csvw = csv.DictWriter(
                 out,

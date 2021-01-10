@@ -38,3 +38,24 @@ def channel_name(ch_name, max_length):
 
 def zone_name(zone_name, max_length):
     return zone_name[:max_length]
+
+
+def ordered(seq, order, key=None):
+    NotFound = object()
+    head = [NotFound] * len(order)
+    tail = []
+    for item in seq:
+        k = key(item) if key else item
+        try:
+            head[order.index(k)] = item
+        except ValueError:
+            tail.append(item)
+    if NotFound in head:
+        # XXX: print? really?
+        print(
+            "Items were not in the sequence to be ordered: {}".format(
+                [order[ix] for ix, item in enumerate(head) if item is NotFound]
+            )
+        )
+        head = [item for item in head if item is not NotFound]
+    return head + tail
