@@ -36,6 +36,7 @@ jobs:
         path: $OUTPUT
   upload:
     if: ${{ github.event_name == 'release' }}
+    needs: build
     runs-on: ubuntu-20.04
     steps:
     - name: Download Codeplugs
