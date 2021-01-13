@@ -6,6 +6,6 @@ python -m dzcb \
     --pnwdigital \
     --seattledmr \
     --default-k7abd \
-    --scanlists-json $DIR/scanlists.json
+    --scanlists-json $DIR/scanlists.json \
     --order-json $DIR/order.json \
 $OUTPUT/default

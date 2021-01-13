@@ -8,7 +8,7 @@ python -m dzcb \
     --default-k7abd \
     --repeaterbook-proximity-csv $DIR/prox.sh \
     --k7abd $DIR/k7abd \
-    --scanlists-json $DIR/scanlists.json
+    --scanlists-json $DIR/scanlists.json \
     --order-json $DIR/order.json \
     --farnsworth-template-json $DIR/md-uv380.json \
 $OUTPUT/kf7hvm
