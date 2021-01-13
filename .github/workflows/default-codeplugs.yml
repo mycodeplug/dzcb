@@ -5,9 +5,10 @@ on:
   release:
     types: [published]
 
+env:
+  OUTPUT: default-codeplug
 jobs:
   build:
-
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
@@ -29,25 +30,31 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: default-codeplug
-        path: OUTPUT
+        path: $OUTPUT
+jobs:
+  upload:
+    if: ${{ github.event_name == 'release' }}
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Download Codeplugs
+      uses: actions/download-artifact@v2
+      with:
+        name: default-codeplug
+    - name: Create release ZIP
+      run: |
+        cd "$OUTPUT" && zip -r "$GITHUB_WORKSPACE/default-codeplug.zip" .
     - name: Get release
       id: get_release
-      if: ${{ github.event_name == 'release' }}
       uses: bruceadams/get-release@v1.2.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Create release ZIP
-      if: ${{ github.event_name == 'release' }}
-      run: |
-        zip -r default-codeplug.zip OUTPUT/*
     - name: Upload artifact to release
       id: upload-release-asset 
-      if: ${{ github.event_name == 'release' }}
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ./default-codeplug.zip
+        asset_path: $GITHUB_WORKSPACE/default-codeplug.zip
         asset_name: default-codeplug.zip
         asset_content_type: application/zip
