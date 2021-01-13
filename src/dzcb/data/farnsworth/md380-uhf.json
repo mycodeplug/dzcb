@@ -173,7 +173,7 @@
 		"PwAndLockEnable": "Off",
 		"RadioID": "1234",
 		"RadioName": "",
-		"RadioProgPassword": "00000000",
+		"RadioProgPassword": "",
 		"RxLowBatteryInterval": "120",
 		"SaveModeReceive": "On",
 		"SavePreamble": "On",
