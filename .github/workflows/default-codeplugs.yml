@@ -38,6 +38,8 @@ jobs:
     if: ${{ github.event_name == 'release' }}
     needs: build
     runs-on: ubuntu-20.04
+    env:
+      ASSET_PATH: /tmp/default-codeplug.zip
     steps:
     - name: Download Codeplugs
       uses: actions/download-artifact@v2
@@ -46,7 +48,7 @@ jobs:
         path: ${{ env.OUTPUT }}
     - name: Create release ZIP
       run: |
-        cd "$OUTPUT" && zip -r "$GITHUB_WORKSPACE/default-codeplug.zip" .
+        cd "${{ env.OUTPUT }}" && zip -r "${{ env.ASSET_PATH }}"
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.2
@@ -59,6 +61,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ${{ env.GITHUB_WORKSPACE }}/default-codeplug.zip
+        asset_path: ${{ env.ASSET_PATH }}
         asset_name: default-codeplug.zip
         asset_content_type: application/zip
