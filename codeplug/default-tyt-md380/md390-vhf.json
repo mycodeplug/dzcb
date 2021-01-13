@@ -3,9 +3,9 @@
 		"CpsVersion": "0134",
 		"FrequencyRange": "136-174",
 		"HighFrequency": "174.00000",
-		"LastProgrammedTime": "31-Dec-2020 14:41:05",
+		"LastProgrammedTime": "31-Dec-2020 14:41:12",
 		"LowFrequency": "136.00000",
-		"Model": "DR780"
+		"Model": "MD390"
 	},
 	"ButtonDefinitions": {
 		"LongPressDuration": "1000"
@@ -173,7 +173,7 @@
 		"PwAndLockEnable": "Off",
 		"RadioID": "1234",
 		"RadioName": "",
-		"RadioProgPassword": "00000000",
+		"RadioProgPassword": "",
 		"RxLowBatteryInterval": "120",
 		"SaveModeReceive": "On",
 		"SavePreamble": "On",
@@ -199,7 +199,7 @@
 		"DisplayMode": "On",
 		"Edit": "On",
 		"EditList": "On",
-		"Gps": "Off",
+		"Gps": "On",
 		"HangTime": "30",
 		"IntroScreen": "On",
 		"KeyboardLock": "On",

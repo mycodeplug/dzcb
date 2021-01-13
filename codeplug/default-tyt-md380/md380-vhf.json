@@ -1,11 +1,11 @@
 {
 	"BasicInformation": {
 		"CpsVersion": "0134",
-		"FrequencyRange": "400-480",
-		"HighFrequency": "480.00000",
-		"LastProgrammedTime": "31-Dec-2020 14:57:41",
-		"LowFrequency": "400.00000",
-		"Model": "MD390"
+		"FrequencyRange": "136-174",
+		"HighFrequency": "174.00000",
+		"LastProgrammedTime": "31-Dec-2020 14:41:05",
+		"LowFrequency": "136.00000",
+		"Model": "DR780"
 	},
 	"ButtonDefinitions": {
 		"LongPressDuration": "1000"
@@ -47,7 +47,7 @@
 			"ReceiveGPSInfo": "Off",
 			"RepeaterSlot": "1",
 			"ReverseBurst": "On",
-			"RxFrequency": "400.00000",
+			"RxFrequency": "136.00000",
 			"RxOnly": "Off",
 			"RxRefFrequency": "Low",
 			"RxSignallingSystem": "Off",
@@ -173,7 +173,7 @@
 		"PwAndLockEnable": "Off",
 		"RadioID": "1234",
 		"RadioName": "",
-		"RadioProgPassword": "00000000",
+		"RadioProgPassword": "",
 		"RxLowBatteryInterval": "120",
 		"SaveModeReceive": "On",
 		"SavePreamble": "On",
@@ -199,7 +199,7 @@
 		"DisplayMode": "On",
 		"Edit": "On",
 		"EditList": "On",
-		"Gps": "On",
+		"Gps": "Off",
 		"HangTime": "30",
 		"IntroScreen": "On",
 		"KeyboardLock": "On",
@@ -220,7 +220,7 @@
 		"Talkaround": "Off",
 		"TextMessage": "On",
 		"ToneOrAlert": "On",
-		"Vox": "Off"
+		"Vox": "On"
 	},
 	"NumberKey": [
 		{

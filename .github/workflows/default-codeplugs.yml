@@ -1,0 +1,68 @@
+name: Default Codeplugs
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  release:
+    types: [published]
+
+env:
+  OUTPUT: /tmp/default-codeplug
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install .
+    - name: Build Codeplugs
+      env:
+        REPEATERBOOK_USER: ${{ secrets.REPEATERBOOK_USER }}
+        REPEATERBOOK_PASSWD: ${{ secrets.REPEATERBOOK_PASSWD }}
+      run: |
+        find ./codeplug -name 'generate.sh' -exec /bin/bash {} \;
+    - name: Archive Codeplugs
+      uses: actions/upload-artifact@v2
+      with:
+        name: default-codeplug
+        path: ${{ env.OUTPUT }}
+  upload:
+    if: ${{ github.event_name == 'release' }}
+    needs: build
+    runs-on: ubuntu-20.04
+    env:
+      ASSET_PATH: /tmp/default-codeplug.zip
+    steps:
+    - name: Download Codeplugs
+      uses: actions/download-artifact@v2
+      with:
+        name: default-codeplug
+        path: ${{ env.OUTPUT }}
+    - name: Create release ZIP
+      run: |
+        cd "${{ env.OUTPUT }}" && zip -r "${{ env.ASSET_PATH }}" .
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload artifact to release
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: ${{ env.ASSET_PATH }}
+        asset_name: default-codeplug.zip
+        asset_content_type: application/zip

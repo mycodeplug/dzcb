@@ -191,7 +191,7 @@
 		"RadioID2": "2",
 		"RadioID3": "3",
 		"RadioName": "",
-		"RadioProgPassword": "00000000",
+		"RadioProgPassword": "",
 		"RxLowBatteryInterval": "120",
 		"SaveModeReceive": "On",
 		"SavePreamble": "On",

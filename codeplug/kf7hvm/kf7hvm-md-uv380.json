@@ -1,11 +1,14 @@
 {
 	"BasicInformation": {
-		"CpsVersion": "0134",
-		"FrequencyRange": "400-480",
-		"HighFrequency": "480.00000",
-		"LastProgrammedTime": "31-Dec-2020 14:57:01",
-		"LowFrequency": "400.00000",
-		"Model": "DR780"
+		"CpsVersion": "0103",
+		"FrequencyRangeA": "136-174",
+		"FrequencyRangeB": "400-480",
+		"HighFrequencyA": "174.00000",
+		"HighFrequencyB": "480.00000",
+		"LastProgrammedTime": "13-Jan-2021 05:48:52",
+		"LowFrequencyA": "136.00000",
+		"LowFrequencyB": "400.00000",
+		"Model": "MD-UV380"
 	},
 	"ButtonDefinitions": {
 		"LongPressDuration": "1000"
@@ -18,10 +21,10 @@
 			"Bandwidth": "12.5",
 			"ChannelMode": "Digital",
 			"ColorCode": "1",
-			"CompressedUdpDataHeader": "On",
 			"ContactName": "None",
 			"CtcssDecode": "None",
 			"CtcssEncode": "None",
+			"DCDMSwitch": "Off",
 			"DataCallConfirmed": "Off",
 			"Decode1": "Off",
 			"Decode2": "Off",
@@ -37,6 +40,7 @@
 			"GPSSystem": "None",
 			"GroupList": "None",
 			"InCallCriteria": "Always",
+			"LeaderMS": "Off",
 			"LoneWorker": "Off",
 			"Name": "Channel1",
 			"Power": "High",
@@ -47,13 +51,13 @@
 			"ReceiveGPSInfo": "Off",
 			"RepeaterSlot": "1",
 			"ReverseBurst": "On",
-			"RxFrequency": "400.00000",
+			"RxFrequency": "136.00000",
 			"RxOnly": "Off",
 			"RxRefFrequency": "Low",
 			"RxSignallingSystem": "Off",
 			"ScanList": "None",
 			"SendGPSInfo": "Off",
-			"Squelch": "Normal",
+			"Squelch": "1",
 			"Talkaround": "Off",
 			"Tot": "60",
 			"TotRekeyDelay": "0",
@@ -155,25 +159,39 @@
 	],
 	"GeneralSettings": {
 		"BacklightTime": "15",
+		"CHVoiceAnnouncement": "Off",
 		"CallAlertToneDuration": "Continue",
 		"ChFreeIndicationTone": "Off",
+		"ChannelsHangTime": "3000",
 		"DisableAllLeds": "Off",
-		"DisableAllTones": "Off",
+		"DisableAllTones": "On",
+		"EditRadioID": "On",
+		"EnableContactsCSV": "On",
+		"FreqChannelMode": "Channel",
 		"GroupCallHangTime": "3000",
+		"GroupCallMatch": "On",
 		"IntroScreen": "Character String",
 		"IntroScreenLine1": "2021/01/01",
 		"IntroScreenLine2": "PNWDigital",
 		"KeypadTones": "Off",
 		"LoneWorkerReminderTime": "10",
 		"LoneWorkerResponseTime": "1",
+		"MicLevel": "3",
+		"ModeSelectA": "Memory",
+		"ModeSelectB": "Memory",
 		"MonitorType": "Open Squelch",
 		"PcProgPassword": "",
 		"PowerOnPassword": "00000000",
 		"PrivateCallHangTime": "4000",
+		"PrivateCallMatch": "On",
+		"PublicZone": "On",
 		"PwAndLockEnable": "Off",
-		"RadioID": "1234",
-		"RadioName": "",
-		"RadioProgPassword": "00000000",
+		"RadioID": "3171501",
+		"RadioID1": "1",
+		"RadioID2": "2",
+		"RadioID3": "3",
+		"RadioName": "KF7HVM",
+		"RadioProgPassword": "",
 		"RxLowBatteryInterval": "120",
 		"SaveModeReceive": "On",
 		"SavePreamble": "On",
@@ -181,6 +199,8 @@
 		"ScanDigitalHangTime": "5000",
 		"SetKeypadLockTime": "Manual",
 		"TalkPermitTone": "None",
+		"TimeZone": "UTC-8:00",
+		"TxMode": "Designated CH + Hand CH",
 		"TxPreambleDuration": "300",
 		"VoxSensitivity": "3"
 	},
@@ -220,7 +240,7 @@
 		"Talkaround": "Off",
 		"TextMessage": "On",
 		"ToneOrAlert": "On",
-		"Vox": "Off"
+		"Vox": "On"
 	},
 	"NumberKey": [
 		{
@@ -336,16 +356,16 @@
 	},
 	"RadioButtons": [
 		{
-			"Button": "Unassigned (default)"
+			"Button": "Monitor"
 		},
 		{
 			"Button": "Unassigned (default)"
 		},
 		{
-			"Button": "Unassigned (default)"
+			"Button": "Nuisance Delete"
 		},
 		{
-			"Button": "Unassigned (default)"
+			"Button": "Scan On/Off"
 		}
 	],
 	"ScanLists": [
@@ -368,9 +388,10 @@
 	],
 	"Zones": [
 		{
-			"Channel": [
+			"ChannelA": [
 				"Channel1"
 			],
+			"ChannelB": [],
 			"Name": "Zone1"
 		}
 	]

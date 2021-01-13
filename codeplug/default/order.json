@@ -1,0 +1,18 @@
+{
+    "zone": {
+        "default": [
+            "PNWDigital",
+            "Local",
+            "SeattleDMR"
+        ],
+        "expanded": [
+        ],
+        "exclude_expanded": [
+            "PNWDigital",
+            "Local",
+            "SeattleDMR"
+        ]
+    },
+    "static_talkgroup": [
+    ]
+}
