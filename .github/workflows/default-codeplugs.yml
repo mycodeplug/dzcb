@@ -33,7 +33,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: default-codeplug
-        path: $OUTPUT
+        path: ${{ env.OUTPUT }}
   upload:
     if: ${{ github.event_name == 'release' }}
     needs: build
