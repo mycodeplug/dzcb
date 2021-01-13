@@ -2,30 +2,13 @@
     "zone": {
         "default": [
             "PNWDigital",
-            "Hotspot",
             "Local",
-            "SeattleDMR",
-            "Longview WA VHF 35mi",
-            "Longview WA UHF 35mi",
-            "Simplex A VHF",
-            "Simplex A UHF",
-            "Simplex D VHF",
-            "Simplex D UHF"
+            "SeattleDMR"
         ],
         "expanded": [
-            "Longview/Rainier",
-            "DPHS Static",
-            "DPHS Wide",
-            "Longview WA VHF 35mi",
-            "Longview WA UHF 35mi",
-            "Simplex A VHF",
-            "Simplex A UHF",
-            "Simplex D VHF",
-            "Simplex D UHF"
         ],
         "exclude_expanded": [
             "PNWDigital",
-            "Hotspot",
             "Local",
             "SeattleDMR",
             "MM/Peter 430",
@@ -62,12 +45,5 @@
         ]
     },
     "static_talkgroup": [
-        "Oregon 1",
-        "Washington 1",
-        "Washington 2",
-        "Cascades 1",
-        "Local 1",
-        "Local 2",
-        "Parrot 1"
     ]
 }
