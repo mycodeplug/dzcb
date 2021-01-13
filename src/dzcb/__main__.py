@@ -58,8 +58,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--farnsworth-template-json",
-        type=argparse.FileType("r"),
-        default=None,
+        nargs="*",
         help="JSON file to take Farnsworth settings from. If no json file, defaults will " 
              "be used for each supported radio type.",
     )
@@ -147,7 +146,7 @@ if __name__ == "__main__":
                 continue
             farnsworth_templates.append((f.name, f.open("r")))
     else:
-        farnsworth_templates.append(("farnsworth.json", args.farnsworth_template_json))
+        farnsworth_templates = [(os.path.basename(ftj), open(ftj, "r")) for ftj in args.farnsworth_template_json]
 
     for fname, fh in farnsworth_templates:
         outfile = outdir / fname
