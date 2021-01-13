@@ -9,7 +9,6 @@ import logging
 import re
 
 import attr
-from bs4 import BeautifulSoup
 import requests
 
 # cached data for testing
