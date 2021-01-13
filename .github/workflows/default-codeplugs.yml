@@ -1,0 +1,29 @@
+name: Default Codeplugs
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install .
+    - name: Build Codeplugs
+      run: |
+        python -m dzcb --pnwdigital --seattledmr --default-k7abd --k7abd codeplug\k7abd \
+                       --repeaterbook-proximity-csv codeplug\prox.csv \
+                       --scanlists-json codeplug\scanlists.json --order-json codeplug\order.json \
+                       OUTPUT\full
+    - name: Archive Codeplugs
+      uses: actions/upload-artifact@v2
+      with:
+        name: default-codeplug
+        path: OUTPUT
