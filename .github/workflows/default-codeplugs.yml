@@ -19,8 +19,9 @@ jobs:
     - name: Build Codeplugs
       run: |
         python -m dzcb --pnwdigital --seattledmr --default-k7abd --k7abd codeplug/k7abd \
+                       --repeaterbook-proximity-csv codeplug/prox.csv \
                        --scanlists-json codeplug/scanlists.json --order-json codeplug/order.json \
-                       OUTPUT/full
+                       OUTPUT/default-codeplug
     - name: Archive Codeplugs
       uses: actions/upload-artifact@v2
       with:
