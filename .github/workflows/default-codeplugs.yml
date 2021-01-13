@@ -34,7 +34,6 @@ jobs:
       with:
         name: default-codeplug
         path: $OUTPUT
-jobs:
   upload:
     if: ${{ github.event_name == 'release' }}
     runs-on: ubuntu-20.04
