@@ -21,10 +21,7 @@ jobs:
         REPEATERBOOK_USER: ${{ secrets.REPEATERBOOK_USER }}
         REPEATERBOOK_PASSWD: ${{ secrets.REPEATERBOOK_PASSWD }}
       run: |
-        python -m dzcb --pnwdigital --seattledmr --default-k7abd --k7abd codeplug/k7abd \
-                       --repeaterbook-proximity-csv codeplug/prox.csv \
-                       --scanlists-json codeplug/scanlists.json --order-json codeplug/order.json \
-                       OUTPUT/default-codeplug
+        find ./codeplug -name 'generate.sh' -exec /bin/bash {} \;
     - name: Archive Codeplugs
       uses: actions/upload-artifact@v2
       with:
