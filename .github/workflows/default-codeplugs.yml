@@ -9,7 +9,7 @@ on:
     types: [published]
 
 env:
-  OUTPUT: default-codeplug
+  OUTPUT: /tmp/default-codeplug
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -43,6 +43,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: default-codeplug
+        path: ${{ env.OUTPUT }}
     - name: Create release ZIP
       run: |
         cd "$OUTPUT" && zip -r "$GITHUB_WORKSPACE/default-codeplug.zip" .
