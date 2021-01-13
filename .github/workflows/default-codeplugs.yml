@@ -3,7 +3,9 @@ name: Default Codeplugs
 on:
   push:
     branches:
-      - ci
+      - main
+  pull_request:
+    branches:
       - main
   release:
     types: [published]
