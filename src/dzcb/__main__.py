@@ -24,8 +24,7 @@ def append_dir_and_create(path, component=None):
     new_path = path
     if component:
         new_path = new_path / component
-    if not new_path.exists():
-        new_path.mkdir()
+    new_path.mkdir(parents=True, exist_ok=True)
     return new_path
 
 
