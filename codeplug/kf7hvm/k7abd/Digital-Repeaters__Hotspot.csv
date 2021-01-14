@@ -1,0 +1,3 @@
+Zone Name,Comment,Power,RX Freq,TX Freq,Color Code,CNJHam,Colorado Mega,CO Skyhub,Illinois-Link,Olympic P,Oregon 1,Oregon TAC,PNW Rgnl,Quadnet Array,Reddit,TAC 310-2,TAC 311-2,TAC 312-2,Texas,Washington 1,Worldwide
+DPHS Static;DHS,Static Tgs,Low,430.4375,439.4375,1,-,-,-,-,2,1,2,2,-,-,-,-,-,-,1,-
+DPHS Wide;DHW,Dynamic Tgs,Low,430.4375,439.4375,1,2,2,2,2,-,-,-,-,2,2,2,2,2,2,-,2
