@@ -1,10 +1,13 @@
 import json
+import logging
 import time
 
 import attr
 
-from dzcb.model import AnalogChannel, Contact, DigitalChannel, GroupList, ScanList, Zone
+from dzcb.model import AnalogChannel, Contact, DigitalChannel, GroupList
 import dzcb.munge
+
+logger = logging.getLogger(__name__)
 
 NAME_MAX = 16
 
@@ -20,15 +23,18 @@ Contact_name_map = dict(
     kind="CallType",
 )
 
+
 def Contact_to_dict(c):
     d = dict(
         CallReceiveTone="No",
     )
-    d.update({
-        Contact_name_map[k]: value_replacements.get(v, str(v))
-        for k, v in attr.asdict(c).items()
-        if k in attr.fields_dict(Contact)
-    })
+    d.update(
+        {
+            Contact_name_map[k]: value_replacements.get(v, str(v))
+            for k, v in attr.asdict(c).items()
+            if k in attr.fields_dict(Contact)
+        }
+    )
     return d
 
 
@@ -37,6 +43,7 @@ GroupList_name_maps = dict(
     contacts="Contact",
 )
 
+
 def GroupList_to_dict(g):
     d = {
         GroupList_name_maps[k]: v
@@ -44,6 +51,7 @@ def GroupList_to_dict(g):
         if k in attr.fields_dict(GroupList)
     }
     return d
+
 
 def ScanList_to_dict(s):
     return dict(
@@ -120,15 +128,19 @@ AnalogChannel_name_maps = dict(
 
 def AnalogChannel_to_dict(c):
     d = DefaultChannel.copy()
-    d.update({
-        "ChannelMode": "Analog",
-        "ScanList": dzcb.munge.zone_name(c.scanlist, NAME_MAX)
-    })
-    d.update({
-        AnalogChannel_name_maps[k]: v
-        for k, v in attr.asdict(c).items()
-        if k in attr.fields_dict(AnalogChannel) and k in AnalogChannel_name_maps
-    })
+    d.update(
+        {
+            "ChannelMode": "Analog",
+            "ScanList": dzcb.munge.zone_name(c.scanlist, NAME_MAX),
+        }
+    )
+    d.update(
+        {
+            AnalogChannel_name_maps[k]: v
+            for k, v in attr.asdict(c).items()
+            if k in attr.fields_dict(AnalogChannel) and k in AnalogChannel_name_maps
+        }
+    )
     d["Name"] = c.short_name
     if d["CtcssEncode"]:
         if d["CtcssEncode"].startswith("D"):
@@ -157,18 +169,22 @@ DigitalChannel_name_maps = dict(
 
 def DigitalChannel_to_dict(c):
     d = DefaultChannel.copy()
-    d.update({
-        "ChannelMode": "Digital",
-        "RepeaterSlot": str(c.talkgroup.timeslot) if c.talkgroup else 1,
-        "ContactName": str(c.talkgroup.name) if c.talkgroup else "Parrot 1",
-        "GroupList": str(c.grouplist.name) if c.grouplist else None,
-        "ScanList": dzcb.munge.zone_name(c.scanlist, NAME_MAX)
-    })
-    d.update({
-        DigitalChannel_name_maps[k]: v
-        for k, v in attr.asdict(c).items()
-        if k in attr.fields_dict(DigitalChannel) and k in DigitalChannel_name_maps
-    })
+    d.update(
+        {
+            "ChannelMode": "Digital",
+            "RepeaterSlot": str(c.talkgroup.timeslot) if c.talkgroup else 1,
+            "ContactName": str(c.talkgroup.name) if c.talkgroup else "Parrot 1",
+            "GroupList": str(c.grouplist.name) if c.grouplist else None,
+            "ScanList": dzcb.munge.zone_name(c.scanlist, NAME_MAX),
+        }
+    )
+    d.update(
+        {
+            DigitalChannel_name_maps[k]: v
+            for k, v in attr.asdict(c).items()
+            if k in attr.fields_dict(DigitalChannel) and k in DigitalChannel_name_maps
+        }
+    )
     d["Name"] = c.short_name
     return d
 
@@ -188,10 +204,7 @@ def Channel_to_dict(c):
         d = DigitalChannel_to_dict(c)
     if d is None:
         raise ValueError("Unknown type: {}".format(c))
-    return {
-        k: Channel_value_replacements.get(v, str(v))
-        for k, v in d.items()
-    }
+    return {k: Channel_value_replacements.get(v, str(v)) for k, v in d.items()}
 
 
 def Zone_to_dict(z):
@@ -228,4 +241,8 @@ def Codeplug_to_json(cp, based_on=None):
     # Set the programming date in intro text
     general_settings = cp_dict.setdefault("GeneralSettings", {})
     general_settings["IntroScreenLine1"] = time.strftime("%Y-%m-%d")
+    logger.info(
+        "Assemble JSON for %s",
+        basic_info.get("Model", "Unknown. (probably won't work!)"),
+    )
     return json.dumps(cp_dict, indent=2)
