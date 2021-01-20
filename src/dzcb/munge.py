@@ -2,6 +2,7 @@
 dzcb.munge - replacements, filters, and modifications of the data
 """
 import re
+import warnings
 
 # These are used when generating channel names
 Talkgroup_Channel_name_replacements = {
@@ -17,13 +18,13 @@ Talkgroup_Channel_name_replacements = {
     "Worldwide": "WW",
 }
 
+
 def channel_name(ch_name, max_length):
     # Replace Long strings with shorter ones
     replacements = Talkgroup_Channel_name_replacements.copy()
     for find, repl in replacements.items():
         ch_name = ch_name.replace(find, repl)
 
-    
     # Truncate the channel name (try to preserve the tail  characters
     # which are typically TG# and 3-digit Code)
     tail_code = re.search(r"[12]?\s[A-Z]+$", ch_name)
@@ -31,7 +32,7 @@ def channel_name(ch_name, max_length):
         n_tail = len(tail_code.group())
         if max_length > n_tail + 1:
             n_trunc = len(ch_name) - max_length
-            ch_name = ch_name[:-n_trunc-n_tail] + ch_name[-n_tail:]
+            ch_name = ch_name[: -n_trunc - n_tail] + ch_name[-n_tail:]
 
     return ch_name[:max_length]
 
@@ -40,7 +41,28 @@ def zone_name(zone_name, max_length):
     return zone_name[:max_length]
 
 
-def ordered(seq, order, key=None):
+class MissingItemsWarning(UserWarning):
+    """Raised when items in order list do not appear in the sequence"""
+
+    def __init__(self, missing_items, sequence, log_sequence_name=None):
+        self.sequence = sequence
+        self.missing_items = missing_items
+        if log_sequence_name is None:
+            log_sequence_name = "the sequence to be ordered"
+        self.log_sequence_name = log_sequence_name
+
+    def __str__(self):
+        return "Items were not in {}: {}".format(
+            self.log_sequence_name, self.missing_items
+        )
+
+
+def ordered(seq, order, key=None, log_sequence_name=None):
+    """
+    If `log_sequence_name` is specified, use that text instead of
+    "the sequence to be ordered" when emitting a log message about
+    missing items.
+    """
     NotFound = object()
     head = [NotFound] * len(order)
     tail = []
@@ -51,11 +73,15 @@ def ordered(seq, order, key=None):
         except ValueError:
             tail.append(item)
     if NotFound in head:
-        # XXX: print? really?
-        print(
-            "Items were not in the sequence to be ordered: {}".format(
-                [order[ix] for ix, item in enumerate(head) if item is NotFound]
-            )
+        warnings.warn(
+            MissingItemsWarning(
+                missing_items=[
+                    order[ix] for ix, item in enumerate(head) if item is NotFound
+                ],
+                sequence=seq,
+                log_sequence_name=log_sequence_name,
+            ),
+            stacklevel=2,
         )
         head = [item for item in head if item is not NotFound]
     return head + tail

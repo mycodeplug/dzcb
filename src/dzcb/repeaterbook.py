@@ -5,14 +5,15 @@ import argparse
 import contextlib
 import csv
 import hashlib
+import logging
 from pathlib import Path
 import os
-import sys
 import time
 
 from bs4 import BeautifulSoup
 import requests
 
+logger = logging.getLogger(__name__)
 
 REPEATERBOOK_INDEX = "https://www.repeaterbook.com/index.php"
 REPEATERBOOK_LOGIN = (
@@ -59,6 +60,7 @@ def text_login(username=None, password=None):
 
         login = session.post(REPEATERBOOK_LOGIN, data=payload)
         login.raise_for_status()
+        session._username = payload["username"]
         yield session
 
 
@@ -72,27 +74,35 @@ def proximity_zones(proximity_zones_csv):
         name = zone.pop("name")
         slug = name.replace(" ", "-").replace(",", "")
         url = REPEATERBOOK_EXPORT.format(**zone)
-        print(url)
         md5urlhash = hashlib.md5(url.encode("utf-8")).hexdigest()
         filename = "{}_{}.csv".format(slug, md5urlhash)
         yield (name, slug, url, filename)
 
 
-def cache_zones_with_proximity(input_csv, output_dir):
+def cache_zones_with_proximity(input_csv, output_dir, delay=0.25):
+    output_dir = Path(output_dir)
+    zones = tuple(proximity_zones(input_csv))
     with text_login() as session:
-        for name, slug, url, filename in proximity_zones(input_csv):
+        logger.info(
+            "Downloading %s proximity zones as %s (%s seconds)",
+            len(zones),
+            session._username,
+            len(zones) * delay,
+        )
+        for name, slug, url, filename in zones:
             resp = session.get(url)
             resp.raise_for_status()
-            (Path(output_dir) / filename).write_text(resp.text)
-            sys.stderr.write(".")
-            time.sleep(0.25)
+            out_file = output_dir / filename
+            out_file.write_text(resp.text)
+            logger.debug("Cache raw CSV to '%s'", out_file)
+            time.sleep(delay)
 
 
 def zones_to_k7abd(input_csv, input_dir, output_dir):
     for name, slug, url, filename in proximity_zones(input_csv):
         in_file = Path(input_dir) / filename
         out_file = Path(output_dir) / "Analog__{}.csv".format(slug)
-        with open(in_file, "r") as inp, open(out_file, "w", newline='') as out:
+        with open(in_file, "r") as inp, open(out_file, "w", newline="") as out:
             csvr = csv.DictReader(inp)
             csvw = csv.DictWriter(
                 out,
@@ -133,6 +143,8 @@ def zones_to_k7abd(input_csv, input_dir, output_dir):
                         "TX Prohibit": "Off",
                     }
                 )
+        logger.debug("Generate '%s' k7abd zones to '%s'", name, out_file)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -5,19 +5,24 @@ dzcb main program
 import argparse
 import json
 from importlib_resources import contents, files
+import logging
 from pathlib import Path
 import os
 import shutil
-import sys
 
+from dzcb import __version__
 import dzcb.data
 import dzcb.farnsworth
 import dzcb.gb3gf
 import dzcb.k7abd
+import dzcb.log
 import dzcb.model
 import dzcb.pnwdigital
 import dzcb.repeaterbook
 import dzcb.seattledmr
+
+
+logger = logging.getLogger("dzcb")
 
 
 def append_dir_and_create(path, component=None):
@@ -26,6 +31,35 @@ def append_dir_and_create(path, component=None):
         new_path = new_path / component
     new_path.mkdir(parents=True, exist_ok=True)
     return new_path
+
+
+def repeaterbook_proximity_csv(csv_file, cache_dir):
+    proximity_csv = csv_file.read().splitlines()
+    rbcache = append_dir_and_create(cache_dir, "repeaterbook")
+    dzcb.repeaterbook.cache_zones_with_proximity(proximity_csv, rbcache)
+    dzcb.repeaterbook.zones_to_k7abd(proximity_csv, rbcache, cache_dir)
+
+
+def cache_user_or_default_json(object_name, user_path, default_path, cache_dir):
+    """
+    Read JSON from a user-specified or default path for object_name.
+
+    Side-effects:
+      * Logging at info level, mentioning object_name and the path used
+      * Copying either the user_path or default_path to cache_dir
+
+    Return:
+        Python objects
+    """
+    if user_path is None:
+        logger.info("Cache default %s: '%s'", object_name, default_path)
+        path = default_path
+    else:
+        logger.info("Cache user-specified %s: '%s'", object_name, user_path)
+        path = Path(user_path)
+    dest = cache_dir / path.name
+    shutil.copy(path, dest)
+    return json.loads(dest.read_text())
 
 
 if __name__ == "__main__":
@@ -44,7 +78,7 @@ if __name__ == "__main__":
         "--repeaterbook-proximity-csv",
         type=argparse.FileType("r"),
         default=None,
-        help="Fetch repeaters within X distance of POIs defined in a CSV file"
+        help="Fetch repeaters within X distance of POIs defined in a CSV file",
     )
     parser.add_argument(
         "--default-k7abd",
@@ -54,43 +88,48 @@ if __name__ == "__main__":
     parser.add_argument(
         "--k7abd",
         nargs="*",
-        help="Specify one or more local directories containing K7ABD CSV files"
+        help="Specify one or more local directories containing K7ABD CSV files",
     )
     parser.add_argument(
         "--farnsworth-template-json",
         nargs="*",
-        help="JSON file to take Farnsworth settings from. If no json file, defaults will " 
-             "be used for each supported radio type.",
+        help="JSON file to take Farnsworth settings from. If no json file, defaults will "
+        "be used for each supported radio type.",
     )
     parser.add_argument(
         "--scanlists-json",
-        type=argparse.FileType("r"),
         default=None,
         help="JSON dict mapping scanlist name to list of channel names.",
     )
     parser.add_argument(
         "--order-json",
-        type=argparse.FileType("r"),
         default=None,
-        help="JSON dict specifying zone and talkgroup orderings."
+        help="JSON dict specifying zone and talkgroup orderings.",
     )
-    parser.add_argument(
-        "outdir", help="Write code plug files to this directory"
-    )
+    parser.add_argument("outdir", help="Write code plug files to this directory")
     args = parser.parse_args()
 
     outdir = append_dir_and_create(Path(args.outdir))
+    dzcb.log.init_logging(log_path=outdir)
+    logger.info("dzcb %s outdir='%s'", __version__, outdir)
+
     cache_dir = append_dir_and_create(outdir, "cache")
+    logger.debug("Using cache_dir: '%s'", cache_dir)
 
     # fetch data from the internet
     if args.repeaterbook_proximity_csv:
-        if "REPEATERBOOK_USER" not in os.environ or "REPEATERBOOK_PASSWD" not in os.environ:
-            print("Supply REPEATERBOOK_USER and REPEATERBOOK_PASSWD in environment")
-            sys.exit(2)
-        proximity_csv = args.repeaterbook_proximity_csv.read().splitlines()
-        rbcache = append_dir_and_create(cache_dir, "repeaterbook")
-        dzcb.repeaterbook.cache_zones_with_proximity(proximity_csv, rbcache)
-        dzcb.repeaterbook.zones_to_k7abd(proximity_csv, rbcache, cache_dir)
+        if (
+            "REPEATERBOOK_USER" not in os.environ
+            or "REPEATERBOOK_PASSWD" not in os.environ
+        ):
+            logger.error(
+                "Set REPEATERBOOK_USER and REPEATERBOOK_PASSWD in environment to use repeaterbook"
+            )
+        else:
+            repeaterbook_proximity_csv(
+                csv_file=args.repeaterbook_proximity_csv,
+                cache_dir=cache_dir,
+            )
 
     if args.pnwdigital:
         dzcb.pnwdigital.cache_repeaters(cache_dir)
@@ -99,43 +138,53 @@ if __name__ == "__main__":
         dzcb.seattledmr.cache_repeaters(cache_dir)
 
     if args.default_k7abd:
-        shutil.copytree(files(dzcb.data) / "k7abd", cache_dir, dirs_exist_ok=True)
+        default_k7abd_path = files(dzcb.data) / "k7abd"
+        logger.info("Cache default k7abd zones from: '%s'", default_k7abd_path)
+        shutil.copytree(default_k7abd_path, cache_dir, dirs_exist_ok=True)
 
     if args.k7abd:
         # copy any additional CSV directories into the cache_dir
         for abd_dir in args.k7abd:
+            logger.info("Cache k7abd zones from: '%s'", abd_dir)
             shutil.copytree(abd_dir, cache_dir, dirs_exist_ok=True)
 
     # load additional data files or defaults
-    if args.scanlists_json is None:
-        scanlists = json.loads(files(dzcb.data).joinpath("scanlists.json").read_text())
-    else:
-        scanlists = json.load(args.scanlists_json)
-
-    if args.order_json is None:
-        order = json.loads(files(dzcb.data).joinpath("order.json").read_text())
-    else:
-        order = json.load(args.order_json)
+    scanlists = cache_user_or_default_json(
+        object_name="scanlists",
+        user_path=args.scanlists_json,
+        default_path=files(dzcb.data).joinpath("scanlists.json"),
+        cache_dir=cache_dir,
+    )
+    order = cache_user_or_default_json(
+        object_name="zone order",
+        user_path=args.order_json,
+        default_path=files(dzcb.data).joinpath("order.json"),
+        cache_dir=cache_dir,
+    )
     zone_order = order.get("zone", {}).get("default", [])
     zone_order_expanded = order.get("zone", {}).get("expanded", [])
     exclude_zones_expanded = order.get("zone", {}).get("exclude_expanded", [])
     static_talkgroup_order = order.get("static_talkgroup", [])
 
     # create codeplug from a directory of k7abd CSVs
-    cp = dzcb.k7abd.Codeplug_from_k7abd(cache_dir).order_grouplists(static_talkgroup_order=static_talkgroup_order)
-
-    # expand static_talkgroups into channel per talkgroup / zone per repeater
-    fw_cp = cp.expand_static_talkgroups(
-        static_talkgroup_order=static_talkgroup_order).order_zones(
-        zone_order=zone_order_expanded,
-        exclude_zones=exclude_zones_expanded,
+    cp = dzcb.k7abd.Codeplug_from_k7abd(cache_dir).order_grouplists(
+        static_talkgroup_order=static_talkgroup_order
     )
-
     # add custom scanlists after static TG expansion
     for sl_name, channels in scanlists.items():
         sl = dzcb.model.ScanList.from_names(name=sl_name, channel_names=channels)
         cp.scanlists.append(sl)
-        fw_cp.scanlists.append(sl)
+    logger.info("Generated %s", cp)
+
+    # GB3GF CSV - Radioddity GD77/OpenGD77, TYT MD-380, MD-9600, Baofeng DM1801, RD-5R
+    # XXX: Only support OpenGD77 at the moment
+    gd77_outdir = Path(args.outdir) / "gb3gf_opengd77"
+    if not gd77_outdir.exists():
+        gd77_outdir.mkdir()
+    dzcb.gb3gf.Codeplug_to_gb3gf_opengd77_csv(
+        cp.order_zones(zone_order=zone_order),
+        output_dir=gd77_outdir,
+    )
 
     # Farnsworth JSON - TYT et. al w/ Zone Import!
     farnsworth_templates = []
@@ -144,11 +193,28 @@ if __name__ == "__main__":
         for f in (files(dzcb.data) / "farnsworth").iterdir():
             if not str(f).endswith(".json"):
                 continue
-            farnsworth_templates.append((f.name, f.open("r")))
+            farnsworth_templates.append((f, f.name, f.open("r")))
     else:
-        farnsworth_templates = [(os.path.basename(ftj), open(ftj, "r")) for ftj in args.farnsworth_template_json]
+        farnsworth_templates = [
+            (ftj, os.path.basename(ftj), open(ftj, "r"))
+            for ftj in args.farnsworth_template_json
+        ]
 
-    for fname, fh in farnsworth_templates:
+    if farnsworth_templates:
+        # expand static_talkgroups into channel per talkgroup / zone per repeater
+        fw_cp = cp.expand_static_talkgroups(
+            static_talkgroup_order=static_talkgroup_order
+        ).order_zones(
+            zone_order=zone_order_expanded,
+            exclude_zones=exclude_zones_expanded,
+        )
+        # add custom scanlists after static TG expansion
+        for sl_name, channels in scanlists.items():
+            sl = dzcb.model.ScanList.from_names(name=sl_name, channel_names=channels)
+            fw_cp.scanlists.append(sl)
+        logger.info("Expand static talkgroups %s", fw_cp)
+
+    for ftj, fname, fh in farnsworth_templates:
         outfile = outdir / fname
         outfile.write_text(
             dzcb.farnsworth.Codeplug_to_json(
@@ -156,13 +222,4 @@ if __name__ == "__main__":
                 based_on=fh,
             )
         )
-
-    # GB3GF CSV - Radioddity GD77/OpenGD77, TYT MD-380, MD-9600, Baofeng DM1801, RD-5R
-    # XXX: Only support OpenGD77 at the moment
-    gd77_outdir = Path(args.outdir) / "gb3gf_opengd77" 
-    if not gd77_outdir.exists():
-        gd77_outdir.mkdir()
-    dzcb.gb3gf.Codeplug_to_gb3gf_opengd77_csv(
-        cp.order_zones(zone_order=zone_order),
-        output_dir=gd77_outdir,
-    )
+        logger.info("Wrote '%s' based JSON to '%s'", ftj, outfile)
