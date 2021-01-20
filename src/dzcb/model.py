@@ -1,15 +1,10 @@
 """
 dzcb.model - data model for codeplug objects
 """
-import csv
 import enum
-import json
-from importlib_resources import files
 import logging
-import re
 
 import attr
-import requests
 
 # cached data for testing
 import dzcb.data
@@ -17,6 +12,8 @@ import dzcb.munge
 
 # XXX: i hate this
 NAME_MAX = 16
+
+logger = logging.getLogger(__name__)
 
 
 class ConvertibleEnum(enum.Enum):
@@ -191,7 +188,12 @@ class DigitalChannel(Channel):
                 talkgroup=tg,
                 scanlist=self.short_name,
                 static_talkgroups=[]
-            ) for tg in dzcb.munge.ordered(talkgroups, order or [], key=lambda tg: tg.name)
+            ) for tg in dzcb.munge.ordered(
+                seq=talkgroups,
+                order=order or [],
+                key=lambda tg: tg.name,
+                log_sequence_name="{} static talkgroup list".format(self.short_name),
+            )
         ]
 
     @property
@@ -229,7 +231,7 @@ class ScanList:
         for cn in channel_names:
             channel = Channel._short_names.get(cn, Channel._all_channels.get(cn))
             if channel is None:
-                print(
+                logger.debug(
                     "ScanList {!r} references unknown channel {!r}, ignoring".format(
                         name, cn,
                     )
@@ -291,13 +293,17 @@ def uniquify_contacts(contacts):
     return list(ctd.values())
 
 
+def _seq_items_repr(s):
+    return "<{} items>".format(len(s))
+
+
 @attr.s
 class Codeplug:
-    contacts = attr.ib(factory=list, converter=uniquify_contacts)
-    channels = attr.ib(factory=list)
-    grouplists = attr.ib(factory=list)
-    scanlists = attr.ib(factory=list)
-    zones = attr.ib(factory=list)
+    contacts = attr.ib(factory=list, converter=uniquify_contacts, repr=_seq_items_repr)
+    channels = attr.ib(factory=list, repr=_seq_items_repr)
+    grouplists = attr.ib(factory=list, repr=_seq_items_repr)
+    scanlists = attr.ib(factory=list, repr=_seq_items_repr)
+    zones = attr.ib(factory=list, repr=_seq_items_repr)
 
     def __attrs_post_init__(self):
         # prune any channels which are not in a zone
@@ -314,7 +320,12 @@ class Codeplug:
 
         zones = [
             zone
-            for zone in dzcb.munge.ordered(self.zones, zone_order, key=lambda z: z.name)
+            for zone in dzcb.munge.ordered(
+                seq=self.zones,
+                order=zone_order,
+                key=lambda z: z.name,
+                log_sequence_name="zone list",
+            )
             if zone.name not in exclude_zones
         ]
         return type(self)(
@@ -342,6 +353,7 @@ class Codeplug:
                 contacts=dzcb.munge.ordered(
                     seq=[c for c in gl.contacts if c not in exclude_talkgroups],
                     order=static_talkgroup_order,
+                    log_sequence_name="grouplist {}".format(gl.name),
                 )
             )
             for gl in self.grouplists
@@ -374,7 +386,11 @@ class Codeplug:
             # none of the ranges matched, so prune this channel
             channels_pruned.append(ch)
         if channels_pruned:
-            print("Excluding {} channels with frequency out of range: {}".format(len(channels_pruned), ranges))
+            logger.info(
+                "filter_frequency_range: Excluding %s channels with frequency out of range: %s",
+                len(channels_pruned),
+                ranges,
+            )
 
         # prune channels from scanlists
         scanlists = []

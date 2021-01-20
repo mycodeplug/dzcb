@@ -21,12 +21,15 @@ following format.
     * "name" in the filename should match with an associated Digital-Repeaters CSV
 """
 import csv
+import logging
 from pathlib import Path
-import os
 
 import attr
 
 from dzcb.model import AnalogChannel, Codeplug, Contact, DigitalChannel, GroupList, ScanList, Talkgroup, Zone
+
+
+logger = logging.getLogger(__name__)
 
 
 def Talkgroups_map_from_csv(talkgroups_csv):
@@ -140,7 +143,7 @@ def DigitalRepeaters_from_k7abd_csv(digital_repeaters_csv, talkgroups_by_name):
         zname, found, code = r.pop("Zone Name").partition(";")
         frequency = float(r.pop("RX Freq"))
         if not frequency:
-            print("Excluding repeater {} with no frequency".format(zname))
+            logger.info("%s: Excluding repeater, %s with no frequency", digital_repeaters_csv, zname)
             continue
         offset = round(float(r.pop("TX Freq")) - frequency, 1)
         color_code = r.pop("Color Code")
@@ -156,7 +159,7 @@ def DigitalRepeaters_from_k7abd_csv(digital_repeaters_csv, talkgroups_by_name):
                     )
                 )
             except ValueError:
-                print("Ignoring ValueError from {}:{}".format(tg_name, timeslot))
+                logger.info("%s: Ignoring ValueError from %s:%s", digital_repeaters_csv, tg_name, timeslot)
         repeater = DigitalChannel(
             name=zname,
             code=code or None,
@@ -205,6 +208,25 @@ def DigitalChannels_from_k7abd_csv(digital_others_csv, talkgroups_by_name):
     return zones
 
 
+def _log_zones_channels(in_zones, log_filename=None, level=logging.DEBUG):
+    filename_str = ""
+    if log_filename:
+        filename_str = " from {}".format(log_filename)
+    total_channels = sum(len(z) for z in in_zones.values())
+    logger.log(level, "Load %s zones (%s channels)%s", len(in_zones), total_channels, filename_str)
+
+
+def update_zones_channels(zones_dict, in_zones, log_filename=None):
+    """
+    Update `zones_dict` with the contents of `in_zones`
+
+    :param log_filename: used for logging only
+    """
+    _log_zones_channels(in_zones, log_filename)
+    # XXX: instead, consider combining channels from same-named zones in different CSV files?
+    zones_dict.update(in_zones)
+
+
 def Codeplug_from_k7abd(input_dir):
     """
     :param input_dir: directory on the filesystem containing K7ABD ACB files
@@ -214,19 +236,25 @@ def Codeplug_from_k7abd(input_dir):
     zones = {}
     talkgroups = {}
     all_talkgroups_by_name = {}
+    total_files = 0
     for p in d.glob("Analog__*.csv"):
-        zones.update(Analog_from_csv(p.read_text().splitlines()))
+        update_zones_channels(zones, Analog_from_csv(p.read_text().splitlines()), log_filename=p)
+        total_files += 1
     for p in d.glob("Talkgroups__*.csv"):
         name = p.name.replace("Talkgroups__", "").replace(".csv", "")
         talkgroups[name] = Talkgroups_map_from_csv(p.read_text().splitlines())
+        logger.debug("Load %s talkgroups from %s", len(talkgroups[name]), p)
         # XXX: potential bug here if talkgroup definitions differ between files
         all_talkgroups_by_name.update(talkgroups[name])
     for p in d.glob("Digital-Others__*.csv"):
-        zones.update(DigitalChannels_from_k7abd_csv(p.read_text().splitlines(), all_talkgroups_by_name))
+        update_zones_channels(zones, DigitalChannels_from_k7abd_csv(p.read_text().splitlines(), all_talkgroups_by_name), log_filename=p)
+        total_files += 1
     for p in d.glob("Digital-Repeaters__*.csv"):
         zname = p.name.replace("Digital-Repeaters__", "").replace(".csv", "")
         # merge Talkgroup files, but prefer talkgroup names from this zone
         tg_csv = all_talkgroups_by_name.copy()
         tg_csv.update(talkgroups[zname])
-        zones[zname] = tuple(DigitalRepeaters_from_k7abd_csv(p.read_text().splitlines(), tg_csv))
+        update_zones_channels(zones, {zname: tuple(DigitalRepeaters_from_k7abd_csv(p.read_text().splitlines(), tg_csv))}, log_filename=p)
+        total_files += 1
+    _log_zones_channels(in_zones=zones, log_filename="{} total files".format(total_files), level=logging.INFO)
     return Codeplug_from_zone_dicts(zones)
