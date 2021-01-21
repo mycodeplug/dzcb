@@ -2,6 +2,11 @@
 
 **D**MR **Z**one **C**hannel **B**uilder
 
+* Fetch - fetch input files from local directories or urls
+* Assemble - combine information from multiple sources
+* Filter - rename, exclude, reorder zones, and talkgroups
+* Format - output to common export formats
+
 ## See [Releases](https://github.com/masenf/dzcb/releases) for Default Codeplugs
 
 ## Github Actions
