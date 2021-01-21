@@ -7,6 +7,8 @@
 * Filter - rename, exclude, reorder zones, and talkgroups
 * Format - output to common export formats
 
+<img src="/doc/dzcb-overview.svg">
+
 ## See [Releases](https://github.com/masenf/dzcb/releases) for Default Codeplugs
 
 ## Github Actions
