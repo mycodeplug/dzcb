@@ -72,7 +72,9 @@ class Contact:
         existing_contact = all_contacts_by_id.get(self.dmrid, None)
         if existing_contact:
             raise dzcb.exceptions.DuplicateDmrID(
-                msg="{} ({}): DMR ID already exists as {}".format(self.name, self.dmrid, existing_contact.name),
+                msg="{} ({}): DMR ID already exists as {}".format(
+                    self.name, self.dmrid, existing_contact.name
+                ),
                 existing_contact=existing_contact,
             )
         all_contacts_by_id[self.dmrid] = self
@@ -88,7 +90,15 @@ class Talkgroup(Contact):
         converter=Timeslot.from_any,
     )
 
-    all_talkgroups_by_id = {}
+    def __attrs_post_init__(self):
+        try:
+            super().__attrs_post_init__()
+        except dzcb.exceptions.DuplicateDmrID as dup:
+            if (
+                isinstance(dup.existing_contact, type(self))
+                and self.timeslot == dup.existing_contact.timeslot
+            ):
+                raise
 
     @property
     def name_with_timeslot(self):
@@ -103,7 +113,10 @@ class Talkgroup(Contact):
     def from_contact(cls, contact, timeslot):
         fields = attr.asdict(contact)
         fields["timeslot"] = timeslot
-        return cls(**fields)
+        try:
+            return cls(**fields)
+        except dzcb.exceptions.DuplicateDmrID as dup:
+            return dup.existing_contact  # return the talkgroup we already have
 
 
 class Power(ConvertibleEnum):
