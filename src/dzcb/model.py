@@ -255,6 +255,9 @@ class ScanList:
     def from_names(cls, name, channel_names):
         channels = []
         for cn in channel_names:
+            # TODO: require method to be called with a set of available channels
+            #       because the global list may contain channels that have already
+            #       been pruned in the given codeplug
             channel = Channel._short_names.get(cn, Channel._all_channels.get(cn))
             if channel is None:
                 logger.debug(
@@ -409,6 +412,30 @@ class Codeplug:
             channels=list(self.channels),
             grouplists=grouplists,
             scanlists=list(self.scanlists),
+            zones=list(self.zones),
+        )
+
+    def replace_scanlists(self, scanlist_dicts):
+        """
+        Return a new codeplug with additional scanlists.
+
+        If the scanlist name appears in the codeplug, the entire scanlist
+        is replaced by the new definition.
+
+        If any channel names are not present in the codeplug, those channels
+        will be ignored.
+
+        :param scanlist_dicts: dict of scanlist_name -> [channel_name1, channel_name2, ...]
+        """
+        scanlists = {sl.name: sl for sl in self.scanlists}
+        for sl_name, channels in scanlist_dicts.items():
+            scanlists[sl_name] = ScanList.from_names(name=sl_name, channel_names=channels)
+
+        return type(self)(
+            contacts=list(self.contacts),
+            channels=list(self.channels),
+            grouplists=list(self.grouplists),
+            scanlists=list(scanlists.values()),
             zones=list(self.zones),
         )
 
