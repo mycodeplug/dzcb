@@ -177,9 +177,8 @@ if __name__ == "__main__":
 
     # GB3GF CSV - Radioddity GD77/OpenGD77, TYT MD-380, MD-9600, Baofeng DM1801, RD-5R
     # XXX: Only support OpenGD77 at the moment
-    gd77_outdir = Path(args.outdir) / "gb3gf_opengd77"
-    if not gd77_outdir.exists():
-        gd77_outdir.mkdir()
+    gb3gf_outdir = append_dir_and_create(outdir, "gb3gf")
+    gd77_outdir = append_dir_and_create(gb3gf_outdir, "opengd77")
     dzcb.gb3gf.Codeplug_to_gb3gf_opengd77_csv(
         cp.order_zones(zone_order=zone_order),
         output_dir=gd77_outdir,
@@ -198,9 +197,10 @@ if __name__ == "__main__":
     logger.info("Expand static talkgroups %s", fw_cp)
 
     # Anytone 578/868/878 stock CPS CSV import files
+    anytone_outdir = append_dir_and_create(outdir, "anytone")
     dzcb.anytone.Codeplug_to_anytone_csv(
         cp=fw_cp,
-        output_dir=outdir,
+        output_dir=anytone_outdir,
     )
 
     # Farnsworth JSON - TYT et. al w/ Zone Import!
@@ -217,8 +217,9 @@ if __name__ == "__main__":
             for ftj in args.farnsworth_template_json
         ]
 
+    fw_outdir = append_dir_and_create(outdir, "editcp")
     for ftj, fname, fh in farnsworth_templates:
-        outfile = outdir / fname
+        outfile = fw_outdir / fname
         outfile.write_text(
             dzcb.farnsworth.Codeplug_to_json(
                 cp=fw_cp,
