@@ -275,11 +275,12 @@ class ScanList:
         Return a sequence of new ScanList objects containing only channels in `channels`
         """
         return [
-            attr.evolve(
-                sl,
-                channels=[ch for ch in sl.channels if ch in channels]
-            )
-            for sl in scanlists
+            sl
+            for sl in [
+                attr.evolve(sl, channels=[ch for ch in sl.channels if ch in channels])
+                for sl in scanlists
+            ]
+            if sl.channels
         ]
 
     @property
@@ -292,9 +293,28 @@ class Zone:
     """
     A Zone groups channels together by name
     """
+
     name = attr.ib(validator=attr.validators.instance_of(str))
     channels_a = attr.ib(factory=list, validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)))
     channels_b = attr.ib(factory=list, validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)))
+
+    @classmethod
+    def prune_missing_channels(cls, zones, channels):
+        """
+        Return a sequence of new Zone objects containing only channels in `channels`
+        """
+        return [
+            zn
+            for zn in [
+                attr.evolve(
+                    zn,
+                    channels_a=[ch for ch in zn.channels_a if ch in channels],
+                    channels_b=[ch for ch in zn.channels_a if ch in channels],
+                )
+                for zn in zones
+            ]
+            if zn.unique_channels
+        ]
 
     @property
     def unique_channels(self):
@@ -418,27 +438,12 @@ class Codeplug:
                 ranges,
             )
 
-        # prune channels from scanlists
-        scanlists = []
-        for scanlist in self.scanlists:
-            sc_channels = [ch for ch in scanlist.channels if ch not in channels_pruned]
-            if sc_channels:
-                scanlists.append(ScanList(name=scanlist.name, channels=sc_channels))
-
-        # prune channels from zones
-        zones = []
-        for zone in self.zones:
-            zn_channels_a = [ch for ch in zone.channels_a if ch not in channels_pruned]
-            zn_channels_b = [ch for ch in zone.channels_b if ch not in channels_pruned]
-            if zn_channels_a or zn_channels_b:
-                zones.append(Zone(name=zone.name, channels_a=zn_channels_a, channels_b=zn_channels_b))
-
         return type(self)(
             contacts=list(self.contacts),
             channels=channels,
             grouplists=list(self.grouplists),
             scanlists=ScanList.prune_missing_channels(self.scanlists, channels),
-            zones=zones,
+            zones=Zone.prune_missing_channels(self.zones, channels),
         )
 
     def expand_static_talkgroups(self, static_talkgroup_order=None):
@@ -479,5 +484,5 @@ class Codeplug:
             grouplists=list(self.grouplists),
             # Don't reference channels that no longer exist
             scanlists=ScanList.prune_missing_channels(self.scanlists, channels) + exp_scanlists,
-            zones=zones,
+            zones=Zone.prune_missing_channels(zones, channels),
         )
