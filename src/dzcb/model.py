@@ -8,6 +8,7 @@ import attr
 
 # cached data for testing
 import dzcb.data
+import dzcb.exceptions
 import dzcb.munge
 
 # XXX: i hate this
@@ -55,7 +56,9 @@ class Contact:
     A Digital Contact: group or private
     """
 
-    name = attr.ib(eq=True)
+    _all_contacts_by_id = {}
+
+    name = attr.ib(eq=True, converter=dzcb.munge.contact_name)
     dmrid = attr.ib(eq=True, order=True, converter=int)
     kind = attr.ib(
         eq=True,
@@ -63,6 +66,16 @@ class Contact:
         validator=attr.validators.instance_of(ContactType),
         converter=ContactType.from_any,
     )
+
+    def __attrs_post_init__(self):
+        all_contacts_by_id = type(self)._all_contacts_by_id
+        existing_contact = all_contacts_by_id.get(self.dmrid, None)
+        if existing_contact:
+            raise dzcb.exceptions.DuplicateDmrID(
+                msg="{} ({}): DMR ID already exists as {}".format(self.name, self.dmrid, existing_contact.name),
+                existing_contact=existing_contact,
+            )
+        all_contacts_by_id[self.dmrid] = self
 
 
 @attr.s(eq=True, frozen=True)
