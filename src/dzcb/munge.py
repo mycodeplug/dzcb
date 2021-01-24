@@ -37,6 +37,16 @@ def channel_name(ch_name, max_length):
     return ch_name[:max_length]
 
 
+def contact_name(contact_name):
+    # PNWDigital source annoyinging appends "-2" to the TAC talkgroup names
+    # strip off the suffix because not all systems have the TACs on TS 2
+    # Radios such as the 868 can only map a given DMR ID to a single name
+    # so the "-2" suffix is confusing
+    if contact_name.startswith("TAC") and contact_name.endswith("-2"):
+        return contact_name[:-2]
+    return contact_name
+
+
 def zone_name(zone_name, max_length):
     return zone_name[:max_length]
 

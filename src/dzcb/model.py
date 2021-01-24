@@ -8,6 +8,7 @@ import attr
 
 # cached data for testing
 import dzcb.data
+import dzcb.exceptions
 import dzcb.munge
 
 # XXX: i hate this
@@ -55,7 +56,9 @@ class Contact:
     A Digital Contact: group or private
     """
 
-    name = attr.ib(eq=True)
+    _all_contacts_by_id = {}
+
+    name = attr.ib(eq=True, converter=dzcb.munge.contact_name)
     dmrid = attr.ib(eq=True, order=True, converter=int)
     kind = attr.ib(
         eq=True,
@@ -63,6 +66,18 @@ class Contact:
         validator=attr.validators.instance_of(ContactType),
         converter=ContactType.from_any,
     )
+
+    def __attrs_post_init__(self):
+        all_contacts_by_id = type(self)._all_contacts_by_id
+        existing_contact = all_contacts_by_id.get(self.dmrid, None)
+        if existing_contact:
+            raise dzcb.exceptions.DuplicateDmrID(
+                msg="{} ({}): DMR ID already exists as {}".format(
+                    self.name, self.dmrid, existing_contact.name
+                ),
+                existing_contact=existing_contact,
+            )
+        all_contacts_by_id[self.dmrid] = self
 
 
 @attr.s(eq=True, frozen=True)
@@ -75,7 +90,15 @@ class Talkgroup(Contact):
         converter=Timeslot.from_any,
     )
 
-    all_talkgroups_by_id = {}
+    def __attrs_post_init__(self):
+        try:
+            super().__attrs_post_init__()
+        except dzcb.exceptions.DuplicateDmrID as dup:
+            if (
+                isinstance(dup.existing_contact, type(self))
+                and self.timeslot == dup.existing_contact.timeslot
+            ):
+                raise
 
     @property
     def name_with_timeslot(self):
@@ -90,7 +113,10 @@ class Talkgroup(Contact):
     def from_contact(cls, contact, timeslot):
         fields = attr.asdict(contact)
         fields["timeslot"] = timeslot
-        return cls(**fields)
+        try:
+            return cls(**fields)
+        except dzcb.exceptions.DuplicateDmrID as dup:
+            return dup.existing_contact  # return the talkgroup we already have
 
 
 class Power(ConvertibleEnum):
@@ -229,6 +255,9 @@ class ScanList:
     def from_names(cls, name, channel_names):
         channels = []
         for cn in channel_names:
+            # TODO: require method to be called with a set of available channels
+            #       because the global list may contain channels that have already
+            #       been pruned in the given codeplug
             channel = Channel._short_names.get(cn, Channel._all_channels.get(cn))
             if channel is None:
                 logger.debug(
@@ -249,11 +278,12 @@ class ScanList:
         Return a sequence of new ScanList objects containing only channels in `channels`
         """
         return [
-            attr.evolve(
-                sl,
-                channels=[ch for ch in sl.channels if ch in channels]
-            )
-            for sl in scanlists
+            sl
+            for sl in [
+                attr.evolve(sl, channels=[ch for ch in sl.channels if ch in channels])
+                for sl in scanlists
+            ]
+            if sl.channels
         ]
 
     @property
@@ -266,9 +296,28 @@ class Zone:
     """
     A Zone groups channels together by name
     """
+
     name = attr.ib(validator=attr.validators.instance_of(str))
     channels_a = attr.ib(factory=list, validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)))
     channels_b = attr.ib(factory=list, validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)))
+
+    @classmethod
+    def prune_missing_channels(cls, zones, channels):
+        """
+        Return a sequence of new Zone objects containing only channels in `channels`
+        """
+        return [
+            zn
+            for zn in [
+                attr.evolve(
+                    zn,
+                    channels_a=[ch for ch in zn.channels_a if ch in channels],
+                    channels_b=[ch for ch in zn.channels_a if ch in channels],
+                )
+                for zn in zones
+            ]
+            if zn.unique_channels
+        ]
 
     @property
     def unique_channels(self):
@@ -366,6 +415,30 @@ class Codeplug:
             zones=list(self.zones),
         )
 
+    def replace_scanlists(self, scanlist_dicts):
+        """
+        Return a new codeplug with additional scanlists.
+
+        If the scanlist name appears in the codeplug, the entire scanlist
+        is replaced by the new definition.
+
+        If any channel names are not present in the codeplug, those channels
+        will be ignored.
+
+        :param scanlist_dicts: dict of scanlist_name -> [channel_name1, channel_name2, ...]
+        """
+        scanlists = {sl.name: sl for sl in self.scanlists}
+        for sl_name, channels in scanlist_dicts.items():
+            scanlists[sl_name] = ScanList.from_names(name=sl_name, channel_names=channels)
+
+        return type(self)(
+            contacts=list(self.contacts),
+            channels=list(self.channels),
+            grouplists=list(self.grouplists),
+            scanlists=list(scanlists.values()),
+            zones=list(self.zones),
+        )
+
     def filter_frequency_range(self, *ranges):
         """
         :param ranges: tuple of (low, high) frequency to keep in the codeplug
@@ -392,27 +465,12 @@ class Codeplug:
                 ranges,
             )
 
-        # prune channels from scanlists
-        scanlists = []
-        for scanlist in self.scanlists:
-            sc_channels = [ch for ch in scanlist.channels if ch not in channels_pruned]
-            if sc_channels:
-                scanlists.append(ScanList(name=scanlist.name, channels=sc_channels))
-
-        # prune channels from zones
-        zones = []
-        for zone in self.zones:
-            zn_channels_a = [ch for ch in zone.channels_a if ch not in channels_pruned]
-            zn_channels_b = [ch for ch in zone.channels_b if ch not in channels_pruned]
-            if zn_channels_a or zn_channels_b:
-                zones.append(Zone(name=zone.name, channels_a=zn_channels_a, channels_b=zn_channels_b))
-
         return type(self)(
             contacts=list(self.contacts),
             channels=channels,
             grouplists=list(self.grouplists),
             scanlists=ScanList.prune_missing_channels(self.scanlists, channels),
-            zones=zones,
+            zones=Zone.prune_missing_channels(self.zones, channels),
         )
 
     def expand_static_talkgroups(self, static_talkgroup_order=None):
@@ -453,5 +511,5 @@ class Codeplug:
             grouplists=list(self.grouplists),
             # Don't reference channels that no longer exist
             scanlists=ScanList.prune_missing_channels(self.scanlists, channels) + exp_scanlists,
-            zones=zones,
+            zones=Zone.prune_missing_channels(zones, channels),
         )

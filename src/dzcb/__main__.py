@@ -11,6 +11,7 @@ import os
 import shutil
 
 from dzcb import __version__
+import dzcb.anytone
 import dzcb.data
 import dzcb.farnsworth
 import dzcb.gb3gf
@@ -167,23 +168,39 @@ if __name__ == "__main__":
     static_talkgroup_order = order.get("static_talkgroup", [])
 
     # create codeplug from a directory of k7abd CSVs
-    cp = dzcb.k7abd.Codeplug_from_k7abd(cache_dir).order_grouplists(
-        static_talkgroup_order=static_talkgroup_order
+    cp = (
+        dzcb.k7abd.Codeplug_from_k7abd(cache_dir)
+        .order_grouplists(static_talkgroup_order=static_talkgroup_order)
+        .replace_scanlists(scanlists)
     )
-    # add custom scanlists after static TG expansion
-    for sl_name, channels in scanlists.items():
-        sl = dzcb.model.ScanList.from_names(name=sl_name, channel_names=channels)
-        cp.scanlists.append(sl)
     logger.info("Generated %s", cp)
 
     # GB3GF CSV - Radioddity GD77/OpenGD77, TYT MD-380, MD-9600, Baofeng DM1801, RD-5R
     # XXX: Only support OpenGD77 at the moment
-    gd77_outdir = Path(args.outdir) / "gb3gf_opengd77"
-    if not gd77_outdir.exists():
-        gd77_outdir.mkdir()
+    gb3gf_outdir = append_dir_and_create(outdir, "gb3gf")
+    gd77_outdir = append_dir_and_create(gb3gf_outdir, "opengd77")
     dzcb.gb3gf.Codeplug_to_gb3gf_opengd77_csv(
         cp.order_zones(zone_order=zone_order),
         output_dir=gd77_outdir,
+    )
+
+    # The following models use expand_static_talkgroups to create
+    # one channel per talkgroup / one zone per repeater
+    fw_cp = (
+        cp.expand_static_talkgroups(static_talkgroup_order=static_talkgroup_order)
+        .order_zones(
+            zone_order=zone_order_expanded,
+            exclude_zones=exclude_zones_expanded,
+        )
+        .replace_scanlists(scanlists)
+    )
+    logger.info("Expand static talkgroups %s", fw_cp)
+
+    # Anytone 578/868/878 stock CPS CSV import files
+    anytone_outdir = append_dir_and_create(outdir, "anytone")
+    dzcb.anytone.Codeplug_to_anytone_csv(
+        cp=fw_cp,
+        output_dir=anytone_outdir,
     )
 
     # Farnsworth JSON - TYT et. al w/ Zone Import!
@@ -200,22 +217,9 @@ if __name__ == "__main__":
             for ftj in args.farnsworth_template_json
         ]
 
-    if farnsworth_templates:
-        # expand static_talkgroups into channel per talkgroup / zone per repeater
-        fw_cp = cp.expand_static_talkgroups(
-            static_talkgroup_order=static_talkgroup_order
-        ).order_zones(
-            zone_order=zone_order_expanded,
-            exclude_zones=exclude_zones_expanded,
-        )
-        # add custom scanlists after static TG expansion
-        for sl_name, channels in scanlists.items():
-            sl = dzcb.model.ScanList.from_names(name=sl_name, channel_names=channels)
-            fw_cp.scanlists.append(sl)
-        logger.info("Expand static talkgroups %s", fw_cp)
-
+    fw_outdir = append_dir_and_create(outdir, "editcp")
     for ftj, fname, fh in farnsworth_templates:
-        outfile = outdir / fname
+        outfile = fw_outdir / fname
         outfile.write_text(
             dzcb.farnsworth.Codeplug_to_json(
                 cp=fw_cp,
