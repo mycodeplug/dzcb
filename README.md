@@ -57,6 +57,23 @@ use as the template for settings and radio capabilities.
 `dzcb` includes basic template files for [MD380/390](./codeplug/default-tyt-md380)
 and [MD-UV380/390](./src/dzcb/data/farnsworth).
 
+## Anytone CPS
+
+For import into the official Anytone CPS (windows-only).
+
+`dzcb` generates Channels.CSV, Talkgroups.CSV, ScanList.CSV, and Zone.CSV
+
+### Versions Supported
+
+* **AT-D578UV** [CPS 1.11](https://cdn.shopify.com/s/files/1/0833/9095/files/D578UV_V1.11_official_release_200918.zip)
+  * [Bridgecom Support](https://bridgecomsystems.freshdesk.com/support/solutions/articles/63000106309-anytone-578-cps-and-firmware-downloads)
+* **AT-D868UV** [CPS 1.39](https://cdn.shopify.com/s/files/1/0833/9095/files/D868UV_2.39_official_200807.zip)
+  * [Bridgecom Support](https://bridgecomsystems.freshdesk.com/support/solutions/articles/63000105671-anytone-868-cps-firmware-and-driver-versions)
+* **AT-D878UV** [CPS 1.21](https://cdn.shopify.com/s/files/1/0833/9095/files/D878UV_V1.21_official_release_200918.zip)  
+  * [Bridgecom Support](https://bridgecomsystems.freshdesk.com/support/solutions/articles/63000105978-anytone-878-878-plus-cps-firmware-and-driver-downloads)
+
+(links fetched 2021/01/24)
+
 ## GB3GF OpenGD77 CSV
 
 For import into [GB3GF CSV tool](http://www.gb3gf.co.uk/downloads.html).
