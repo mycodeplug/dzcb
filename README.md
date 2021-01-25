@@ -9,33 +9,13 @@
 
 <img src="/doc/dzcb-overview.svg">
 
-## See [Releases](https://github.com/masenf/dzcb/releases) for Default Codeplugs
+## See [Releases](https://github.com/mycodeplug/dzcb/releases) for Default Codeplugs
 
 ## Github Actions
 
-This repository uses a Github Actions workflow to build
-[codeplugs](./codeplug) automatically in the cloud.
-
-### Customizing Your Own Codeplug
-
-See **[codeplug-example](./codeplug-example/kf7hvm)**
-
-* Fork this repo
-* Copy `codeplug-example/kf7hvm` to `codeplug/your-call`
-* customize generate.sh and other files
-  * `kf7hvm-md-uv380.json`: set your Radio ID and Radio Name
-    * Copy templates from [default-tyt-md380](./codeplug/default-tyt-md380) for
-      monoband variants.
-  * `order.json`: preferred zone order, zone exclusion, preferred talkgroup order
-  * `scanlists.json`: additional scanlists
-* if using repeaterbook, set secrets in repo settings:
-  * REPEATERBOOK_USER
-  * REPEATERBOOK_PASSWD
-  * `prox.csv`: customize zones
-* Github [`default-codeplugs`](.github/workflows/default-codeplugs.yml) workflow
-  will automatically build all codeplugs in the [`codeplug`](./codeplug) directory.
-* When a Release is published, the generated codeplugs will be hosted publicly 
-  with a stable URL.
+For more information on generating customized codeplugs in the cloud without
+installing any software, see
+**[example-codeplug](https://github.com/mycodeplug/example-codeplug/tree/main/input/kf7hvm)**
 
 # Output Formats
 
