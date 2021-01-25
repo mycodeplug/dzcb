@@ -15,7 +15,8 @@
 
 For more information on generating customized codeplugs in the cloud without
 installing any software, see
-**[example-codeplug](https://github.com/mycodeplug/example-codeplug/tree/main/input/kf7hvm)**
+**[example-codeplug](https://github.com/mycodeplug/example-codeplug)** 
+[[input files](https://github.com/mycodeplug/example-codeplug/tree/main/input/kf7hvm)]
 
 # Output Formats
 
