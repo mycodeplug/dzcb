@@ -15,6 +15,8 @@ the concepts are applicable to excel, linux, or git command line.
 "Fork" means to make a linked copy of the example-codeplug that you can
 edit without affecting the original.
 
+Click "Fork" (not the number next to it)
+
 [<img src="./fork-button.png" alt="click fork and select your account">](https://raw.githubusercontent.com/masenf/dzcb/walkthru/doc/walkthrough/forking.webm)
 
 ## Rename Your New Fork
@@ -114,7 +116,7 @@ Libreoffice (or Excel).
 
 Add the new talkgroup, BC on brandmeister, `30271`.
 
-<img src="./calc-talkgroups-hotspot.png>
+<img src="./calc-talkgroups-hotspot.png">
 
 Save the file. **Use Text CSV Format!**
 
@@ -181,7 +183,11 @@ Click "Push origin"
 
 ### Check progress
 
-Click "View on Github" and click the "Actions" tab. You should see the
+Click "View on Github"
+
+<img src="./github-desktop-view-on-github.png">
+
+When the browser opens, click the "Actions" tab. You should see the
 codeplug being built.
 
 <img src="./github-actions-overview.png">
