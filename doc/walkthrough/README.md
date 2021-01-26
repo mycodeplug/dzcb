@@ -12,4 +12,4 @@ the concepts are applicable to excel, linux, or git command line.
 
 ## Fork [`example-codeplug`](https://github.com/mycodeplug/example-codeplug)
 
-[<img src="./fork-button.png" alt="click to fork">](https://github.com/mycodeplug/example-codeplug/fork)
+[<img src="./fork-button.png" alt="click fork and select your account">](https://raw.githubusercontent.com/masenf/dzcb/walkthru/doc/walkthrough/forking.webm)
