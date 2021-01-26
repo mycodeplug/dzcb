@@ -62,7 +62,7 @@ Start Github Desktop and sign in with your Github Account.
 From the list of repositories, select your new fork ("shiney-new-codeplug"
 in this example), and click "Clone youruser/your-codeplug". 
 
-Next, nhoose where to download the repository, or keep the defaults.
+Next, choose where to download the repository, or keep the defaults.
 
 <img src="./walkthrough/github-desktop-clone.png">
 
@@ -79,7 +79,7 @@ Click Continue.
 ## Make Changes to Source Files
 
 From the repository main screen in Github Desktop, click
-"Show in Explorer" to view and files
+"Show in Explorer" to view the files
 
 <img src="./walkthrough/github-desktop-repo.png">
 
@@ -155,7 +155,7 @@ and is used for radios that do NOT expand static talkgroups into
 channels (Radioddity OpenGD77).
 
 The second list, "expanded", orders zones based on the zone name
-in the CSV file and affects the zone order on Anytone and TYT radios.
+_inside_ the CSV file and affects the zone order on Anytone and TYT radios.
 
 Add a line to the top of the "expanded" list for the "New Hotspot".
 (if you used a different name in the previous step, use that same
@@ -229,14 +229,14 @@ Sometimes Settings is hidden behind the three dots menu.
 
 Scroll down and select "Secrets" from the left menu.
 
-<img src="./walkthrough/settings-secrets1">
+<img src="./walkthrough/settings-secrets1.png">
 
 Click New repository secret.
 
 1. Name: `REPEATERBOOK_USER`
 2. Value: your repeaterbook account name (replace `kf7hvm` with your username)
 
-<img src="./walkthrough/settings-secrets2">
+<img src="./walkthrough/settings-secrets2.png">
 
 Click Add secret.
 
@@ -245,7 +245,7 @@ Again click New repository secret.
 1. Name: `REPEATERBOOK_PASSWD`
 2. Value: your repeaterbook password
 
-<img src="./walkthrough/settings-secrets3">
+<img src="./walkthrough/settings-secrets3.png">
 
 Click Add secret.
 
@@ -299,5 +299,5 @@ When the codeplug has been generated, you will see `codeplugs.zip`
 under the "Assets" section of the release.
 
 Github will host your codeplug indefinitely, you may right click
-`codeplugs.zip` and "Copy link location" to share the generated codeplug.
+`codeplugs.zip` and "Copy link location" to share the generated codeplug
 with others.
