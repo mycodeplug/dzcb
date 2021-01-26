@@ -14,8 +14,10 @@
 ## Github Actions
 
 For more information on generating customized codeplugs in the cloud without
-installing any software, see
-**[example-codeplug](https://github.com/mycodeplug/example-codeplug)** 
+installing any software, see **[WALKTHROUGH](./doc/WALKTHROUGH.md)**.
+
+The walkthrough uses
+[mycodeplug/example-codeplug](https://github.com/mycodeplug/example-codeplug)
 [[input files](https://github.com/mycodeplug/example-codeplug/tree/main/input/kf7hvm)]
 
 # Output Formats
