@@ -17,7 +17,7 @@ edit without affecting the original.
 
 Click "Fork" (not the number next to it)
 
-[<img src="./fork-button.png" alt="click fork and select your account">](https://raw.githubusercontent.com/masenf/dzcb/walkthru/doc/walkthrough/forking.webm)
+[<img src="./walkthrough/fork-button.png" alt="click fork and select your account">](https://raw.githubusercontent.com/masenf/dzcb/walkthru/doc/walkthrough/forking.webm)
 
 ## Rename Your New Fork
 
@@ -29,11 +29,11 @@ fork once.**
 
 Sometimes Settings is hidden behind the three dots menu.
 
-<img src="./settings1.png" alt="sometimes settings is hidden behind the three dots menu">
+<img src="./walkthrough/settings1.png" alt="sometimes settings is hidden behind the three dots menu">
 
 ### Choose a new name
 
-<img src="./settings-rename.png" alt="pick a descriptive name or use callsign">
+<img src="./walkthrough/settings-rename.png" alt="pick a descriptive name or use callsign">
 
 Click Rename.
 
@@ -41,7 +41,7 @@ Click Rename.
 
 Click Actions tab.
 
-<img src="./enable-actions.png" alt="I understand my workflows, go ahead and enable them">
+<img src="./walkthrough/enable-actions.png" alt="I understand my workflows, go ahead and enable them">
 
 Click "I understand my workflows, go ahead and enable them"
 
@@ -56,14 +56,14 @@ Github to generate the codeplug.
 
 Start Github Desktop and sign in with your Github Account.
 
-<img src="./github-desktop-home.png">
+<img src="./walkthrough/github-desktop-home.png">
 
 From the list of repositories, select your new fork ("shiney-new-codeplug"
 in this example), and click "Clone youruser/your-codeplug". 
 
 Next, nhoose where to download the repository, or keep the defaults.
 
-<img src="./github-desktop-clone.png">
+<img src="./walkthrough/github-desktop-clone.png">
 
 Click Clone.
 
@@ -71,7 +71,7 @@ Wait patiently until asked
 "How are you planning to use this fork?", then select
 "For my own purposes".
 
-<img src="./github-desktop-clone2.png">
+<img src="./walkthrough/github-desktop-clone2.png">
 
 Click Continue.
 
@@ -80,12 +80,12 @@ Click Continue.
 From the repository main screen in Github Desktop, click
 "Show in Explorer" to view and files
 
-<img src="./github-desktop-repo.png">
+<img src="./walkthrough/github-desktop-repo.png">
 
 When the explorer window opens, double click "input" then "default"
 to view the example code plug source files.
 
-<img src="./explorer-default.png">
+<img src="./walkthrough/explorer-default.png">
 
 The `.json` and `.sh` files are plain text and can be opened with
 notepad for editing.
@@ -95,17 +95,17 @@ notepad for editing.
 Double click `example-md-uv380.json`, click the "More Apps ꜜ" link
 and choose Notepad from the list.
 
-<img src="./explorer-open-with.png">
+<img src="./walkthrough/explorer-open-with.png">
 
 From Edit > Find... search for `"RadioID`.
 
-<img src="./notepad-find.png">
+<img src="./walkthrough/notepad-find.png">
 
 Replace "1234567" with your DMR number.
 
 Scroll down a bit and replace "AA1AA" with your callsign
 
-<img src="./notepad-changed.png">
+<img src="./walkthrough/notepad-changed.png">
 
 Close Notepad and save the file.
 
@@ -116,7 +116,7 @@ Libreoffice (or Excel).
 
 Add the new talkgroup, BC on brandmeister, `30271`.
 
-<img src="./calc-talkgroups-hotspot.png">
+<img src="./walkthrough/calc-talkgroups-hotspot.png">
 
 Save the file. **Use Text CSV Format!**
 
@@ -130,7 +130,7 @@ a new row based on the existing rows. You can also
 rename the existing zones and modify the RX / TX frequencies
 instead of creating a new row.
 
-<img src="./calc-digital-repeaters-hotspot.png">
+<img src="./walkthrough/calc-digital-repeaters-hotspot.png">
 
 Next scroll to the far right and add a new column corresponding
 to the "BC" talkgroup that was added in the previous section.
@@ -139,7 +139,7 @@ Enter a "-", "1", or "2" in each cell in the BC column indicating
 whether the zone should create a channel for the talkgroup
 on timeslot 1 or timeslot 2.
 
-<img src="./calc-digital-repeaters-bc.png">
+<img src="./walkthrough/calc-digital-repeaters-bc.png">
 
 Save the file. **Use Text CSV Format!**
 
@@ -160,7 +160,7 @@ Add a line to the top of the "expanded" list for the "New Hotspot".
 (if you used a different name in the previous step, use that same
 name here).
 
-<img src="./notepad-order.png">
+<img src="./walkthrough/notepad-order.png">
 
 Close Notepad and save the file.
 
@@ -170,30 +170,133 @@ Switch back to Github Desktop and review the changes that were made.
 
 In the lower left, describe the change and click "Commit to main"
 
-<img src="./github-desktop-commit.png">
+<img src="./walkthrough/github-desktop-commit.png">
 
 ### Push commits
 
 A "push" uploads your changes to github.com and starts the
 codeplug generation.
 
-<img src="./github-desktop-push.png">
+<img src="./walkthrough/github-desktop-push.png">
 
 Click "Push origin"
 
-### Check progress
+### View progress
 
 Click "View on Github"
 
-<img src="./github-desktop-view-on-github.png">
+<img src="./walkthrough/github-desktop-view-on-github.png">
 
 When the browser opens, click the "Actions" tab. You should see the
 codeplug being built.
 
-<img src="./github-actions-overview.png">
+<img src="./walkthrough/github-actions-overview.png">
+
+### Check Codeplug
 
 After a minute or two, the codeplug should be ready. From the build
 summary, scroll down to the "Artifacts" section to download
 codeplugs.zip with the generated codeplug!
 
-<img src="./github-actions-artifacts.png">
+<img src="./walkthrough/github-actions-artifacts.png">
+
+Import the files into your preferred CPS and check that
+the new zone and channel is added.
+
+# Enable Repeaterbook
+
+The `prox.csv` file in the `input` directory identifies points
+of interest used to download repeater information from repeaterbook.com.
+
+## Sign up for Repeaterbook
+
+To download the data, you must
+[sign up for an account](https://www.repeaterbook.com/index.php/user-profile?view=registration).
+
+_Don't use the same password that you use for your email or online
+banking, as the password will have to be entered into github!_
+
+## Add "Secrets" to your forked repository.
+
+### Open Settings
+
+Sometimes Settings is hidden behind the three dots menu.
+
+<img src="./walkthrough/settings1.png" alt="sometimes settings is hidden behind the three dots menu">
+
+### Select "Secrets"
+
+Scroll down and select "Secrets" from the left menu.
+
+<img src="./walkthrough/settings-secrets1">
+
+Click New repository secret.
+
+1. Name: `REPEATERBOOK_USER`
+2. Value: your repeaterbook account name (replace `kf7hvm` with your username)
+
+<img src="./walkthrough/settings-secrets2">
+
+Click Add secret.
+
+Again click New repository secret.
+
+1. Name: `REPEATERBOOK_PASSWD`
+2. Value: your repeaterbook password
+
+<img src="./walkthrough/settings-secrets3">
+
+Click Add secret.
+
+## Add a new analog zone
+
+Back in the "input\default" directory, open `prox.csv`.
+
+Add new zones by providing coordinates, distance, and band
+id (14 - 2 meter, 4 - 70 centimeter). Follow the existing
+examples for guidance.
+
+<img src="./walkthrough/calc-prox-new.png">
+
+Save the file. **Use Text CSV Format!**
+
+## Commit and push
+
+Go back to Github Desktop, make a new commit, and Push
+to origin as seen in a previous step.
+
+Github Actions will build your changed codeplug.
+
+# Publish and Share
+
+After checking that the codeplug meets expectations and
+is functional, go back to the Code tab of your forked repo
+and select "Releases" in the right column.
+
+<img src="./walkthrough/github-code-releases.png">
+
+<img src="./walkthrough/github-releases-main.png">
+
+Click Draft a new release.
+
+For the "Tag version" box, enter the date in ISO format: `2021-01-26`
+
+"Release title" and "Describe this release" are optional and can
+be edited later.
+
+<img src="./walkthrough/github-releases-publish.png">
+
+Click Publish release.
+
+This will trigger another Github Actions rebuild of your codeplug.
+
+Wait a few minutes and then refresh the page.
+
+<img src="./walkthrough/github-releases-assets.png">
+
+When the codeplug has been generated, you will see `codeplugs.zip`
+under the "Assets" section of the release.
+
+Github will host your codeplug indefinitely, you may right click
+`codeplugs.zip` and "Copy link location" to share the generated codeplug.
+with others.
