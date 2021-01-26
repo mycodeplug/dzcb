@@ -15,6 +15,7 @@ the concepts are applicable to excel, linux, or git command line.
 "Fork" means to make a linked copy of the example-codeplug that you can
 edit without affecting the original.
 
+Go to [https://github.com/mycodeplug/example-codeplug](https://github.com/mycodeplug/example-codeplug).
 Click "Fork" (not the number next to it)
 
 [<img src="./walkthrough/fork-button.png" alt="click fork and select your account">](https://raw.githubusercontent.com/masenf/dzcb/walkthru/doc/walkthrough/forking.webm)
