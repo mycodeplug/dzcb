@@ -13,3 +13,19 @@ the concepts are applicable to excel, linux, or git command line.
 ## Fork [`example-codeplug`](https://github.com/mycodeplug/example-codeplug)
 
 [<img src="./fork-button.png" alt="click fork and select your account">](https://raw.githubusercontent.com/masenf/dzcb/walkthru/doc/walkthrough/forking.webm)
+
+## Rename Your New Fork
+
+Your new fork is a repo containing the files needed to 
+generate your customized codeplug. **You only need to make a
+fork once.**
+
+### Open Settings
+
+<img src="./settings1.png" alt="sometimes settings is hidden behind the three dots menu">
+
+### Choose a new name
+
+<img src="./settings-rename.png" alt="pick a descriptive name or use callsign">
+
+Click Rename.
