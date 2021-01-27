@@ -45,12 +45,10 @@ GroupList_name_maps = dict(
 
 
 def GroupList_to_dict(g):
-    d = {
-        GroupList_name_maps[k]: v
-        for k, v in attr.asdict(g).items()
-        if k in attr.fields_dict(GroupList)
+    return {
+        "Name": g.name,
+        "Contact": [tg.name for tg in g.contacts]
     }
-    return d
 
 
 def ScanList_to_dict(s):
