@@ -119,6 +119,10 @@ Add the new talkgroup, BC on brandmeister, `30271`.
 
 <img src="./walkthrough/calc-talkgroups-hotspot.png">
 
+It may be convenient to keep your CSV files sorted alphabetically or otherwise,
+however dzcb will re-order combined zones and expanded talkgroups according to
+`order.json` (see below).
+
 Save the file. **Use Text CSV Format!**
 
 ### Add a new Simplex Hotspot (example)
@@ -131,12 +135,16 @@ a new row based on the existing rows. You can also
 rename the existing zones and modify the RX / TX frequencies
 instead of creating a new row.
 
+To the right of "Color Code" the remaining column headers correspond to
+talkgroup names. Going across the row, a "-", "1", or "2" indicates
+whether to create a channel in the zone on the given frequency and timeslot.
+
 <img src="./walkthrough/calc-digital-repeaters-hotspot.png">
 
 Next scroll to the far right and add a new column corresponding
 to the "BC" talkgroup that was added in the previous section.
 
-Enter a "-", "1", or "2" in each cell in the BC column indicating
+Enter a "-", "1", or "2" in each cell of the BC column indicating
 whether the zone should create a channel for the talkgroup
 on timeslot 1 or timeslot 2.
 
@@ -149,6 +157,8 @@ Save the file. **Use Text CSV Format!**
 The newly added zone can be placed at the top of the zone list
 by editing `order.json` and adding a line matching the
 new zone name.
+
+**Any zones not in the list will follow in alphabetical order**.
 
 The first list, "default", orders zones based on the CSV file name
 and is used for radios that do NOT expand static talkgroups into
