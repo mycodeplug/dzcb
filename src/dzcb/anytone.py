@@ -322,7 +322,7 @@ SUPPORTED_RADIOS = {
             "PTT Prohibit": "TX Prohibit",
             "Scan List": "CH Scan List",
         },
-        remove_fields=["DMR MODE"],
+        remove_fields=["Contact TG/DMR ID", "DMR MODE"],
     ),
     "878_1_21": dict(
         version="1.21",
@@ -389,6 +389,7 @@ def Codeplug_to_anytone_csv(cp, output_dir, models=None):
                             "Contact Call Type": str(channel.talkgroup.kind) + " Call",
                             "Color Code": str(channel.color_code),
                             "Slot": str(channel.talkgroup.timeslot),
+                            "Contact TG/DMR ID": channel.talkgroup.dmrid,
                             "Scan List": channel.scanlist,
                             "Busy Lock/TX Permit": TXPermit.SAMECOLOR.value
                             if abs(channel.offset) > 0
