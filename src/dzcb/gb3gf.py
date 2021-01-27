@@ -84,6 +84,7 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
                     "RX Tone": "None",
                     "TX Tone": "None",
                     "Colour Code": channel.color_code,
+                    "Contact": "N/A",
                     "TG List": channel.grouplist.name if channel.grouplist else "None",
                 }
                 if channel.talkgroup:
