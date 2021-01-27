@@ -63,6 +63,13 @@ def replace_field_names(d, model):
     return d
 
 
+def remove_fields(d, model):
+    for f in model.get("remove_fields", []):
+        if f in d:
+            del d[f]
+    return d
+
+
 class DMR_MODE(enum.Enum):
     SIMPLEX = 0
     REPEATER = 1
@@ -297,6 +304,7 @@ SUPPORTED_RADIOS = {
         talkgroup=talkgroup_fields,
         talkgroup_filename=talkgroup_filename_578_1_11,
         replace_field_names={},
+        remove_fields=[],
     ),
     "868_1_39": dict(
         version="1.39",
@@ -314,6 +322,7 @@ SUPPORTED_RADIOS = {
             "PTT Prohibit": "TX Prohibit",
             "Scan List": "CH Scan List",
         },
+        remove_fields=["DMR MODE"],
     ),
     "878_1_21": dict(
         version="1.21",
@@ -328,6 +337,7 @@ SUPPORTED_RADIOS = {
         talkgroup=talkgroup_fields,
         talkgroup_filename=talkgroup_filename,
         replace_field_names={},
+        remove_fields=[],
     ),
 }
 
@@ -403,7 +413,7 @@ def Codeplug_to_anytone_csv(cp, output_dir, models=None):
                         "PTT Prohibit": value_replacements[channel.rx_only],
                     }
                 )
-                csvw.writerow(replace_field_names(d, model))
+                csvw.writerow(replace_field_names(remove_fields(d, model), model))
         with (radio_dir / model["zone_filename"]).open("w", newline="") as f:
             csvw = csv.DictWriter(f, tuple(model["zone"].keys()))
             csvw.writeheader()
