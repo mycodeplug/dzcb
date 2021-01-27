@@ -95,7 +95,6 @@ class TXPermit(enum.Enum):
         return cls.ALWAYS.value
 
 
-
 # 578/868/878 Common Talkgroups.CSV format
 talkgroup_fields = ("No.", "Radio ID", "Name", "Call Type", "Call Alert")
 talkgroup_filename = "TalkGroups.CSV"
@@ -380,9 +379,7 @@ def AnalogChannel_to_dict(channel):
     return {
         "CTCSS/DCS Decode": channel.tone_decode or OFF,
         "CTCSS/DCS Encode": channel.tone_encode or OFF,
-        "Squelch Mode": "CTCSS/DCS"
-        if channel.tone_decode
-        else "Carrier",
+        "Squelch Mode": "CTCSS/DCS" if channel.tone_decode else "Carrier",
         "Busy Lock/TX Permit": OFF,
     }
 
@@ -400,9 +397,7 @@ def DigitalChannel_to_dict(channel):
         # DMR MODE "Repeater" unless "Simplex=On"
         # Set it ON for simplex channels, and it will have zero
         # effect because it only makes a difference on split channels
-        "Through Mode": OFF
-        if abs(channel.offset) > 0
-        else ON,
+        "Through Mode": OFF if abs(channel.offset) > 0 else ON,
         # TODO: Support group list
     }
     if channel.talkgroup:
@@ -415,9 +410,7 @@ def Channel_to_dict(index, channel):
         "No.": str(index + 1),
         "Channel Name": channel.short_name,
         "Receive Frequency": format_frequency(channel.frequency),
-        "Transmit Frequency": format_frequency(
-            channel.frequency + channel.offset
-        ),
+        "Transmit Frequency": format_frequency(channel.frequency + channel.offset),
         "Channel Type": format_channel_type(type(channel)),
         "Transmit Power": str(channel.power),
         "Band Width": "25K" if channel.bandwidth > 19 else "12.5K",
