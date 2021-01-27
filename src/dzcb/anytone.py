@@ -75,12 +75,25 @@ class DMR_MODE(enum.Enum):
     REPEATER = 1
     DUAL_SLOT = 2
 
+    @classmethod
+    def value_from(cls, channel):
+        if abs(channel.offset) > 0:
+            return cls.REPEATER.value
+        return cls.SIMPLEX.value
+
 
 class TXPermit(enum.Enum):
     ALWAYS = "Always"
     CHANNELFREE = "ChannelFree"
     SAMECOLOR = "Same Color Code"
     DIFFERENTCOLOR = "Different Color Code"
+
+    @classmethod
+    def value_from(cls, channel):
+        if abs(channel.offset) > 0:
+            return cls.SAMECOLOR.value
+        return cls.ALWAYS.value
+
 
 
 # 578/868/878 Common Talkgroups.CSV format
@@ -303,7 +316,9 @@ SUPPORTED_RADIOS = {
         zone_filename=zone_filename,
         talkgroup=talkgroup_fields,
         talkgroup_filename=talkgroup_filename_578_1_11,
-        replace_field_names={},
+        replace_field_names={
+            "Through Mode": "Simplex",
+        },
         remove_fields=[],
     ),
     "868_1_39": dict(
@@ -391,12 +406,18 @@ def Codeplug_to_anytone_csv(cp, output_dir, models=None):
                             "Slot": str(channel.talkgroup.timeslot),
                             "Contact TG/DMR ID": channel.talkgroup.dmrid,
                             "Scan List": channel.scanlist,
-                            "Busy Lock/TX Permit": TXPermit.SAMECOLOR.value
+                            "Busy Lock/TX Permit": TXPermit.value_from(channel),
+                            "DMR MODE": DMR_MODE.value_from(channel),
+                            # On the 578 and 878, DMR MODE = "Simplex" (0) channels
+                            # also have "Simplex=On" and "Through Mode=On" in the
+                            # exported file. Neither targeted CPS version exposes
+                            # this setting in the UI. But the 578 1.11 CPS will show
+                            # DMR MODE "Repeater" unless "Simplex=On"
+                            # Set it ON for simplex channels, and it will have zero
+                            # effect because it only makes a difference on split channels
+                            "Through Mode": OFF
                             if abs(channel.offset) > 0
-                            else TXPermit.ALWAYS.value,
-                            "DMR MODE": DMR_MODE.REPEATER.value
-                            if abs(channel.offset) > 0
-                            else DMR_MODE.SIMPLEX.value
+                            else ON,
                             # TODO: Support group list
                         }
                     )
