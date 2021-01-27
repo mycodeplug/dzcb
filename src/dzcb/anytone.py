@@ -9,6 +9,7 @@ Supported CPS versions
 
 """
 import csv
+import enum
 import logging
 from pathlib import Path
 
@@ -60,6 +61,19 @@ def replace_field_names(d, model):
             d[repl] = d[orig]
             del d[orig]
     return d
+
+
+class DMR_MODE(enum.Enum):
+    SIMPLEX = 0
+    REPEATER = 1
+    DUAL_SLOT = 2
+
+
+class TXPermit(enum.Enum):
+    ALWAYS = "Always"
+    CHANNELFREE = "ChannelFree"
+    SAMECOLOR = "Same Color Code"
+    DIFFERENTCOLOR = "Different Color Code"
 
 
 # 578/868/878 Common Talkgroups.CSV format
@@ -353,6 +367,7 @@ def Codeplug_to_anytone_csv(cp, output_dir, models=None):
                             "Squelch Mode": "CTCSS/DCS"
                             if channel.tone_decode
                             else "Carrier",
+                            "Busy Lock/TX Permit": OFF,
                         }
                     )
                 else:
@@ -365,6 +380,12 @@ def Codeplug_to_anytone_csv(cp, output_dir, models=None):
                             "Color Code": str(channel.color_code),
                             "Slot": str(channel.talkgroup.timeslot),
                             "Scan List": channel.scanlist,
+                            "Busy Lock/TX Permit": TXPermit.SAMECOLOR.value
+                            if abs(channel.offset) > 0
+                            else TXPermit.ALWAYS.value,
+                            "DMR MODE": DMR_MODE.REPEATER.value
+                            if abs(channel.offset) > 0
+                            else DMR_MODE.SIMPLEX.value
                             # TODO: Support group list
                         }
                     )
