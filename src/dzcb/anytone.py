@@ -348,8 +348,8 @@ def Codeplug_to_anytone_csv(cp, output_dir, models=None):
                 if isinstance(channel, AnalogChannel):
                     d.update(
                         {
-                            "CTCSS/DCS Decode": channel.tone_decode or "None",
-                            "CTCSS/DCS Encode": channel.tone_encode or "None",
+                            "CTCSS/DCS Decode": channel.tone_decode or OFF,
+                            "CTCSS/DCS Encode": channel.tone_encode or OFF,
                             "Squelch Mode": "CTCSS/DCS"
                             if channel.tone_decode
                             else "Carrier",
