@@ -73,7 +73,7 @@ def Codeplug_from_zone_dicts(zone_dicts):
         contacts.update(ch.static_talkgroups)
         grouplist = GroupList(
             name="{} TGS".format(ch.code),
-            contacts=[tg.name for tg in ch.static_talkgroups],
+            contacts=ch.static_talkgroups,
         )
         grouplists.append(grouplist)
         return attr.evolve(ch, grouplist=grouplist)
