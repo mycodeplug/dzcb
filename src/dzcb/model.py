@@ -402,6 +402,7 @@ class Codeplug:
                 contacts=dzcb.munge.ordered(
                     seq=[c for c in gl.contacts if c not in exclude_talkgroups],
                     order=static_talkgroup_order,
+                    key=lambda c: c.name,
                     log_sequence_name="grouplist {}".format(gl.name),
                 )
             )
