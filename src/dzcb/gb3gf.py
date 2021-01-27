@@ -16,7 +16,7 @@ TALKGROUP_LIST_OVERFLOW = [
     "Ontario 2",
     "PS1-DNU",
     "PS2-DNU",
-    "SNARS 1~2",
+    "SNARS 1-2",
     "USA 2",
     "Worldwide 2",
     "TAC Eng 123",
@@ -40,21 +40,10 @@ value_replacements = {
 def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
     # filter down to supported frequency ranges
     cp = cp.filter_frequency_range((136.0, 174.0), (400.0, 480.0))
+    # will keep track of contacts separately and write them at the end
+    # using name_with_timeslot
+    contacts = set()
     # Channels.csv, Contacts.csv, TG_List.csv, Zones.csv
-    with open("{}/Contacts.csv".format(output_dir), "w", newline="") as f:
-        csvw = csv.DictWriter(
-            f, ["Contact Name", "ID", "ID Type", "TS Override"], delimiter=";"
-        )
-        csvw.writeheader()
-        for tg in cp.contacts:
-            csvw.writerow(
-                {
-                    "Contact Name": tg.name,
-                    "ID": tg.dmrid,
-                    "ID Type": str(tg.kind),
-                    "TS Override": str(tg.timeslot),
-                }
-            )
     channel_fields = [
         "Channel Number",
         "Channel Name",
@@ -95,9 +84,11 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
                     "RX Tone": "None",
                     "TX Tone": "None",
                     "Colour Code": channel.color_code,
-                    "Contact": channel.talkgroup.name if channel.talkgroup else "N/A",
                     "TG List": channel.grouplist.name if channel.grouplist else "None",
                 }
+                if channel.talkgroup:
+                    d["Contact"] = channel.talkgroup.name_with_timeslot
+                    contacts.add(channel.talkgroup)
             d.update(
                 {
                     "Channel Number": ix + 1,
@@ -126,16 +117,17 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
                 n_grouplists -= 1
                 continue
             tg_list = {"TG List Name": gl.name}
-            contacts = list(gl.contacts)
+            contacts_by_name = {tg.name: tg for tg in gl.contacts}
             remove_tgs = list(reversed(TALKGROUP_LIST_OVERFLOW))
             # remove some talkgroups to get under the limit
-            while len(contacts) > 32:
+            while len(contacts_by_name) > 32:
                 try:
-                    contacts.remove(remove_tgs.pop())
-                except ValueError:
+                    del contacts_by_name[remove_tgs.pop()]
+                except KeyError:
                     pass
-            for ix, tg in enumerate(contacts):
-                tg_list["Contact {}".format(ix + 1)] = tg
+            for ix, tg in enumerate(contacts_by_name.values()):
+                tg_list["Contact {}".format(ix + 1)] = tg.name_with_timeslot
+                contacts.add(tg)
             csvw.writerow(tg_list)
     zone_fields = ["Zone Name"] + ["Channel {}".format(x) for x in range(1, 81)]
     with open("{}/Zones.csv".format(output_dir), "w", newline="") as f:
@@ -153,4 +145,18 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
                     break
                 row["Channel {}".format(ix + 1)] = ch.short_name
             csvw.writerow(row)
+    with open("{}/Contacts.csv".format(output_dir), "w", newline="") as f:
+        csvw = csv.DictWriter(
+            f, ["Contact Name", "ID", "ID Type", "TS Override"], delimiter=";"
+        )
+        csvw.writeheader()
+        for tg in sorted(contacts, key=lambda c: c.name_with_timeslot):
+            csvw.writerow(
+                {
+                    "Contact Name": tg.name_with_timeslot,
+                    "ID": tg.dmrid,
+                    "ID Type": str(tg.kind),
+                    "TS Override": str(tg.timeslot),
+                }
+            )
     logger.info("Wrote GB3GF OpenGD77 CSV files to '%s'", output_dir)
