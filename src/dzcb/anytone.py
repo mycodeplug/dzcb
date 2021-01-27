@@ -357,6 +357,117 @@ SUPPORTED_RADIOS = {
 }
 
 
+def Talkgroup_to_dict(index, talkgroup):
+    return {
+        "No.": str(index + 1),
+        "Radio ID": str(talkgroup.dmrid),
+        "Name": talkgroup.name,
+        "Call Type": str(talkgroup.kind) + " Call",
+        "Call Alert": NONE,
+    }
+
+
+def Talkgroup_to_channel_detail(talkgroup):
+    return {
+        "Contact": talkgroup.name,
+        "Contact Call Type": str(talkgroup.kind) + " Call",
+        "Contact TG/DMR ID": talkgroup.dmrid,
+        "Slot": str(talkgroup.timeslot),
+    }
+
+
+def AnalogChannel_to_dict(channel):
+    return {
+        "CTCSS/DCS Decode": channel.tone_decode or OFF,
+        "CTCSS/DCS Encode": channel.tone_encode or OFF,
+        "Squelch Mode": "CTCSS/DCS"
+        if channel.tone_decode
+        else "Carrier",
+        "Busy Lock/TX Permit": OFF,
+    }
+
+
+def DigitalChannel_to_dict(channel):
+    d = {
+        "Color Code": str(channel.color_code),
+        "Scan List": channel.scanlist,
+        "Busy Lock/TX Permit": TXPermit.value_from(channel),
+        "DMR MODE": DMR_MODE.value_from(channel),
+        # On the 578 and 878, DMR MODE = "Simplex" (0) channels
+        # also have "Simplex=On" and "Through Mode=On" in the
+        # exported file. Neither targeted CPS version exposes
+        # this setting in the UI. But the 578 1.11 CPS will show
+        # DMR MODE "Repeater" unless "Simplex=On"
+        # Set it ON for simplex channels, and it will have zero
+        # effect because it only makes a difference on split channels
+        "Through Mode": OFF
+        if abs(channel.offset) > 0
+        else ON,
+        # TODO: Support group list
+    }
+    if channel.talkgroup:
+        d.update(Talkgroup_to_channel_detail(channel.talkgroup))
+    return d
+
+
+def Channel_to_dict(index, channel):
+    d = {
+        "No.": str(index + 1),
+        "Channel Name": channel.short_name,
+        "Receive Frequency": format_frequency(channel.frequency),
+        "Transmit Frequency": format_frequency(
+            channel.frequency + channel.offset
+        ),
+        "Channel Type": format_channel_type(type(channel)),
+        "Transmit Power": str(channel.power),
+        "Band Width": "25K" if channel.bandwidth > 19 else "12.5K",
+        "PTT Prohibit": value_replacements[channel.rx_only],
+    }
+    if isinstance(channel, AnalogChannel):
+        d.update(AnalogChannel_to_dict(channel))
+    else:
+        d.update(DigitalChannel_to_dict(channel))
+    return d
+
+
+def Zone_to_dict(index, zone, expand_members):
+    d = {
+        "No.": str(index + 1),
+        "Zone Name": zone.name,
+    }
+    d.update(
+        format_member_list(
+            members=zone.unique_channels,
+            list_name="Zone Channel Member",
+            expand_members=expand_members,
+        )
+    )
+    for list_name in ("A Channel", "B Channel"):
+        d.update(
+            format_member_list(
+                members=(zone.unique_channels[0],),
+                list_name=list_name,
+                expand_members=expand_members,
+            )
+        )
+    return d
+
+
+def ScanList_to_dict(index, scanlist, expand_members):
+    d = {
+        "No.": str(index + 1),
+        "Scan List Name": scanlist.name,
+    }
+    d.update(
+        format_member_list(
+            members=scanlist.unique_channels[:SCANLIST_MAX],
+            list_name="Scan Channel Member",
+            expand_members=expand_members,
+        )
+    )
+    return d
+
+
 def Codeplug_to_anytone_csv(cp, output_dir, models=None):
     if models is None:
         models = tuple(SUPPORTED_RADIOS.keys())
@@ -370,115 +481,24 @@ def Codeplug_to_anytone_csv(cp, output_dir, models=None):
             csvw = csv.DictWriter(f, model["talkgroup"])
             csvw.writeheader()
             for ix, tg in enumerate(mcp.contacts):
-                csvw.writerow(
-                    {
-                        "No.": str(ix + 1),
-                        "Radio ID": str(tg.dmrid),
-                        "Name": tg.name,
-                        "Call Type": str(tg.kind) + " Call",
-                        "Call Alert": NONE,
-                    }
-                )
+                csvw.writerow(Talkgroup_to_dict(ix, tg))
         with (radio_dir / model["channel_filename"]).open("w", newline="") as f:
             csvw = csv.DictWriter(f, tuple(model["channel"].keys()))
             csvw.writeheader()
             for ix, channel in enumerate(mcp.channels):
                 d = model["channel"].copy()
-                if isinstance(channel, AnalogChannel):
-                    d.update(
-                        {
-                            "CTCSS/DCS Decode": channel.tone_decode or OFF,
-                            "CTCSS/DCS Encode": channel.tone_encode or OFF,
-                            "Squelch Mode": "CTCSS/DCS"
-                            if channel.tone_decode
-                            else "Carrier",
-                            "Busy Lock/TX Permit": OFF,
-                        }
-                    )
-                else:
-                    d.update(
-                        {
-                            "Contact": channel.talkgroup.name
-                            if channel.talkgroup
-                            else "",
-                            "Contact Call Type": str(channel.talkgroup.kind) + " Call",
-                            "Color Code": str(channel.color_code),
-                            "Slot": str(channel.talkgroup.timeslot),
-                            "Contact TG/DMR ID": channel.talkgroup.dmrid,
-                            "Scan List": channel.scanlist,
-                            "Busy Lock/TX Permit": TXPermit.value_from(channel),
-                            "DMR MODE": DMR_MODE.value_from(channel),
-                            # On the 578 and 878, DMR MODE = "Simplex" (0) channels
-                            # also have "Simplex=On" and "Through Mode=On" in the
-                            # exported file. Neither targeted CPS version exposes
-                            # this setting in the UI. But the 578 1.11 CPS will show
-                            # DMR MODE "Repeater" unless "Simplex=On"
-                            # Set it ON for simplex channels, and it will have zero
-                            # effect because it only makes a difference on split channels
-                            "Through Mode": OFF
-                            if abs(channel.offset) > 0
-                            else ON,
-                            # TODO: Support group list
-                        }
-                    )
-                d.update(
-                    {
-                        "No.": str(ix + 1),
-                        "Channel Name": channel.short_name,
-                        "Receive Frequency": format_frequency(channel.frequency),
-                        "Transmit Frequency": format_frequency(
-                            channel.frequency + channel.offset
-                        ),
-                        "Channel Type": format_channel_type(type(channel)),
-                        "Transmit Power": str(channel.power),
-                        "Band Width": "25K" if channel.bandwidth > 19 else "12.5K",
-                        "PTT Prohibit": value_replacements[channel.rx_only],
-                    }
-                )
+                d.update(Channel_to_dict(ix, channel))
                 csvw.writerow(replace_field_names(remove_fields(d, model), model))
         with (radio_dir / model["zone_filename"]).open("w", newline="") as f:
             csvw = csv.DictWriter(f, tuple(model["zone"].keys()))
             csvw.writeheader()
             for ix, zone in enumerate(mcp.zones):
-                d = {
-                    "No.": str(ix + 1),
-                    "Zone Name": zone.name,
-                }
-                d.update(
-                    format_member_list(
-                        members=zone.unique_channels,
-                        list_name="Zone Channel Member",
-                        expand_members=model["expand_members"],
-                    )
-                )
-                [
-                    d.update(
-                        format_member_list(
-                            members=(zone.unique_channels[0],),
-                            list_name=list_name,
-                            expand_members=model["expand_members"],
-                        )
-                    )
-                    for list_name in ("A Channel", "B Channel")
-                ]
-                csvw.writerow(d)
+                csvw.writerow(Zone_to_dict(ix, zone, model["expand_members"]))
         with (radio_dir / model["scanlist_filename"]).open("w", newline="") as f:
             csvw = csv.DictWriter(f, tuple(model["scanlist"].keys()))
             csvw.writeheader()
             for ix, sl in enumerate(mcp.scanlists):
                 d = model["scanlist"].copy()
-                d.update(
-                    {
-                        "No.": str(ix + 1),
-                        "Scan List Name": sl.name,
-                    }
-                )
-                d.update(
-                    format_member_list(
-                        members=sl.unique_channels[:SCANLIST_MAX],
-                        list_name="Scan Channel Member",
-                        expand_members=model["expand_members"],
-                    )
-                )
+                d.update(ScanList_to_dict(ix, sl, model["expand_members"]))
                 csvw.writerow(d)
         logger.info("Wrote Anytone %s CSV files to '%s'", model_id, radio_dir)
