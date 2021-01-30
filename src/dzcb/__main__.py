@@ -119,7 +119,9 @@ if __name__ == "__main__":
 
     # fetch data from the internet
     if args.repeaterbook_proximity_csv:
-        if (
+        if True:
+            logger.error("Repeaterbook API is not currently available.")
+        elif (
             "REPEATERBOOK_USER" not in os.environ
             or "REPEATERBOOK_PASSWD" not in os.environ
         ):
