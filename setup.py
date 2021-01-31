@@ -30,6 +30,7 @@ setuptools.setup(
         'setuptools_scm >= 3.3',
     ],
     install_requires=[
+        'appdirs==1.4.4',
         'attrs',
         'beautifulsoup4~=4.9.3',
         'importlib-resources',
