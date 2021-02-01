@@ -32,7 +32,7 @@ setuptools.setup(
     install_requires=[
         'appdirs==1.4.4',
         'attrs',
-        'beautifulsoup4~=4.9.3',
+        'geopy==2.1.0',
         'importlib-resources',
         'requests~=2.24.0',
     ],
