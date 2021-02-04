@@ -219,46 +219,6 @@ the new zone and channel is added.
 The `prox.csv` file in the `input` directory identifies points
 of interest used to download repeater information from repeaterbook.com.
 
-## Sign up for Repeaterbook
-
-To download the data, you must
-[sign up for an account](https://www.repeaterbook.com/index.php/user-profile?view=registration).
-
-_Don't use the same password that you use for your email or online
-banking, as the password will have to be entered into github!_
-
-## Add "Secrets" to your forked repository.
-
-### Open Settings
-
-Sometimes Settings is hidden behind the three dots menu.
-
-<img src="./walkthrough/settings1.png" alt="sometimes settings is hidden behind the three dots menu">
-
-### Select "Secrets"
-
-Scroll down and select "Secrets" from the left menu.
-
-<img src="./walkthrough/settings-secrets1.png">
-
-Click New repository secret.
-
-1. Name: `REPEATERBOOK_USER`
-2. Value: your repeaterbook account name (replace `kf7hvm` with your username)
-
-<img src="./walkthrough/settings-secrets2.png">
-
-Click Add secret.
-
-Again click New repository secret.
-
-1. Name: `REPEATERBOOK_PASSWD`
-2. Value: your repeaterbook password
-
-<img src="./walkthrough/settings-secrets3.png">
-
-Click Add secret.
-
 ## Add a new analog zone
 
 Back in the "input\default" directory, open `prox.csv`.
@@ -266,6 +226,9 @@ Back in the "input\default" directory, open `prox.csv`.
 Add new zones by providing coordinates, distance, and band
 id (14 - 2 meter, 4 - 70 centimeter). Follow the existing
 examples for guidance.
+
+XXX: image below shows the old format! Follow the format in the
+example-codeplug's `prox.csv` file.
 
 <img src="./walkthrough/calc-prox-new.png">
 
