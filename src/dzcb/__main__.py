@@ -82,6 +82,13 @@ if __name__ == "__main__":
         help="Fetch repeaters within X distance of POIs defined in a CSV file",
     )
     parser.add_argument(
+        "--repeaterbook-state",
+        nargs="*",
+        help="Download repeaters from the given state(s). Default: '{}'".format(
+            "' '".join(dzcb.repeaterbook.REPEATERBOOK_DEFAULT_STATES),
+        ),
+    )
+    parser.add_argument(
         "--default-k7abd",
         action="store_true",
         help="Include bundled K7ABD input files (simplex + unlicensed)",
@@ -122,6 +129,7 @@ if __name__ == "__main__":
         dzcb.repeaterbook.zones_to_k7abd(
             input_csv=args.repeaterbook_proximity_csv,
             output_dir=cache_dir,
+            states=args.repeaterbook_state or REPEATERBOOK_DEFAULT_STATES,
         )
 
     if args.pnwdigital:
