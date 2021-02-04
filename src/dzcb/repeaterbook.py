@@ -26,7 +26,7 @@ REPEATERBOOK_LAST_FETCH = 0
 #      so limit the data to the area of interest. Eventually
 #      this list will be passed by JSON or CSV
 REPEATERBOOK_DEFAULT_STATES = ("Washington","Oregon","Idaho","California","British Columbia")
-REPEATERBOOK_CACHE_MAX_AGE = 3600 * 12  # 12 hours
+REPEATERBOOK_CACHE_MAX_AGE = 3600 * 12.1  # 12 hours (and some change)
 CSV_ZONE_NAME = "Zone Name"
 CSV_LAT = "Lat"
 CSV_LONG = "Long"
