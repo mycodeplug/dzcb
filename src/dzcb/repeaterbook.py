@@ -130,8 +130,8 @@ def filter_repeaters(repeaters, zone):
     return [r for _, r in sorted(matching, key=lambda x: x[0])]
 
 
-def zones_to_k7abd(input_csv, output_dir):
-    repeaters = list(iter_cached_repeaters())
+def zones_to_k7abd(input_csv, output_dir, states=None):
+    repeaters = list(iter_cached_repeaters(states=states))
     for name, slug, zone in proximity_zones(input_csv):
         out_file = Path(output_dir) / "Analog__{}.csv".format(slug)
         total_channels = 0
