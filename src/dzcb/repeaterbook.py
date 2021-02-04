@@ -2,108 +2,140 @@
 dzcb.repeaterbook - export CSV from Repeaterbook, convert to K7ABD format
 """
 import argparse
-import contextlib
 import csv
 import hashlib
+import json
 import logging
 from pathlib import Path
 import os
 import time
 
-from bs4 import BeautifulSoup
+import geopy.distance
 import requests
+
+from . import appdir, AmateurBands
 
 logger = logging.getLogger(__name__)
 
-REPEATERBOOK_INDEX = "https://www.repeaterbook.com/index.php"
-REPEATERBOOK_LOGIN = (
-    "https://www.repeaterbook.com/index.php/user-profile?task=user.login"
-)
-REPEATERBOOK_EXPORT = (
-    "https://www.repeaterbook.com/repeaters/downloads/csv/index.php?"
-    "func=prox&features%5B0%5D=FM&"
-    "lat={lat}&long={lon}&"
-    "distance={distance}&Dunit={dunit}&"
-    "band1={band1}&band2={band2}&"
-    "call=&use=OPEN&status_id=1&order=distance_calc,%20state_id,%20`call`%20ASC"
-)
+# ?country=United%20States&state=Washington&state=Oregon&state=Idaho&state=California"
+REPEATERBOOK_API = "https://www.repeaterbook.com/api/export.php"
+REPEATERBOOK_API_DELAY = 30
+REPEATERBOOK_LAST_FETCH = 0
+
+# XXX: Repeaterbook API returns 3500 records per request,
+#      so limit the data to the area of interest. Eventually
+#      this list will be passed by JSON or CSV
+REPEATERBOOK_DEFAULT_STATES = ("Washington","Oregon","Idaho","California","British Columbia")
+REPEATERBOOK_CACHE_MAX_AGE = 3600 * 12.1  # 12 hours (and some change)
+CSV_ZONE_NAME = "Zone Name"
+CSV_LAT = "Lat"
+CSV_LONG = "Long"
+CSV_DISTANCE = "Distance"
+CSV_UNIT = "Unit"
+CSV_BAND = "Band(2m;1.25m;70cm)"
 
 
-@contextlib.contextmanager
-def text_login(username=None, password=None):
-    """
-    Login to Repeaterbook.com with the given credentials.
+def cached_json(url, max_age=REPEATERBOOK_CACHE_MAX_AGE):
+    md5urlhash = hashlib.md5(url.encode("utf-8")).hexdigest()
+    cachedir = Path(appdir.user_cache_dir)
+    filepath = cachedir / "repeaters_{}.json".format(md5urlhash)
+    if not filepath.exists() or filepath.stat().st_mtime < time.time() - max_age:
+        # cache is expired, need to refetch
+        cachedir.mkdir(parents=True, exist_ok=True)
+        # don't make requests too often
+        global REPEATERBOOK_LAST_FETCH
+        global_last_fetched = time.time() - REPEATERBOOK_LAST_FETCH
+        if global_last_fetched < REPEATERBOOK_API_DELAY:
+            time.sleep(REPEATERBOOK_API_DELAY - global_last_fetched)
+        resp = requests.get(url)
+        REPEATERBOOK_LAST_FETCH = time.time()
+        filepath.write_bytes(resp.content)
+    return filepath
 
-    The useful search/export functionalities require an authenticated user.
 
-    :param username: Optional repeaterbook username.
-        default: environment variable - REPEATERBOOK_USER
-    :param password: Optional repeaterbook password.
-        default: environment variable - REPEATERBOOK_PASSWD
-    :return: requests.Session with logged in cookie
-    """
-    payload = {
-        "username": username or os.environ["REPEATERBOOK_USER"],
-        "password": password or os.environ["REPEATERBOOK_PASSWD"],
-    }
-    with requests.Session() as session:
-        index = session.get(REPEATERBOOK_INDEX)
-        index.raise_for_status
-        soup = BeautifulSoup(index.text, features="html.parser")
-        # have to find the CSRF token
-        noncsrf_inputs = "remember", "username", "password"
-        copy_inputs = "option", "task", "return"
-        for inp in soup.form.find_all("input"):
-            if inp.attrs["name"] in noncsrf_inputs:
-                continue
-            payload[inp.attrs["name"]] = inp.attrs["value"]
-
-        login = session.post(REPEATERBOOK_LOGIN, data=payload)
-        login.raise_for_status()
-        session._username = payload["username"]
-        yield session
+def iter_cached_repeaters(states=None, max_age=REPEATERBOOK_CACHE_MAX_AGE):
+    if states is None:
+        states = REPEATERBOOK_DEFAULT_STATES
+    for state in states:
+        url = "".join(
+            (
+                REPEATERBOOK_API,
+                "?state={}".format(state),
+            )
+        )
+        cached_json_file = cached_json(url, max_age=max_age)
+        with open(cached_json_file, "r") as f:
+            rb_api_resp = json.load(f)
+            logger.info(
+                "Load cached Repeaterbook data for %s: %s records (%s)",
+                state,
+                len(rb_api_resp["results"]),
+                cached_json_file,
+            )
+        for repeater in rb_api_resp["results"]:
+            yield repeater
 
 
 def proximity_zones(proximity_zones_csv):
     csvr = csv.DictReader(
         proximity_zones_csv,
-        fieldnames=["name", "lat", "lon", "distance", "dunit", "band1", "band2"],
     )
     for zone in csvr:
-        zone = zone.copy()
-        name = zone.pop("name")
+        name = zone.pop(CSV_ZONE_NAME)
         slug = name.replace(" ", "-").replace(",", "")
-        url = REPEATERBOOK_EXPORT.format(**zone)
-        md5urlhash = hashlib.md5(url.encode("utf-8")).hexdigest()
-        filename = "{}_{}.csv".format(slug, md5urlhash)
-        yield (name, slug, url, filename)
+        yield (name, slug, zone)
 
 
-def cache_zones_with_proximity(input_csv, output_dir, delay=0.25):
-    output_dir = Path(output_dir)
-    zones = tuple(proximity_zones(input_csv))
-    with text_login() as session:
-        logger.info(
-            "Downloading %s proximity zones as %s (%s seconds)",
-            len(zones),
-            session._username,
-            len(zones) * delay,
-        )
-        for name, slug, url, filename in zones:
-            resp = session.get(url)
-            resp.raise_for_status()
-            out_file = output_dir / filename
-            out_file.write_text(resp.text)
-            logger.debug("Cache raw CSV to '%s'", out_file)
-            time.sleep(delay)
+def matches_criteria(repeater, criteria):
+    for field, value in criteria.items():
+        # XXX: maybe need a regex match here...
+        if str(value).lower() != str(repeater.get(field, "")).lower():
+            return False
+    return True
 
 
-def zones_to_k7abd(input_csv, input_dir, output_dir):
-    for name, slug, url, filename in proximity_zones(input_csv):
-        in_file = Path(input_dir) / filename
+def filter_repeaters(repeaters, zone):
+    zone = zone.copy()
+    radius = zone.pop(CSV_DISTANCE)
+    dunit = zone.pop(CSV_UNIT)
+    if radius:
+        radius = float(radius)
+        poi_coords = (float(zone.pop(CSV_LAT)), float(zone.pop(CSV_LONG)))
+    else:
+        distance = 0
+    bands = [
+        AmateurBands.get_normalized(b)
+        for b in zone.pop(CSV_BAND).strip().split(";")
+        if b
+    ]
+    matching = []
+    # Find matching repeaters
+    for r in repeaters:
+        if not r:
+            continue
+        if radius:
+            # repeater must be within radius of poi
+            repeater_coords = (r["Lat"], r["Long"])
+            distance = geopy.distance.distance(poi_coords, repeater_coords)
+            if getattr(distance, dunit) > radius:
+                continue
+        if bands:
+            # repeater frequency must be in the given bands
+            if AmateurBands.get_normalized(r["Frequency"]) not in bands:
+                continue
+
+        # remaining fields in the zone list are criteria to satisfy
+        if matches_criteria(r, zone):
+            matching.append((distance, r))
+    return [r for _, r in sorted(matching, key=lambda x: x[0])]
+
+
+def zones_to_k7abd(input_csv, output_dir, states=None):
+    repeaters = list(iter_cached_repeaters(states=states))
+    for name, slug, zone in proximity_zones(input_csv):
         out_file = Path(output_dir) / "Analog__{}.csv".format(slug)
-        with open(in_file, "r") as inp, open(out_file, "w", newline="") as out:
-            csvr = csv.DictReader(inp)
+        total_channels = 0
+        with open(out_file, "w", newline="") as out:
             csvw = csv.DictWriter(
                 out,
                 fieldnames=[
@@ -119,43 +151,34 @@ def zones_to_k7abd(input_csv, input_dir, output_dir):
                 ],
             )
             csvw.writeheader()
-            # XXX: the unit is part of the field name..? groan
-            #      this will break if the user changes from m to km
-            for row in sorted(csvr, key=lambda r: float(r["Miles"])):
-                freq = float(row["Freq"][:-1])
-                offsetdir = row["Freq"][-1]
-                if 144 <= freq <= 148:
-                    offset = 0.6
-                elif 430 <= freq <= 460:
-                    offset = 5
-                if offsetdir == "-":
-                    offset = -offset
+            for repeater in filter_repeaters(repeaters, zone):
                 csvw.writerow(
                     {
                         "Zone": name,
-                        "Channel Name": "{} {}".format(row["Call"], row["Location"]),
+                        "Channel Name": "{} {} {}".format(
+                            repeater["Callsign"],
+                            repeater["Nearest City"],
+                            repeater["Landmark"],
+                        ).strip(),
                         "Bandwidth": "25K",
                         "Power": "High",
-                        "RX Freq": str(freq),
-                        "TX Freq": str(freq + offset),
-                        "CTCSS Decode": row["Tone"] if row["Tone"] != "CSQ" else "Off",
-                        "CTCSS Encode": row["Tone"] if row["Tone"] != "CSQ" else "Off",
+                        "RX Freq": repeater["Frequency"],
+                        "TX Freq": repeater["Input Freq"] or repeater["Frequency"],
+                        "CTCSS Decode": repeater["TSQ"] or "Off",
+                        "CTCSS Encode": repeater["PL"] or "Off",
                         "TX Prohibit": "Off",
                     }
                 )
-        logger.debug("Generate '%s' k7abd zones to '%s'", name, out_file)
+                total_channels += 1
+        logger.debug("Generate '%s' k7abd zones (%s channels) to '%s'", name, total_channels, out_file)
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     parser = argparse.ArgumentParser()
     parser.add_argument("proximity_csv_file", type=argparse.FileType("r"))
     parser.add_argument("output_dir")
-    parser.add_argument("--cache-dir", default="/tmp/cache_dir")
     args = parser.parse_args()
-    if not os.path.exists(args.cache_dir):
-        os.makedirs(args.cache_dir)
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
-    proximity_csv = args.proximity_csv_file.read().splitlines()
-    cache_zones_with_proximity(proximity_csv, args.cache_dir)
-    zones_to_k7abd(proximity_csv, args.cache_dir, args.output_dir)
+    zones_to_k7abd(args.proximity_csv_file, args.output_dir)

@@ -124,26 +124,38 @@ and cleaned up a bit in [`dzcb.seattledmr`](./src/dzcb/seattledmr.py)
 
 ### Repeaterbook Proximity
 
-**Repeaterbook account is required to access this endpoint**
-
-Download live analog repeaterbook data within distance of point of
+Download live analog Repeaterbook data within distance of point of
 interest.
 
 `--repeaterbook-proximity-csv` references a csv file with the fields:
 
-* Zone Name,Lat,Lon,Distance,Unit(m),Band(14 - 2m, 4 - 70cm)
+* Zone Name,Lat,Long,Distance,Unit,Band(2m;1.25m;70cm),Use,Operational Status,etc
 
-This corresponds directly to the repeaterbook csv download "prox" http endpoint, which
-requires authentication. See [`dzcb.repeaterbook`](./src/dzcb/repeaterbook.py).
+The fields after Band are optional and correspond directly to the field names
+and values in the [Repeaterbook API](https://www.repeaterbook.com/wiki/doku.php?id=api)
+(see examples).
 
-When using this option, be sure to set REPEATERBOOK_USER and REPEATERBOOK_PASSWD
-in the environment.
+`--repeaterbook-state` is a space-separated list of US states or Canadian
+provinces that should be included in the proximity search. Including more
+states will increase the time required to generate the codeplug.
+
+Repeaterbook API data is downloaded and cached in a user and platform-specific
+cache directory. Data will be refreshed if it is older than 12 hours. When
+downloading from Repeaterbook, a delay of 30 seconds is introduced between
+requests to reduce load on the repeaterbook servers.
+
+Please respect their servers and submit changes requests to repeaterbook
+directly.
+
+See [`dzcb.repeaterbook`](./src/dzcb/repeaterbook.py).
 
 #### Example Format
 
 ```
-Longview WA VHF 35mi,46.13819885,-122.93800354,35,m,14,
-Longview WA UHF 35mi,46.13819885,-122.93800354,35,m,4,
+Zone Name,Lat,Long,Distance,Unit,Band(2m;1.25m;70cm),Use,Operational Status
+Longview WA 35mi,46.13819885,-122.93800354,35,miles,2m;70cm,OPEN,On-air
+Longview WA VHF 35mi,46.13819885,-122.93800354,35,miles,2m,open,On-air
+Longview WA UHF 35mi,46.13819885,-122.93800354,35,miles,70cm,OPEN,On-Air
 ```
 
 (it's easy to search on repeaterbook and copy the info from the URL!)
