@@ -19,6 +19,8 @@ logger = logging.getLogger(__name__)
 
 # ?country=United%20States&state=Washington&state=Oregon&state=Idaho&state=California"
 REPEATERBOOK_API = "https://www.repeaterbook.com/api/export.php"
+REPEATERBOOK_API_DELAY = 30
+REPEATERBOOK_LAST_FETCH = 0
 
 # XXX: Repeaterbook API returns 3500 records per request,
 #      so limit the data to the area of interest. Eventually
@@ -40,7 +42,13 @@ def cached_json(url, max_age=REPEATERBOOK_CACHE_MAX_AGE):
     if not filepath.exists() or filepath.stat().st_mtime < time.time() - max_age:
         # cache is expired, need to refetch
         cachedir.mkdir(parents=True, exist_ok=True)
+        # don't make requests too often
+        global REPEATERBOOK_LAST_FETCH
+        global_last_fetched = time.time() - REPEATERBOOK_LAST_FETCH
+        if global_last_fetched < REPEATERBOOK_API_DELAY:
+            time.sleep(REPEATERBOOK_API_DELAY - global_last_fetched)
         resp = requests.get(url)
+        REPEATERBOOK_LAST_FETCH = time.time()
         filepath.write_bytes(resp.content)
     return filepath
 
