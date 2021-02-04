@@ -23,8 +23,7 @@ REPEATERBOOK_API = "https://www.repeaterbook.com/api/export.php"
 # XXX: Repeaterbook API returns 3500 records per request,
 #      so limit the data to the area of interest. Eventually
 #      this list will be passed by JSON or CSV
-REPEATERBOOK_DEFAULT_STATE = ("Washington",)
-REPEATERBOOK_DEFAULT_COUNTRY = ("United States",)
+REPEATERBOOK_DEFAULT_STATES = ("Washington","Oregon","Idaho","California","British Columbia")
 REPEATERBOOK_CACHE_MAX_AGE = 3600 * 12  # 12 hours
 CSV_ZONE_NAME = "Zone Name"
 CSV_LAT = "Lat"
@@ -34,20 +33,7 @@ CSV_UNIT = "Unit"
 CSV_BAND = "Band(2m;1.25m;70cm)"
 
 
-def cached_repeaters_json(state=None, country=None, max_age=REPEATERBOOK_CACHE_MAX_AGE):
-    if state is None:
-        state = REPEATERBOOK_DEFAULT_STATE
-    if country is None:
-        country = REPEATERBOOK_DEFAULT_COUNTRY
-    url = "".join(
-        (
-            REPEATERBOOK_API,
-            "?",
-            "&".join("country={}".format(c) for c in country),
-            "&",
-            "&".join("state={}".format(s) for s in state),
-        )
-    )
+def cached_json(url, max_age=REPEATERBOOK_CACHE_MAX_AGE):
     md5urlhash = hashlib.md5(url.encode("utf-8")).hexdigest()
     cachedir = Path(appdir.user_cache_dir)
     filepath = cachedir / "repeaters_{}.json".format(md5urlhash)
@@ -57,6 +43,29 @@ def cached_repeaters_json(state=None, country=None, max_age=REPEATERBOOK_CACHE_M
         resp = requests.get(url)
         filepath.write_bytes(resp.content)
     return filepath
+
+
+def iter_cached_repeaters(states=None, max_age=REPEATERBOOK_CACHE_MAX_AGE):
+    if states is None:
+        states = REPEATERBOOK_DEFAULT_STATES
+    for state in states:
+        url = "".join(
+            (
+                REPEATERBOOK_API,
+                "?state={}".format(state),
+            )
+        )
+        cached_json_file = cached_json(url, max_age=max_age)
+        with open(cached_json_file, "r") as f:
+            rb_api_resp = json.load(f)
+            logger.info(
+                "Load cached Repeaterbook data for %s: %s records (%s)",
+                state,
+                len(rb_api_resp["results"]),
+                cached_json_file,
+            )
+        for repeater in rb_api_resp["results"]:
+            yield repeater
 
 
 def proximity_zones(proximity_zones_csv):
@@ -114,10 +123,10 @@ def filter_repeaters(repeaters, zone):
 
 
 def zones_to_k7abd(input_csv, output_dir):
-    with cached_repeaters_json().open("r") as f:
-        repeaters = json.load(f)["results"]
+    repeaters = list(iter_cached_repeaters())
     for name, slug, zone in proximity_zones(input_csv):
         out_file = Path(output_dir) / "Analog__{}.csv".format(slug)
+        total_channels = 0
         with open(out_file, "w", newline="") as out:
             csvw = csv.DictWriter(
                 out,
@@ -152,7 +161,8 @@ def zones_to_k7abd(input_csv, output_dir):
                         "TX Prohibit": "Off",
                     }
                 )
-        logger.debug("Generate '%s' k7abd zones to '%s'", name, out_file)
+                total_channels += 1
+        logger.debug("Generate '%s' k7abd zones (%s channels) to '%s'", name, total_channels, out_file)
 
 
 if __name__ == "__main__":
