@@ -82,7 +82,7 @@ def proximity_zones(proximity_zones_csv):
     )
     for zone in csvr:
         name = zone.pop(CSV_ZONE_NAME)
-        slug = name.replace(" ", "-").replace(",", "")
+        slug = name.replace(" ", "-").replace(",", "").replace("/", "-").replace("\\", "-")
         yield (name, slug, zone)
 
 
