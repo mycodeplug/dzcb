@@ -22,10 +22,10 @@ REPEATERBOOK_API = "https://www.repeaterbook.com/api/export.php"
 REPEATERBOOK_API_DELAY = 30
 REPEATERBOOK_LAST_FETCH = 0
 
-# XXX: Repeaterbook API returns 3500 records per request,
-#      so limit the data to the area of interest. Eventually
-#      this list will be passed by JSON or CSV
-REPEATERBOOK_DEFAULT_STATES = ("Washington","Oregon","Idaho","California","British Columbia")
+# Limit default state to avoid unnecessary API hits
+# Users will want to pass the state on the command line
+# TODO: Geocode Lat/Long from the CSV file
+REPEATERBOOK_DEFAULT_STATES = ("Washington","Oregon")
 REPEATERBOOK_CACHE_MAX_AGE = 3600 * 12.1  # 12 hours (and some change)
 CSV_ZONE_NAME = "Zone Name"
 CSV_LAT = "Lat"
