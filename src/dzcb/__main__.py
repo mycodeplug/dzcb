@@ -129,7 +129,7 @@ if __name__ == "__main__":
         dzcb.repeaterbook.zones_to_k7abd(
             input_csv=args.repeaterbook_proximity_csv,
             output_dir=cache_dir,
-            states=args.repeaterbook_state or REPEATERBOOK_DEFAULT_STATES,
+            states=args.repeaterbook_state or dzcb.repeaterbook.REPEATERBOOK_DEFAULT_STATES,
         )
 
     if args.pnwdigital:
