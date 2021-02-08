@@ -1,8 +1,23 @@
 import os
 from pathlib import Path
 
+import pytest
+
 from dzcb import k7abd
-from dzcb.model import Timeslot
+from dzcb.model import Contact, Timeslot
+
+
+@pytest.fixture(autouse=True)
+def reset_dzcb_model_Contact__all_contacts_by_id():
+    saved = Contact._all_contacts_by_id
+    Contact._all_contacts_by_id = {}
+    yield
+    Contact._all_contacts_by_id = saved
+
+
+def codeplug_from_relative_dir(dname):
+    input_dir = Path(os.path.dirname(__file__)) / dname
+    return k7abd.Codeplug_from_k7abd(input_dir)
 
 
 def test_multiple_repeaters_one_talkgroups():
@@ -12,8 +27,7 @@ def test_multiple_repeaters_one_talkgroups():
     existing Talkgroups.csv
     """
 
-    input_dir = Path(os.path.dirname(__file__)) / "multiple-repeaters-one-talkgroups"
-    cp = k7abd.Codeplug_from_k7abd(input_dir)
+    cp = codeplug_from_relative_dir("multiple-repeaters-one-talkgroups")
     assert len(cp.zones) == 2
     assert len(cp.contacts) == 3
     assert len(cp.channels) == 2
@@ -36,3 +50,39 @@ def test_multiple_repeaters_one_talkgroups():
         assert ch.name == exp_ch[0]
         assert ch.talkgroup.name == exp_ch[1]
         assert ch.talkgroup.timeslot == exp_ch[2]
+
+
+def test_digital_repeaters_missing_talkgroup():
+    """
+    Unknown talkgroup names in Digital-Repeaters__ZoneName.csv
+    will be ignored in the generated codeplug.
+    """
+
+    cp = codeplug_from_relative_dir("digital-repeaters-missing-talkgroup")
+    assert len(cp.zones) == 1
+    assert len(cp.contacts) == 1
+    assert len(cp.channels) == 1
+
+    assert cp.channels[0].name == "Foo"
+    stg0 = cp.channels[0].static_talkgroups[0]
+    assert stg0.name == "TG 2"
+    assert stg0.dmrid == 2
+    assert stg0.timeslot == Timeslot.ONE
+
+
+def test_digital_channels_missing_talkgroup():
+    """
+    Unknown talkgroup names in Digital-Others__ZoneName.csv
+    will be ignored in the generated codeplug.
+    """
+
+    cp = codeplug_from_relative_dir("digital-channels-missing-talkgroup")
+    assert len(cp.zones) == 1
+    assert len(cp.contacts) == 1
+    assert len(cp.channels) == 1
+
+    assert cp.channels[0].name == "Bar TG 2"
+    ch0tg = cp.channels[0].talkgroup
+    assert ch0tg.name == "TG 2"
+    assert ch0tg.dmrid == 2
+    assert ch0tg.timeslot == Timeslot.ONE
