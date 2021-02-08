@@ -172,6 +172,11 @@ def DigitalRepeaters_from_k7abd_csv(digital_repeaters_csv, talkgroups_by_name):
                         talkgroups_by_name[tg_name], timeslot,
                     )
                 )
+            except KeyError:
+                logger.warning(
+                    "'%s' references unknown talkgroup '%s'. Ignored.",
+                    zname, tg_name,
+                )
             except ValueError:
                 logger.info("%s: Ignoring ValueError from %s:%s", digital_repeaters_csv, tg_name, timeslot)
         repeater = DigitalChannel(
@@ -205,9 +210,16 @@ def DigitalChannels_from_k7abd_csv(digital_others_csv, talkgroups_by_name):
         color_code = r.pop("Color Code")
         power = r.pop("Power")
         tg_name = r.pop("Talk Group")
-        talkgroup = Talkgroup.from_contact(
-            talkgroups_by_name[tg_name], r.pop("TimeSlot"),
-        )
+        try:
+            talkgroup = Talkgroup.from_contact(
+                talkgroups_by_name[tg_name], r.pop("TimeSlot"),
+            )
+        except KeyError:
+            logger.warning(
+                "'%s/%s' references unknown talkgroup '%s'. Ignored.",
+                zname, name, tg_name,
+            )
+            continue
         zones.setdefault(zname, []).append(
             DigitalChannel(
                 name=name,
