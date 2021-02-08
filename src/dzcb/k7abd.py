@@ -267,7 +267,10 @@ def Codeplug_from_k7abd(input_dir):
         zname = p.name.replace("Digital-Repeaters__", "").replace(".csv", "")
         # merge Talkgroup files, but prefer talkgroup names from this zone
         tg_csv = all_talkgroups_by_name.copy()
-        tg_csv.update(talkgroups[zname])
+        try:
+            tg_csv.update(talkgroups[zname])
+        except KeyError:
+            logger.debug("Talkgroups__%s.csv was not found. Ignored.", zname)
         update_zones_channels(zones, {zname: tuple(DigitalRepeaters_from_k7abd_csv(p.read_text().splitlines(), tg_csv))}, log_filename=p)
         total_files += 1
     _log_zones_channels(in_zones=zones, log_filename="{} total files".format(total_files), level=logging.INFO)
