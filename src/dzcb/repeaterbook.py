@@ -14,6 +14,7 @@ import geopy.distance
 import requests
 
 from . import appdir, AmateurBands
+from dzcb import k7abd
 
 logger = logging.getLogger(__name__)
 
@@ -130,6 +131,24 @@ def filter_repeaters(repeaters, zone):
     return [r for _, r in sorted(matching, key=lambda x: x[0])]
 
 
+def repeater_to_k7abd_row(repeater, zone_name):
+    return {
+        k7abd.ZONE: zone_name,
+        k7abd.CHANNEL_NAME: "{} {} {}".format(
+            repeater["Callsign"],
+            repeater["Nearest City"],
+            repeater["Landmark"],
+        ).strip(),
+        k7abd.BANDWIDTH: "25K",
+        k7abd.POWER: "High",
+        k7abd.RX_FREQ: repeater["Frequency"],
+        k7abd.TX_FREQ: repeater["Input Freq"] or repeater["Frequency"],
+        k7abd.CTCSS_DECODE: repeater["TSQ"] if repeater["TSQ"].upper() not in ("", "CSQ") else k7abd.OFF,
+        k7abd.CTCSS_ENCODE: repeater["PL"] if repeater["PL"].upper() not in ("", "CSQ") else k7abd.OFF,
+        k7abd.TX_PROHIBIT: k7abd.OFF,
+    }
+
+
 def zones_to_k7abd(input_csv, output_dir, states=None):
     repeaters = list(iter_cached_repeaters(states=states))
     for name, slug, zone in proximity_zones(input_csv):
@@ -138,37 +157,11 @@ def zones_to_k7abd(input_csv, output_dir, states=None):
         with open(out_file, "w", newline="") as out:
             csvw = csv.DictWriter(
                 out,
-                fieldnames=[
-                    "Zone",
-                    "Channel Name",
-                    "Bandwidth",
-                    "Power",
-                    "RX Freq",
-                    "TX Freq",
-                    "CTCSS Decode",
-                    "CTCSS Encode",
-                    "TX Prohibit",
-                ],
+                fieldnames=k7abd.ANALOG_CSV_FIELDS,
             )
             csvw.writeheader()
             for repeater in filter_repeaters(repeaters, zone):
-                csvw.writerow(
-                    {
-                        "Zone": name,
-                        "Channel Name": "{} {} {}".format(
-                            repeater["Callsign"],
-                            repeater["Nearest City"],
-                            repeater["Landmark"],
-                        ).strip(),
-                        "Bandwidth": "25K",
-                        "Power": "High",
-                        "RX Freq": repeater["Frequency"],
-                        "TX Freq": repeater["Input Freq"] or repeater["Frequency"],
-                        "CTCSS Decode": repeater["TSQ"] or "Off",
-                        "CTCSS Encode": repeater["PL"] or "Off",
-                        "TX Prohibit": "Off",
-                    }
-                )
+                csvw.writerow(repeater_to_k7abd_row(repeater, zone_name=name))
                 total_channels += 1
         logger.debug("Generate '%s' k7abd zones (%s channels) to '%s'", name, total_channels, out_file)
 
