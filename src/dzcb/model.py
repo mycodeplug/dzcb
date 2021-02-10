@@ -18,20 +18,160 @@ NAME_MAX = 16
 logger = logging.getLogger(__name__)
 
 VALID_TONES = [
-    "67.0", "69.3", "71.9", "74.4", "77.0", "79.7", "82.5", "85.4", "88.5", "91.5", "94.8", "97.4",
-    "100.0", "103.5", "107.2", "110.9", "114.8", "118.8", "123.0", "127.3", "131.8", "136.5", "141.3", "146.2",
-    "151.4", "156.7", "159.8", "162.2", "165.5", "167.9", "171.3", "173.8", "177.3", "179.9", "183.5", "186.2",
-    "189.9", "192.8", "196.6", "199.5", "203.5", "206.5", "210.7", "218.1", "225.7", "229.1", "233.6", "241.8",
-    "250.3", "254.1",
-    "D023", "D025", "D026", "D031", "D032", "D036", "D043", "D047", "D051", "D053",
-    "D054", "D065", "D071", "D072", "D073", "D074", "D114", "D115", "D116", "D122", "D125", "D131",
-    "D132", "D134", "D143", "D145", "D152", "D155", "D156", "D162", "D165", "D172", "D174", "D205",
-    "D212", "D223", "D225", "D226", "D243", "D244", "D245", "D246", "D251", "D252", "D255", "D261",
-    "D263", "D265", "D266", "D271", "D274", "D306", "D311", "D315", "D325", "D331", "D332", "D343",
-    "D346", "D351", "D356", "D364", "D365", "D371", "D411", "D412", "D413", "D423", "D431", "D432",
-    "D445", "D446", "D452", "D454", "D455", "D462", "D464", "D465", "D466", "D503", "D506", "D516",
-    "D523", "D526", "D532", "D546", "D565", "D606", "D612", "D624", "D627", "D631", "D632", "D654",
-    "D662", "D664", "D703", "D712", "D723", "D731", "D732", "D734", "D743", "D754"
+    "67.0",
+    "69.3",
+    "71.9",
+    "74.4",
+    "77.0",
+    "79.7",
+    "82.5",
+    "85.4",
+    "88.5",
+    "91.5",
+    "94.8",
+    "97.4",
+    "100.0",
+    "103.5",
+    "107.2",
+    "110.9",
+    "114.8",
+    "118.8",
+    "123.0",
+    "127.3",
+    "131.8",
+    "136.5",
+    "141.3",
+    "146.2",
+    "151.4",
+    "156.7",
+    "159.8",
+    "162.2",
+    "165.5",
+    "167.9",
+    "171.3",
+    "173.8",
+    "177.3",
+    "179.9",
+    "183.5",
+    "186.2",
+    "189.9",
+    "192.8",
+    "196.6",
+    "199.5",
+    "203.5",
+    "206.5",
+    "210.7",
+    "218.1",
+    "225.7",
+    "229.1",
+    "233.6",
+    "241.8",
+    "250.3",
+    "254.1",
+    "D023",
+    "D025",
+    "D026",
+    "D031",
+    "D032",
+    "D036",
+    "D043",
+    "D047",
+    "D051",
+    "D053",
+    "D054",
+    "D065",
+    "D071",
+    "D072",
+    "D073",
+    "D074",
+    "D114",
+    "D115",
+    "D116",
+    "D122",
+    "D125",
+    "D131",
+    "D132",
+    "D134",
+    "D143",
+    "D145",
+    "D152",
+    "D155",
+    "D156",
+    "D162",
+    "D165",
+    "D172",
+    "D174",
+    "D205",
+    "D212",
+    "D223",
+    "D225",
+    "D226",
+    "D243",
+    "D244",
+    "D245",
+    "D246",
+    "D251",
+    "D252",
+    "D255",
+    "D261",
+    "D263",
+    "D265",
+    "D266",
+    "D271",
+    "D274",
+    "D306",
+    "D311",
+    "D315",
+    "D325",
+    "D331",
+    "D332",
+    "D343",
+    "D346",
+    "D351",
+    "D356",
+    "D364",
+    "D365",
+    "D371",
+    "D411",
+    "D412",
+    "D413",
+    "D423",
+    "D431",
+    "D432",
+    "D445",
+    "D446",
+    "D452",
+    "D454",
+    "D455",
+    "D462",
+    "D464",
+    "D465",
+    "D466",
+    "D503",
+    "D506",
+    "D516",
+    "D523",
+    "D526",
+    "D532",
+    "D546",
+    "D565",
+    "D606",
+    "D612",
+    "D624",
+    "D627",
+    "D631",
+    "D632",
+    "D654",
+    "D662",
+    "D664",
+    "D703",
+    "D712",
+    "D723",
+    "D731",
+    "D732",
+    "D734",
+    "D743",
+    "D754",
 ]
 
 
@@ -162,12 +302,12 @@ class Channel:
         validator=attr.validators.instance_of(Power),
         converter=Power.from_any,
     )
-    rx_only = attr.ib(
-        default=False,
-        validator=attr.validators.instance_of(bool)
-    )
+    rx_only = attr.ib(default=False, validator=attr.validators.instance_of(bool))
     scanlist = attr.ib(default=None)
-    code = attr.ib(default=None, validator=attr.validators.optional(attr.validators.instance_of(str)))
+    code = attr.ib(
+        default=None,
+        validator=attr.validators.optional(attr.validators.instance_of(str)),
+    )
 
     def __attrs_post_init__(self):
         type(self)._all_channels[self.name] = self
@@ -179,19 +319,26 @@ class Channel:
         maybe_this_channel = None
         while maybe_this_channel != self:
             maybe_short_name = dzcb.munge.channel_name(
-                self.name,
-                NAME_MAX - (1 if attempt else 0)
+                self.name, NAME_MAX - (1 if attempt else 0)
             ) + (str(attempt) if attempt else "")
-            maybe_this_channel = type(self)._short_names.setdefault(maybe_short_name, self)
+            maybe_this_channel = type(self)._short_names.setdefault(
+                maybe_short_name, self
+            )
             attempt += 1
             if attempt > 9:
-                raise RuntimeError("Cannot find a non-conflicting channel short name for {}".format(self))
+                raise RuntimeError(
+                    "Cannot find a non-conflicting channel short name for {}".format(
+                        self
+                    )
+                )
         return maybe_short_name
 
 
 def _tone_validator(instance, attribute, value):
     if value is not None and value not in VALID_TONES:
-        raise ValueError("field {!r} has unknown tone {!r}".format(attribute.name, value))
+        raise ValueError(
+            "field {!r} has unknown tone {!r}".format(attribute.name, value)
+        )
 
 
 def _tone_converter(value):
@@ -205,8 +352,16 @@ def _tone_converter(value):
 
 @attr.s
 class AnalogChannel(Channel):
-    tone_encode = attr.ib(default=None, validator=_tone_validator, converter=attr.converters.optional(_tone_converter))
-    tone_decode = attr.ib(default=None, validator=_tone_validator, converter=attr.converters.optional(_tone_converter))
+    tone_encode = attr.ib(
+        default=None,
+        validator=_tone_validator,
+        converter=attr.converters.optional(_tone_converter),
+    )
+    tone_decode = attr.ib(
+        default=None,
+        validator=_tone_validator,
+        converter=attr.converters.optional(_tone_converter),
+    )
     # configurable bandwidth for analog (technically should be enum)
     bandwidth = attr.ib(
         default=25,
@@ -228,7 +383,10 @@ class DigitalChannel(Channel):
     squelch = 0
     color_code = attr.ib(default=1)
     grouplist = attr.ib(default=None)
-    talkgroup = attr.ib(default=None, validator=attr.validators.optional(attr.validators.instance_of(Talkgroup)))
+    talkgroup = attr.ib(
+        default=None,
+        validator=attr.validators.optional(attr.validators.instance_of(Talkgroup)),
+    )
     # a list of other static talkgroups, which form the basis of an RX/scan list
     static_talkgroups = attr.ib(factory=list)
 
@@ -245,8 +403,9 @@ class DigitalChannel(Channel):
                 ),
                 talkgroup=tg,
                 scanlist=self.short_name,
-                static_talkgroups=[]
-            ) for tg in dzcb.munge.ordered(
+                static_talkgroups=[],
+            )
+            for tg in dzcb.munge.ordered(
                 seq=talkgroups,
                 order=order or [],
                 key=lambda tg: tg.name,
@@ -271,6 +430,7 @@ class GroupList:
     A GroupList specifies a set of contacts that will be received on the same
     channel.
     """
+
     name = attr.ib(validator=attr.validators.instance_of(str))
     contacts = attr.ib(factory=list)
 
@@ -280,8 +440,12 @@ class ScanList:
     """
     A ScanList specifies a set of channels that can be sequentially scanned.
     """
+
     name = attr.ib(validator=attr.validators.instance_of(str))
-    channels = attr.ib(factory=list, validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)))
+    channels = attr.ib(
+        factory=list,
+        validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
+    )
 
     @classmethod
     def from_names(cls, name, channel_names):
@@ -294,15 +458,13 @@ class ScanList:
             if channel is None:
                 logger.debug(
                     "ScanList {!r} references unknown channel {!r}, ignoring".format(
-                        name, cn,
+                        name,
+                        cn,
                     )
                 )
                 continue
             channels.append(channel)
-        return cls(
-            name=name,
-            channels=channels
-        )
+        return cls(name=name, channels=channels)
 
     @classmethod
     def prune_missing_channels(cls, scanlists, channels):
@@ -330,8 +492,14 @@ class Zone:
     """
 
     name = attr.ib(validator=attr.validators.instance_of(str))
-    channels_a = attr.ib(factory=list, validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)))
-    channels_b = attr.ib(factory=list, validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)))
+    channels_a = attr.ib(
+        factory=list,
+        validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
+    )
+    channels_b = attr.ib(
+        factory=list,
+        validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
+    )
 
     @classmethod
     def prune_missing_channels(cls, zones, channels):
@@ -370,7 +538,11 @@ def uniquify_contacts(contacts):
     for ct in contacts:
         stored_ct = ctd.setdefault(ct.name, ct)
         if stored_ct.dmrid != ct.dmrid:
-            raise RuntimeError("Two contacts named {} have different IDs: {} {}".format(ct.name, ct.dmrid, stored_ct.dmrid))
+            raise RuntimeError(
+                "Two contacts named {} have different IDs: {} {}".format(
+                    ct.name, ct.dmrid, stored_ct.dmrid
+                )
+            )
     return list(ctd.values())
 
 
@@ -435,7 +607,7 @@ class Codeplug:
                     order=static_talkgroup_order,
                     key=lambda c: c.name,
                     log_sequence_name="grouplist {}".format(gl.name),
-                )
+                ),
             )
             for gl in self.grouplists
         ]
@@ -461,7 +633,9 @@ class Codeplug:
         """
         scanlists = {sl.name: sl for sl in self.scanlists}
         for sl_name, channels in scanlist_dicts.items():
-            scanlists[sl_name] = ScanList.from_names(name=sl_name, channel_names=channels)
+            scanlists[sl_name] = ScanList.from_names(
+                name=sl_name, channel_names=channels
+            )
 
         return type(self)(
             contacts=list(self.contacts),
@@ -475,6 +649,7 @@ class Codeplug:
         """
         :param ranges: tuple of (low, high) frequency to keep in the codeplug
         """
+
         def freq_in_range(freq):
             for low, high in ranges:
                 if float(low) < freq < float(high):
@@ -522,7 +697,9 @@ class Codeplug:
             if not isinstance(ch, DigitalChannel) or not ch.static_talkgroups:
                 channels.append(ch)
                 continue
-            zone_channels = ch.from_talkgroups(ch.static_talkgroups, order=static_talkgroup_order)
+            zone_channels = ch.from_talkgroups(
+                ch.static_talkgroups, order=static_talkgroup_order
+            )
             zscanlist = ScanList(
                 name=ch.short_name,
                 channels=zone_channels,
@@ -542,6 +719,7 @@ class Codeplug:
             channels=channels,
             grouplists=list(self.grouplists),
             # Don't reference channels that no longer exist
-            scanlists=ScanList.prune_missing_channels(self.scanlists, channels) + exp_scanlists,
+            scanlists=ScanList.prune_missing_channels(self.scanlists, channels)
+            + exp_scanlists,
             zones=Zone.prune_missing_channels(zones, channels),
         )
