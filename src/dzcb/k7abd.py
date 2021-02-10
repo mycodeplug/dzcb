@@ -27,7 +27,16 @@ from pathlib import Path
 import attr
 
 import dzcb.exceptions
-from dzcb.model import AnalogChannel, Codeplug, Contact, DigitalChannel, GroupList, ScanList, Talkgroup, Zone
+from dzcb.model import (
+    AnalogChannel,
+    Codeplug,
+    Contact,
+    DigitalChannel,
+    GroupList,
+    ScanList,
+    Talkgroup,
+    Zone,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -148,8 +157,12 @@ def Analog_from_csv(analog_repeaters_csv):
         offset = round(float(r[TX_FREQ]) - frequency, 1)
         power = r[POWER]
         bandwidth = r[BANDWIDTH].rstrip("K")
-        tone_encode = r[CTCSS_ENCODE] if r[CTCSS_ENCODE].lower() not in ("off", "") else None
-        tone_decode = r[CTCSS_DECODE] if r[CTCSS_DECODE].lower() not in ("off", "") else None
+        tone_encode = (
+            r[CTCSS_ENCODE] if r[CTCSS_ENCODE].lower() not in ("off", "") else None
+        )
+        tone_decode = (
+            r[CTCSS_DECODE] if r[CTCSS_DECODE].lower() not in ("off", "") else None
+        )
         try:
             zones.setdefault(zname, []).append(
                 AnalogChannel(
@@ -183,7 +196,11 @@ def DigitalRepeaters_from_k7abd_csv(digital_repeaters_csv, talkgroups_by_name):
         zname, found, code = r.pop("Zone Name").partition(";")
         frequency = float(r.pop("RX Freq"))
         if not frequency:
-            logger.info("%s: Excluding repeater, %s with no frequency", digital_repeaters_csv, zname)
+            logger.info(
+                "%s: Excluding repeater, %s with no frequency",
+                digital_repeaters_csv,
+                zname,
+            )
             continue
         offset = round(float(r.pop("TX Freq")) - frequency, 1)
         color_code = r.pop("Color Code")
@@ -195,16 +212,23 @@ def DigitalRepeaters_from_k7abd_csv(digital_repeaters_csv, talkgroups_by_name):
             try:
                 talkgroups.append(
                     Talkgroup.from_contact(
-                        talkgroups_by_name[tg_name], timeslot,
+                        talkgroups_by_name[tg_name],
+                        timeslot,
                     )
                 )
             except KeyError:
                 logger.warning(
                     "'%s' references unknown talkgroup '%s'. Ignored.",
-                    zname, tg_name,
+                    zname,
+                    tg_name,
                 )
             except ValueError:
-                logger.info("%s: Ignoring ValueError from %s:%s", digital_repeaters_csv, tg_name, timeslot)
+                logger.info(
+                    "%s: Ignoring ValueError from %s:%s",
+                    digital_repeaters_csv,
+                    tg_name,
+                    timeslot,
+                )
         repeater = DigitalChannel(
             name=zname,
             code=code or None,
@@ -238,12 +262,15 @@ def DigitalChannels_from_k7abd_csv(digital_others_csv, talkgroups_by_name):
         tg_name = r.pop("Talk Group")
         try:
             talkgroup = Talkgroup.from_contact(
-                talkgroups_by_name[tg_name], r.pop("TimeSlot"),
+                talkgroups_by_name[tg_name],
+                r.pop("TimeSlot"),
             )
         except KeyError:
             logger.warning(
                 "'%s/%s' references unknown talkgroup '%s'. Ignored.",
-                zname, name, tg_name,
+                zname,
+                name,
+                tg_name,
             )
             continue
         zones.setdefault(zname, []).append(
@@ -265,7 +292,13 @@ def _log_zones_channels(in_zones, log_filename=None, level=logging.DEBUG):
     if log_filename:
         filename_str = " from {}".format(log_filename)
     total_channels = sum(len(z) for z in in_zones.values())
-    logger.log(level, "Load %s zones (%s channels)%s", len(in_zones), total_channels, filename_str)
+    logger.log(
+        level,
+        "Load %s zones (%s channels)%s",
+        len(in_zones),
+        total_channels,
+        filename_str,
+    )
 
 
 def update_zones_channels(zones_dict, in_zones, log_filename=None):
@@ -290,7 +323,9 @@ def Codeplug_from_k7abd(input_dir):
     all_talkgroups_by_name = {}
     total_files = 0
     for p in d.glob("Analog__*.csv"):
-        update_zones_channels(zones, Analog_from_csv(p.read_text().splitlines()), log_filename=p)
+        update_zones_channels(
+            zones, Analog_from_csv(p.read_text().splitlines()), log_filename=p
+        )
         total_files += 1
     for p in d.glob("Talkgroups__*.csv"):
         name = p.name.replace("Talkgroups__", "").replace(".csv", "")
@@ -299,7 +334,13 @@ def Codeplug_from_k7abd(input_dir):
         # XXX: potential bug here if talkgroup definitions differ between files
         all_talkgroups_by_name.update(talkgroups[name])
     for p in d.glob("Digital-Others__*.csv"):
-        update_zones_channels(zones, DigitalChannels_from_k7abd_csv(p.read_text().splitlines(), all_talkgroups_by_name), log_filename=p)
+        update_zones_channels(
+            zones,
+            DigitalChannels_from_k7abd_csv(
+                p.read_text().splitlines(), all_talkgroups_by_name
+            ),
+            log_filename=p,
+        )
         total_files += 1
     for p in d.glob("Digital-Repeaters__*.csv"):
         zname = p.name.replace("Digital-Repeaters__", "").replace(".csv", "")
@@ -309,7 +350,19 @@ def Codeplug_from_k7abd(input_dir):
             tg_csv.update(talkgroups[zname])
         except KeyError:
             logger.debug("Talkgroups__%s.csv was not found. Ignored.", zname)
-        update_zones_channels(zones, {zname: tuple(DigitalRepeaters_from_k7abd_csv(p.read_text().splitlines(), tg_csv))}, log_filename=p)
+        update_zones_channels(
+            zones,
+            {
+                zname: tuple(
+                    DigitalRepeaters_from_k7abd_csv(p.read_text().splitlines(), tg_csv)
+                )
+            },
+            log_filename=p,
+        )
         total_files += 1
-    _log_zones_channels(in_zones=zones, log_filename="{} total files".format(total_files), level=logging.INFO)
+    _log_zones_channels(
+        in_zones=zones,
+        log_filename="{} total files".format(total_files),
+        level=logging.INFO,
+    )
     return Codeplug_from_zone_dicts(zones)
