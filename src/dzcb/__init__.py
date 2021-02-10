@@ -12,6 +12,7 @@ import appdirs
 from pkg_resources import get_distribution
 
 __version__ = get_distribution(__name__).version
+__minor_version__ = ".".join(__version__.split(".")[:2])
 
 COMMERCIAL_VHF = (136.0, 174.0)
 COMMERCIAL_UHF = (400.0, 480.0)
@@ -54,4 +55,4 @@ class AmateurBands(enum.Enum):
         )
 
 
-appdir = appdirs.AppDirs("dzcb", "mycodeplug", version=__version__)
+appdir = appdirs.AppDirs("dzcb", "mycodeplug", version=__minor_version__)
