@@ -89,3 +89,31 @@ def test_digital_channels_missing_talkgroup():
     assert ch0tg.name == "TG 2"
     assert ch0tg.dmrid == 2
     assert ch0tg.timeslot == Timeslot.ONE
+
+
+def test_analog_weird_values():
+    """
+    test validation of fields in the csv file
+    """
+
+    cp = codeplug_from_relative_dir("analog-weird-values")
+
+    assert len(cp.zones) == 6
+    assert len(cp.channels) == 6
+
+    for ch in cp.channels:
+        if ch.name in ("off", "blank"):
+            assert ch.tone_decode is None
+            assert ch.tone_encode is None
+        elif ch.name == "lowerd023":
+            assert ch.tone_decode == "D023"
+            assert ch.tone_encode == "D023"
+        elif ch.name == "sixty-seven":
+            assert ch.tone_decode == "67.0"
+            assert ch.tone_encode == "67.0"
+        elif ch.name == "sixty-seven-decimal":
+            assert ch.tone_decode == "67.0"
+            assert ch.tone_encode == "67.0"
+        elif ch.name == "split-tone":
+            assert ch.tone_decode == "74.4"
+            assert ch.tone_encode == "254.1"
