@@ -17,7 +17,7 @@ def reset_dzcb_model_Contact__all_contacts_by_id():
 
 def codeplug_from_relative_dir(dname):
     input_dir = Path(os.path.dirname(__file__)) / dname
-    return k7abd.Codeplug_from_k7abd(input_dir)
+    return k7abd.Codeplug_from_k7abd(input_dir).order_zones()
 
 
 def test_multiple_repeaters_one_talkgroups():
@@ -32,10 +32,10 @@ def test_multiple_repeaters_one_talkgroups():
     assert len(cp.contacts) == 3
     assert len(cp.channels) == 2
 
-    exp_cp = cp.expand_static_talkgroups()
-    assert len(exp_cp.zones) == 2
-    assert len(exp_cp.contacts) == 3
-    assert len(exp_cp.channels) == 6
+    expanded_cp = cp.expand_static_talkgroups().order_zones()
+    assert len(expanded_cp.zones) == 2
+    assert len(expanded_cp.contacts) == 3
+    assert len(expanded_cp.channels) == 6
 
     expect_channels = [
         ("Simplex 99 2 BAR", "Simplex 99", Timeslot.TWO),
@@ -46,7 +46,10 @@ def test_multiple_repeaters_one_talkgroups():
         ("TG 9 1 FOO", "TG 9", Timeslot.ONE),
     ]
 
-    for ch, exp_ch in zip(exp_cp.channels, expect_channels):
+    print("EXPECT CHANNELS:\n{}".format("\n".join(str(ch) for ch in expect_channels)))
+    print("ACTUAL CHANNELS:\n{}".format("\n".join(str(ch) for ch in expanded_cp.channels)))
+
+    for ch, exp_ch in zip(expanded_cp.channels, expect_channels):
         assert ch.name == exp_ch[0]
         assert ch.talkgroup.name == exp_ch[1]
         assert ch.talkgroup.timeslot == exp_ch[2]
