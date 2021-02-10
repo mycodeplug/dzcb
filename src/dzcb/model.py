@@ -368,7 +368,7 @@ class Codeplug:
                 key=lambda z: z.name,
                 log_sequence_name="zone list",
             )
-            if zone.name not in exclude_zones
+            if zone.name not in exclude_zones and zone.unique_channels
         ]
 
         # prune any channels which are not in a zone
