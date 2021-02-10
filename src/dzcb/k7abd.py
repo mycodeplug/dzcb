@@ -172,6 +172,11 @@ def DigitalRepeaters_from_k7abd_csv(digital_repeaters_csv, talkgroups_by_name):
                         talkgroups_by_name[tg_name], timeslot,
                     )
                 )
+            except KeyError:
+                logger.warning(
+                    "'%s' references unknown talkgroup '%s'. Ignored.",
+                    zname, tg_name,
+                )
             except ValueError:
                 logger.info("%s: Ignoring ValueError from %s:%s", digital_repeaters_csv, tg_name, timeslot)
         repeater = DigitalChannel(
@@ -205,9 +210,16 @@ def DigitalChannels_from_k7abd_csv(digital_others_csv, talkgroups_by_name):
         color_code = r.pop("Color Code")
         power = r.pop("Power")
         tg_name = r.pop("Talk Group")
-        talkgroup = Talkgroup.from_contact(
-            talkgroups_by_name[tg_name], r.pop("TimeSlot"),
-        )
+        try:
+            talkgroup = Talkgroup.from_contact(
+                talkgroups_by_name[tg_name], r.pop("TimeSlot"),
+            )
+        except KeyError:
+            logger.warning(
+                "'%s/%s' references unknown talkgroup '%s'. Ignored.",
+                zname, name, tg_name,
+            )
+            continue
         zones.setdefault(zname, []).append(
             DigitalChannel(
                 name=name,
@@ -267,7 +279,10 @@ def Codeplug_from_k7abd(input_dir):
         zname = p.name.replace("Digital-Repeaters__", "").replace(".csv", "")
         # merge Talkgroup files, but prefer talkgroup names from this zone
         tg_csv = all_talkgroups_by_name.copy()
-        tg_csv.update(talkgroups[zname])
+        try:
+            tg_csv.update(talkgroups[zname])
+        except KeyError:
+            logger.debug("Talkgroups__%s.csv was not found. Ignored.", zname)
         update_zones_channels(zones, {zname: tuple(DigitalRepeaters_from_k7abd_csv(p.read_text().splitlines(), tg_csv))}, log_filename=p)
         total_files += 1
     _log_zones_channels(in_zones=zones, log_filename="{} total files".format(total_files), level=logging.INFO)
