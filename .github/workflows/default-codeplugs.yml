@@ -21,7 +21,7 @@ jobs:
       uses: 1466587594/get-current-time@v2
       id: current-time
       with:
-        format: YYYYMMDD-A
+        format: YYYYMMDD
         utcOffset: "-08:00"
     - name: Cache .cache
       uses: actions/cache@v2
