@@ -131,6 +131,10 @@ def filter_repeaters(repeaters, zone):
     return [r for _, r in sorted(matching, key=lambda x: x[0])]
 
 
+def normalize_tone(tone):
+    return tone if tone.upper() not in ("", "CSQ") else k7abd.OFF
+
+
 def repeater_to_k7abd_row(repeater, zone_name):
     return {
         k7abd.ZONE: zone_name,
@@ -143,8 +147,8 @@ def repeater_to_k7abd_row(repeater, zone_name):
         k7abd.POWER: "High",
         k7abd.RX_FREQ: repeater["Frequency"],
         k7abd.TX_FREQ: repeater["Input Freq"] or repeater["Frequency"],
-        k7abd.CTCSS_DECODE: repeater["TSQ"] if repeater["TSQ"].upper() not in ("", "CSQ") else k7abd.OFF,
-        k7abd.CTCSS_ENCODE: repeater["PL"] if repeater["PL"].upper() not in ("", "CSQ") else k7abd.OFF,
+        k7abd.CTCSS_DECODE: normalize_tone(repeater["TSQ"]),
+        k7abd.CTCSS_ENCODE: normalize_tone(repeater["PL"]),
         k7abd.TX_PROHIBIT: k7abd.OFF,
     }
 
