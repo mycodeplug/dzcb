@@ -354,13 +354,6 @@ class Codeplug:
     scanlists = attr.ib(factory=list, repr=_seq_items_repr)
     zones = attr.ib(factory=list, repr=_seq_items_repr)
 
-    def __attrs_post_init__(self):
-        # prune any channels which are not in a zone
-        all_channels = []
-        for z in self.zones:
-            all_channels.extend(z.unique_channels)
-        self.channels = [ch for ch in self.channels if ch in all_channels]
-
     def order_zones(self, zone_order=None, exclude_zones=None):
         if zone_order is None:
             zone_order = []
@@ -377,9 +370,15 @@ class Codeplug:
             )
             if zone.name not in exclude_zones
         ]
+
+        # prune any channels which are not in a zone
+        channels = []
+        for zone in zones:
+            channels.extend(zone.unique_channels)
+
         return type(self)(
             contacts=list(self.contacts),
-            channels=list(self.channels),
+            channels=channels,
             grouplists=list(self.grouplists),
             scanlists=list(self.scanlists),
             zones=zones,
