@@ -26,7 +26,7 @@ REPEATERBOOK_LAST_FETCH = 0
 # Limit default state to avoid unnecessary API hits
 # Users will want to pass the state on the command line
 # TODO: Geocode Lat/Long from the CSV file
-REPEATERBOOK_DEFAULT_STATES = ("Washington","Oregon")
+REPEATERBOOK_DEFAULT_STATES = ("Washington", "Oregon")
 REPEATERBOOK_CACHE_MAX_AGE = 3600 * 12.1  # 12 hours (and some change)
 CSV_ZONE_NAME = "Zone Name"
 CSV_LAT = "Lat"
@@ -83,7 +83,9 @@ def proximity_zones(proximity_zones_csv):
     )
     for zone in csvr:
         name = zone.pop(CSV_ZONE_NAME)
-        slug = name.replace(" ", "-").replace(",", "").replace("/", "-").replace("\\", "-")
+        slug = (
+            name.replace(" ", "-").replace(",", "").replace("/", "-").replace("\\", "-")
+        )
         yield (name, slug, zone)
 
 
@@ -167,7 +169,12 @@ def zones_to_k7abd(input_csv, output_dir, states=None):
             for repeater in filter_repeaters(repeaters, zone):
                 csvw.writerow(repeater_to_k7abd_row(repeater, zone_name=name))
                 total_channels += 1
-        logger.debug("Generate '%s' k7abd zones (%s channels) to '%s'", name, total_channels, out_file)
+        logger.debug(
+            "Generate '%s' k7abd zones (%s channels) to '%s'",
+            name,
+            total_channels,
+            out_file,
+        )
 
 
 if __name__ == "__main__":
