@@ -125,20 +125,23 @@ def Analog_from_csv(analog_repeaters_csv):
         offset = round(float(r["TX Freq"]) - frequency, 1)
         power = r["Power"]
         bandwidth = r["Bandwidth"].rstrip("K")
-        tone_encode = r["CTCSS Decode"] if r["CTCSS Decode"] != "Off" else None
-        tone_decode = r["CTCSS Encode"] if r["CTCSS Encode"] != "Off" else None
-        zones.setdefault(zname, []).append(
-            AnalogChannel(
-                name=name,
-                code=code or None,
-                frequency=frequency,
-                offset=offset,
-                tone_encode=tone_encode,
-                tone_decode=tone_decode,
-                power=power,
-                bandwidth=bandwidth,
+        tone_encode = r["CTCSS Encode"] if r["CTCSS Encode"].lower() not in ("off", "") else None
+        tone_decode = r["CTCSS Decode"] if r["CTCSS Decode"].lower() not in ("off", "") else None
+        try:
+            zones.setdefault(zname, []).append(
+                AnalogChannel(
+                    name=name,
+                    code=code or None,
+                    frequency=frequency,
+                    offset=offset,
+                    tone_encode=tone_encode,
+                    tone_decode=tone_decode,
+                    power=power,
+                    bandwidth=bandwidth,
+                )
             )
-        )
+        except ValueError as ve:
+            logger.info("Skipping channel {} / {}: {}".format(zname, name, ve))
     return zones
 
 
