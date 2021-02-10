@@ -1,0 +1,10 @@
+Zone,Channel Name,Bandwidth,Power,RX Freq,TX Freq,CTCSS Decode,CTCSS Encode,TX Prohibit
+off,off,25K,High,146.52,146.52,Off,Off,Off
+blank,blank,25K,High,146.52,146.52,,,Off
+restricted-in,FM 146.52,25K,High,146.52,146.52,restricted,Off,Off
+restricted-out,FM 146.52,25K,High,146.52,146.52,Off,restricted,Off
+lowerd023,lowerd023,25K,High,146.52,146.52,D023,d023,Off
+sixty-seven,sixty-seven,25K,High,146.52,146.52,67,67,Off
+sixty-seven-decimal,sixty-seven-decimal,25K,High,146.52,146.52,67.0,67.0,Off
+sixty-nine,sixty-nine,25K,High,146.52,146.52,69,69,Off
+split-tone,split-tone,25K,High,146.52,146.52,74.4,254.1,Off

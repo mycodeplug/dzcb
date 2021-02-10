@@ -2,3 +2,5 @@ Zone Name,Lat,Long,Distance,Unit,Band(2m;1.25m;70cm),Use,Operational Status
 Longview WA 35mi,46.13819885,-122.93800354,35,miles,2m;70cm,OPEN,On-air
 Longview WA VHF 35mi,46.13819885,-122.93800354,35,miles,2m,open,On-air
 Longview WA UHF 35mi,46.13819885,-122.93800354,35,miles,70cm,OPEN,On-Air
+Portland OR VHF 30mi,45.52310181,-122.67600250,30,miles,2m,OPEN,On-Air
+Portland OR UHF 30mi,45.52310181,-122.67600250,30,miles,70cm,OPEN,On-Air

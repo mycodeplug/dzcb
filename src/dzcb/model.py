@@ -3,13 +3,14 @@ dzcb.model - data model for codeplug objects
 """
 import enum
 import logging
+import re
 
 import attr
 
-# cached data for testing
 import dzcb.data
 import dzcb.exceptions
 import dzcb.munge
+import dzcb.tone
 
 # XXX: i hate this
 NAME_MAX = 16
@@ -144,12 +145,12 @@ class Channel:
         validator=attr.validators.instance_of(Power),
         converter=Power.from_any,
     )
-    rx_only = attr.ib(
-        default=False,
-        validator=attr.validators.instance_of(bool)
-    )
+    rx_only = attr.ib(default=False, validator=attr.validators.instance_of(bool))
     scanlist = attr.ib(default=None)
-    code = attr.ib(default=None, validator=attr.validators.optional(attr.validators.instance_of(str)))
+    code = attr.ib(
+        default=None,
+        validator=attr.validators.optional(attr.validators.instance_of(str)),
+    )
 
     def __attrs_post_init__(self):
         type(self)._all_channels[self.name] = self
@@ -161,20 +162,49 @@ class Channel:
         maybe_this_channel = None
         while maybe_this_channel != self:
             maybe_short_name = dzcb.munge.channel_name(
-                self.name,
-                NAME_MAX - (1 if attempt else 0)
+                self.name, NAME_MAX - (1 if attempt else 0)
             ) + (str(attempt) if attempt else "")
-            maybe_this_channel = type(self)._short_names.setdefault(maybe_short_name, self)
+            maybe_this_channel = type(self)._short_names.setdefault(
+                maybe_short_name, self
+            )
             attempt += 1
             if attempt > 9:
-                raise RuntimeError("Cannot find a non-conflicting channel short name for {}".format(self))
+                raise RuntimeError(
+                    "Cannot find a non-conflicting channel short name for {}".format(
+                        self
+                    )
+                )
         return maybe_short_name
+
+
+def _tone_validator(instance, attribute, value):
+    if value is not None and value not in dzcb.tone.VALID_TONES:
+        raise ValueError(
+            "field {!r} has unknown tone {!r}".format(attribute.name, value)
+        )
+
+
+def _tone_converter(value):
+    if not isinstance(value, str):
+        value = str(value)
+    elif re.match("[0-9.]+", value):
+        # normalize float values
+        value = str(float(value))
+    return value.upper()
 
 
 @attr.s
 class AnalogChannel(Channel):
-    tone_encode = attr.ib(default=None)
-    tone_decode = attr.ib(default=None)
+    tone_encode = attr.ib(
+        default=None,
+        validator=_tone_validator,
+        converter=attr.converters.optional(_tone_converter),
+    )
+    tone_decode = attr.ib(
+        default=None,
+        validator=_tone_validator,
+        converter=attr.converters.optional(_tone_converter),
+    )
     # configurable bandwidth for analog (technically should be enum)
     bandwidth = attr.ib(
         default=25,
@@ -196,7 +226,10 @@ class DigitalChannel(Channel):
     squelch = 0
     color_code = attr.ib(default=1)
     grouplist = attr.ib(default=None)
-    talkgroup = attr.ib(default=None, validator=attr.validators.optional(attr.validators.instance_of(Talkgroup)))
+    talkgroup = attr.ib(
+        default=None,
+        validator=attr.validators.optional(attr.validators.instance_of(Talkgroup)),
+    )
     # a list of other static talkgroups, which form the basis of an RX/scan list
     static_talkgroups = attr.ib(factory=list)
 
@@ -213,8 +246,9 @@ class DigitalChannel(Channel):
                 ),
                 talkgroup=tg,
                 scanlist=self.short_name,
-                static_talkgroups=[]
-            ) for tg in dzcb.munge.ordered(
+                static_talkgroups=[],
+            )
+            for tg in dzcb.munge.ordered(
                 seq=talkgroups,
                 order=order or [],
                 key=lambda tg: tg.name,
@@ -239,6 +273,7 @@ class GroupList:
     A GroupList specifies a set of contacts that will be received on the same
     channel.
     """
+
     name = attr.ib(validator=attr.validators.instance_of(str))
     contacts = attr.ib(factory=list)
 
@@ -248,8 +283,12 @@ class ScanList:
     """
     A ScanList specifies a set of channels that can be sequentially scanned.
     """
+
     name = attr.ib(validator=attr.validators.instance_of(str))
-    channels = attr.ib(factory=list, validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)))
+    channels = attr.ib(
+        factory=list,
+        validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
+    )
 
     @classmethod
     def from_names(cls, name, channel_names):
@@ -262,15 +301,13 @@ class ScanList:
             if channel is None:
                 logger.debug(
                     "ScanList {!r} references unknown channel {!r}, ignoring".format(
-                        name, cn,
+                        name,
+                        cn,
                     )
                 )
                 continue
             channels.append(channel)
-        return cls(
-            name=name,
-            channels=channels
-        )
+        return cls(name=name, channels=channels)
 
     @classmethod
     def prune_missing_channels(cls, scanlists, channels):
@@ -298,8 +335,14 @@ class Zone:
     """
 
     name = attr.ib(validator=attr.validators.instance_of(str))
-    channels_a = attr.ib(factory=list, validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)))
-    channels_b = attr.ib(factory=list, validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)))
+    channels_a = attr.ib(
+        factory=list,
+        validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
+    )
+    channels_b = attr.ib(
+        factory=list,
+        validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
+    )
 
     @classmethod
     def prune_missing_channels(cls, zones, channels):
@@ -338,7 +381,11 @@ def uniquify_contacts(contacts):
     for ct in contacts:
         stored_ct = ctd.setdefault(ct.name, ct)
         if stored_ct.dmrid != ct.dmrid:
-            raise RuntimeError("Two contacts named {} have different IDs: {} {}".format(ct.name, ct.dmrid, stored_ct.dmrid))
+            raise RuntimeError(
+                "Two contacts named {} have different IDs: {} {}".format(
+                    ct.name, ct.dmrid, stored_ct.dmrid
+                )
+            )
     return list(ctd.values())
 
 
@@ -368,7 +415,7 @@ class Codeplug:
                 key=lambda z: z.name,
                 log_sequence_name="zone list",
             )
-            if zone.name not in exclude_zones
+            if zone.name not in exclude_zones and zone.unique_channels
         ]
 
         # prune any channels which are not in a zone
@@ -403,7 +450,7 @@ class Codeplug:
                     order=static_talkgroup_order,
                     key=lambda c: c.name,
                     log_sequence_name="grouplist {}".format(gl.name),
-                )
+                ),
             )
             for gl in self.grouplists
         ]
@@ -429,7 +476,9 @@ class Codeplug:
         """
         scanlists = {sl.name: sl for sl in self.scanlists}
         for sl_name, channels in scanlist_dicts.items():
-            scanlists[sl_name] = ScanList.from_names(name=sl_name, channel_names=channels)
+            scanlists[sl_name] = ScanList.from_names(
+                name=sl_name, channel_names=channels
+            )
 
         return type(self)(
             contacts=list(self.contacts),
@@ -443,6 +492,7 @@ class Codeplug:
         """
         :param ranges: tuple of (low, high) frequency to keep in the codeplug
         """
+
         def freq_in_range(freq):
             for low, high in ranges:
                 if float(low) < freq < float(high):
@@ -490,7 +540,9 @@ class Codeplug:
             if not isinstance(ch, DigitalChannel) or not ch.static_talkgroups:
                 channels.append(ch)
                 continue
-            zone_channels = ch.from_talkgroups(ch.static_talkgroups, order=static_talkgroup_order)
+            zone_channels = ch.from_talkgroups(
+                ch.static_talkgroups, order=static_talkgroup_order
+            )
             zscanlist = ScanList(
                 name=ch.short_name,
                 channels=zone_channels,
@@ -510,6 +562,7 @@ class Codeplug:
             channels=channels,
             grouplists=list(self.grouplists),
             # Don't reference channels that no longer exist
-            scanlists=ScanList.prune_missing_channels(self.scanlists, channels) + exp_scanlists,
+            scanlists=ScanList.prune_missing_channels(self.scanlists, channels)
+            + exp_scanlists,
             zones=Zone.prune_missing_channels(zones, channels),
         )
