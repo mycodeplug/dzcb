@@ -205,8 +205,8 @@ def _tone_converter(value):
 
 @attr.s
 class AnalogChannel(Channel):
-    tone_encode = attr.ib(default=None)
-    tone_decode = attr.ib(default=None)
+    tone_encode = attr.ib(default=None, validator=_tone_validator, converter=attr.converters.optional(_tone_converter))
+    tone_decode = attr.ib(default=None, validator=_tone_validator, converter=attr.converters.optional(_tone_converter))
     # configurable bandwidth for analog (technically should be enum)
     bandwidth = attr.ib(
         default=25,
