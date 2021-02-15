@@ -1,6 +1,7 @@
 """
 dzcb.model - data model for codeplug objects
 """
+import csv
 import enum
 import logging
 import re
@@ -369,6 +370,26 @@ class Zone:
             if ch not in channels:
                 channels.append(ch)
         return channels
+
+
+@attr.s
+class Ordering:
+    contacts = attr.ib(factory=list)
+    channels = attr.ib(factory=list)
+    grouplists = attr.ib(factory=list)
+    scanlists = attr.ib(factory=list)
+    zones = attr.ib(factory=list)
+
+    @classmethod
+    def from_csv(cls, ordering_csv):
+        order = {}
+        csvr = csv.DictReader(ordering_csv)
+        for r in csvr:
+            for obj, item in r.items():
+                if not item:
+                    continue
+                order.setdefault(obj.lower(), []).append(item)
+        return cls(**order)
 
 
 def uniquify_contacts(contacts):

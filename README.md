@@ -172,6 +172,33 @@ and [Analog](./src/dzcb/data/k7abd/Analog__Simplex.csv) simplex frequencies,
 and [GMRS/FRS and MURS channels](./src/dzcb/data/k7abd/Analog__Unlicensed.csv) are
 included if `--default-k7abd` is specified.
 
+# Customization
+
+The channels, zones, and contacts present and the ordering of such in the
+final generated codeplug is controlled by one or more CSV files passed
+as parameters.
+
+The column headers may themselves appear in any order or be omitted (if
+no change is requested to that type of codeplug object).
+
+## `--include`
+
+If the CSV file is passed as a `--include` parameter, then any objects not explicitly
+mentioned in the file will be removed.
+
+## `--exclude`
+
+If the CSV file is passed as an `--exclude` parameter, then any objects mentioned
+will be removed.
+
+## `--order`
+
+The remaining objects are sorted alphabetically after processing removals.
+
+Any remaining objects are sorted according to the order specified in the file
+passed to `--order`. Similarly, a file may be specified as `--reverse-order` which
+will sort in reverse, starting from the end of the list.
+
 # Bonus: Trim the Contact List
 
 Download the usersDB.bin with Farnsworth editcp.
