@@ -67,7 +67,7 @@ class MissingItemsWarning(UserWarning):
         )
 
 
-def ordered(seq, order, key=None, log_sequence_name=None):
+def ordered(seq, order, key=None, log_sequence_name=None, reverse=False):
     """
     If `log_sequence_name` is specified, use that text instead of
     "the sequence to be ordered" when emitting a log message about
@@ -94,4 +94,7 @@ def ordered(seq, order, key=None, log_sequence_name=None):
             stacklevel=2,
         )
         head = [item for item in head if item is not NotFound]
+    if reverse:
+        head.reverse()
+        return tail + head
     return head + tail
