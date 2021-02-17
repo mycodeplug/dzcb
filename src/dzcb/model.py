@@ -140,13 +140,16 @@ class Channel:
     offset = attr.ib(
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(float)),
+        converter=attr.converters.optional(float),
     )
     power = attr.ib(
         default=Power.HIGH,
         validator=attr.validators.instance_of(Power),
         converter=Power.from_any,
     )
-    rx_only = attr.ib(default=False, validator=attr.validators.instance_of(bool))
+    rx_only = attr.ib(
+        default=False, validator=attr.validators.instance_of(bool), converter=bool
+    )
     scanlist = attr.ib(default=None)
     code = attr.ib(
         default=None,
@@ -278,6 +281,23 @@ class GroupList:
     name = attr.ib(validator=attr.validators.instance_of(str))
     contacts = attr.ib(factory=list)
 
+    @classmethod
+    def prune_missing_contacts(cls, grouplists, contacts):
+        """
+        Return a sequence of new GroupList objects containing only contacts in `contacts`
+        """
+        contact_names = [ct.name for ct in contacts]
+        return [
+            gl
+            for gl in [
+                attr.evolve(
+                    gl, contacts=[ct for ct in gl.contacts if ct.name in contact_names]
+                )
+                for gl in grouplists
+            ]
+            if gl.contacts
+        ]
+
 
 @attr.s
 class ScanList:
@@ -315,10 +335,13 @@ class ScanList:
         """
         Return a sequence of new ScanList objects containing only channels in `channels`
         """
+        channel_names = [ch.name for ch in channels]
         return [
             sl
             for sl in [
-                attr.evolve(sl, channels=[ch for ch in sl.channels if ch in channels])
+                attr.evolve(
+                    sl, channels=[ch for ch in sl.channels if ch.name in channel_names]
+                )
                 for sl in scanlists
             ]
             if sl.channels
@@ -350,13 +373,14 @@ class Zone:
         """
         Return a sequence of new Zone objects containing only channels in `channels`
         """
+        channel_names = [ch.name for ch in channels]
         return [
             zn
             for zn in [
                 attr.evolve(
                     zn,
-                    channels_a=[ch for ch in zn.channels_a if ch in channels],
-                    channels_b=[ch for ch in zn.channels_a if ch in channels],
+                    channels_a=[ch for ch in zn.channels_a if ch.name in channel_names],
+                    channels_b=[ch for ch in zn.channels_a if ch.name in channel_names],
                 )
                 for zn in zones
             ]
@@ -407,7 +431,40 @@ def uniquify_contacts(contacts):
                     ct.name, ct.dmrid, stored_ct.dmrid
                 )
             )
-    return list(ctd.values())
+    return tuple(ctd.values())
+
+
+def filter_channel_frequency(channels, ranges):
+    """
+    :param channels: sequence of Channel to filter
+    :param ranges: sequence of tuple of (low, high) frequency to retain
+    :return: sequence of Channels within given ranges
+    """
+    if ranges is None:
+        return channels
+
+    def freq_in_range(freq):
+        for low, high in ranges:
+            if float(low) < freq < float(high):
+                return True
+        return False
+
+    keep_channels = []
+    channels_pruned = []
+
+    for ch in channels:
+        if freq_in_range(ch.frequency):
+            keep_channels.append(ch)
+            continue
+        # none of the ranges matched, so prune this channel
+        channels_pruned.append(ch)
+    if channels_pruned:
+        logger.info(
+            "filter_channel_frequency: Excluding %s channels with frequency out of range: %s",
+            len(channels_pruned),
+            ranges,
+        )
+    return keep_channels
 
 
 def _seq_items_repr(s):
@@ -416,11 +473,99 @@ def _seq_items_repr(s):
 
 @attr.s
 class Codeplug:
-    contacts = attr.ib(factory=list, converter=uniquify_contacts, repr=_seq_items_repr)
-    channels = attr.ib(factory=list, repr=_seq_items_repr)
-    grouplists = attr.ib(factory=list, repr=_seq_items_repr)
-    scanlists = attr.ib(factory=list, repr=_seq_items_repr)
-    zones = attr.ib(factory=list, repr=_seq_items_repr)
+    contacts = attr.ib(factory=tuple, converter=uniquify_contacts, repr=_seq_items_repr)
+    channels = attr.ib(factory=tuple, converter=tuple, repr=_seq_items_repr)
+    grouplists = attr.ib(factory=tuple, converter=tuple, repr=_seq_items_repr)
+    scanlists = attr.ib(factory=tuple, converter=tuple, repr=_seq_items_repr)
+    zones = attr.ib(factory=tuple, converter=tuple, repr=_seq_items_repr)
+
+    def filter(
+        self, include=None, exclude=None, order=None, reverse_order=None, ranges=None
+    ):
+        """
+        Filter codeplug objects and return a new Codeplug.
+
+        :param include: Ordering object of codeplug objects to retain
+        :param exclude: Ordering object of codeplug objects to return
+        :param order: Ordering object specifying top down order
+        :param reverse_order: Ordering object specifying bottom up order
+        :param ranges: Frequency ranges of channels to retain
+        :return: New Codeplug with filtering applied
+        """
+        # create a mutable codeplug for sorting
+        cp = dict(
+            contacts=list(self.contacts),
+            channels=filter_channel_frequency(self.channels, ranges),
+            grouplists=list(self.grouplists),
+            scanlists=list(self.scanlists),
+            zones=list(self.zones),
+        )
+        # keep objects in the include list
+        for obj_type, objects in cp.items():
+            include_names = getattr(include, obj_type, None)
+            if include_names:
+                cp[obj_type] = [obj for obj in objects if obj.name in include_names]
+
+        # keep objects not in the exclude list
+        for obj_type, objects in cp.items():
+            exclude_names = getattr(exclude, obj_type, None)
+            if exclude_names:
+                cp[obj_type] = [obj for obj in objects if obj.name not in exclude_names]
+
+        # order and reverse order the objects
+        for obj_type, objects in cp.items():
+            order_names = getattr(order, obj_type, None)
+            if order_names:
+                cp[obj_type] = dzcb.munge.ordered(
+                    seq=objects,
+                    order=order_names,
+                    key=lambda o: o.name,
+                    log_sequence_name="{} list".format(obj_type),
+                )
+            rorder_names = getattr(reverse_order, obj_type, None)
+            if rorder_names:
+                cp[obj_type] = dzcb.munge.ordered(
+                    seq=objects,
+                    order=rorder_names,
+                    reverse=True,
+                    key=lambda o: o.name,
+                    log_sequence_name="{} list".format(obj_type),
+                )
+
+        # order static_talkgroups based on contact order
+        def order_static_talkgroups(ch):
+            if isinstance(ch, AnalogChannel) or not ch.static_talkgroups:
+                return ch
+            static_talkgroup_names = [tg.name for tg in ch.static_talkgroups]
+            return attr.evolve(
+                ch,
+                static_talkgroups=[
+                    tg for tg in cp["contacts"] if tg.name in static_talkgroup_names
+                ],
+            )
+
+        # remove any channels with a talkgroup that doesn't exist
+        contact_names = [tg.name for tg in cp["contacts"]]
+
+        def talkgroup_exists(ch):
+            if isinstance(ch, AnalogChannel) or ch.talkgroup is None:
+                return True
+            return ch.talkgroup.name in contact_names
+
+        cp["channels"] = [
+            order_static_talkgroups(ch) for ch in cp["channels"] if talkgroup_exists(ch)
+        ]
+
+        # Prune orphan channels and contacts from containers
+        cp["grouplists"] = GroupList.prune_missing_contacts(
+            cp["grouplists"], cp["contacts"]
+        )
+        cp["scanlists"] = ScanList.prune_missing_channels(
+            cp["scanlists"], cp["channels"]
+        )
+        cp["zones"] = Zone.prune_missing_channels(cp["zones"], cp["channels"])
+
+        return attr.evolve(self, **cp)
 
     def order_zones(self, zone_order=None, exclude_zones=None):
         if zone_order is None:
@@ -444,13 +589,7 @@ class Codeplug:
         for zone in zones:
             channels.extend(zone.unique_channels)
 
-        return type(self)(
-            contacts=list(self.contacts),
-            channels=channels,
-            grouplists=list(self.grouplists),
-            scanlists=list(self.scanlists),
-            zones=zones,
-        )
+        return attr.evolve(self, channels=channels, zones=zones)
 
     def order_grouplists(self, static_talkgroup_order=None, exclude_talkgroups=None):
         """
@@ -475,13 +614,7 @@ class Codeplug:
             )
             for gl in self.grouplists
         ]
-        return type(self)(
-            contacts=list(self.contacts),
-            channels=list(self.channels),
-            grouplists=grouplists,
-            scanlists=list(self.scanlists),
-            zones=list(self.zones),
-        )
+        return attr.evolve(self, grouplists=grouplists)
 
     def replace_scanlists(self, scanlist_dicts):
         """
@@ -501,48 +634,7 @@ class Codeplug:
                 name=sl_name, channel_names=channels
             )
 
-        return type(self)(
-            contacts=list(self.contacts),
-            channels=list(self.channels),
-            grouplists=list(self.grouplists),
-            scanlists=list(scanlists.values()),
-            zones=list(self.zones),
-        )
-
-    def filter_frequency_range(self, *ranges):
-        """
-        :param ranges: tuple of (low, high) frequency to keep in the codeplug
-        """
-
-        def freq_in_range(freq):
-            for low, high in ranges:
-                if float(low) < freq < float(high):
-                    return True
-            return False
-
-        channels = []
-        channels_pruned = []
-
-        for ch in self.channels:
-            if freq_in_range(ch.frequency):
-                channels.append(ch)
-                continue
-            # none of the ranges matched, so prune this channel
-            channels_pruned.append(ch)
-        if channels_pruned:
-            logger.info(
-                "filter_frequency_range: Excluding %s channels with frequency out of range: %s",
-                len(channels_pruned),
-                ranges,
-            )
-
-        return type(self)(
-            contacts=list(self.contacts),
-            channels=channels,
-            grouplists=list(self.grouplists),
-            scanlists=ScanList.prune_missing_channels(self.scanlists, channels),
-            zones=Zone.prune_missing_channels(self.zones, channels),
-        )
+        return attr.evolve(self, scanlists=scanlists.values())
 
     def expand_static_talkgroups(self, static_talkgroup_order=None):
         """
@@ -578,10 +670,9 @@ class Codeplug:
             )
             channels.extend(zone_channels)
 
-        return type(self)(
-            contacts=list(self.contacts),
+        return attr.evolve(
+            self,
             channels=channels,
-            grouplists=list(self.grouplists),
             # Don't reference channels that no longer exist
             scanlists=ScanList.prune_missing_channels(self.scanlists, channels)
             + exp_scanlists,
