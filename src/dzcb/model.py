@@ -280,13 +280,13 @@ class GroupList:
     def prune_missing_contacts(cls, grouplists, contacts):
         """
         Return a sequence of new GroupList objects containing only contacts in `contacts`
+        and in the order specified in contacts
         """
-        contact_names = [ct.name for ct in contacts]
         return [
             gl
             for gl in [
                 attr.evolve(
-                    gl, contacts=[ct for ct in gl.contacts if ct.name in contact_names]
+                    gl, contacts=[ct for ct in contacts if ct.name in set(glct.name for glct in gl.contacts)]
                 )
                 for gl in grouplists
             ]
