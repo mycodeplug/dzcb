@@ -577,9 +577,12 @@ class Codeplug:
         # order static_talkgroups based on contact order
         def order_static_talkgroups(ch):
             if isinstance(ch, DigitalChannel) and ch.static_talkgroups:
-                ch.static_talkgroups = [
-                    tg for tg in cp["contacts"] if tg in ch.static_talkgroups
-                ]
+                return attr.evolve(
+                    ch,
+                    static_talkgroups=[
+                        tg for tg in cp["contacts"] if tg in ch.static_talkgroups
+                    ],
+                )
             return ch
 
         if include:
