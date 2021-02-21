@@ -20,11 +20,6 @@ Talkgroup_Channel_name_replacements = {
 
 
 def channel_name(ch_name, max_length):
-    # Replace Long strings with shorter ones
-    replacements = Talkgroup_Channel_name_replacements.copy()
-    for find, repl in replacements.items():
-        ch_name = ch_name.replace(find, repl)
-
     # Truncate the channel name (try to preserve the tail  characters
     # which are typically TG# and 3-digit Code)
     tail_code = re.search(r"[12]?\s[A-Z]+$", ch_name)
