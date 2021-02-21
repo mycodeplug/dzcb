@@ -330,7 +330,7 @@ class ScanList:
         """
         Return a sequence of new ScanList objects containing only channels in `channels`
         """
-        channel_names = [ch.name for ch in channels]
+        channel_names = set(ch.name for ch in channels)
         return [
             sl
             for sl in [
