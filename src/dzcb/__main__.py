@@ -110,12 +110,34 @@ if __name__ == "__main__":
         help="JSON dict mapping scanlist name to list of channel names.",
     )
     parser.add_argument(
-        "--order-json",
-        default=None,
-        help="JSON dict specifying zone and talkgroup orderings.",
+        "--include",
+        nargs="*",
+        help="Specify one or more CSV files with object names to include",
+    )
+    parser.add_argument(
+        "--exclude",
+        nargs="*",
+        help="Specify one or more CSV files with object names to exclude",
+    )
+    parser.add_argument(
+        "--order",
+        nargs="*",
+        help="Specify one or more CSV files with object order by name",
+    )
+    parser.add_argument(
+        "--reverse-order",
+        nargs="*",
+        help="Specify one or more CSV files with object order by name (reverse)",
     )
     parser.add_argument("outdir", help="Write code plug files to this directory")
     args = parser.parse_args()
+
+    # get overall ordering objects first and raise any validation errors
+    ordering = {}
+    for oarg_name in ["include", "exclude", "order", "reverse_order"]:
+        ordering[oarg_name] = dzcb.model.Ordering()
+        for f in getattr(args, oarg_name) or tuple():
+            ordering[oarg_name] += dzcb.model.Ordering.from_csv(Path(f).read_text().splitlines())
 
     outdir = append_dir_and_create(Path(args.outdir))
     dzcb.log.init_logging(log_path=outdir)
@@ -156,21 +178,11 @@ if __name__ == "__main__":
         default_path=files(dzcb.data).joinpath("scanlists.json"),
         cache_dir=cache_dir,
     )
-    order = cache_user_or_default_json(
-        object_name="zone order",
-        user_path=args.order_json,
-        default_path=files(dzcb.data).joinpath("order.json"),
-        cache_dir=cache_dir,
-    )
-    zone_order = order.get("zone", {}).get("default", [])
-    zone_order_expanded = order.get("zone", {}).get("expanded", [])
-    exclude_zones_expanded = order.get("zone", {}).get("exclude_expanded", [])
-    static_talkgroup_order = order.get("static_talkgroup", [])
 
     # create codeplug from a directory of k7abd CSVs
     cp = (
         dzcb.k7abd.Codeplug_from_k7abd(cache_dir)
-        .order_grouplists(static_talkgroup_order=static_talkgroup_order)
+        .filter(**ordering)
         .replace_scanlists(scanlists)
     )
     logger.info("Generated %s", cp)
@@ -180,18 +192,15 @@ if __name__ == "__main__":
     gb3gf_outdir = append_dir_and_create(outdir, "gb3gf")
     gd77_outdir = append_dir_and_create(gb3gf_outdir, "opengd77")
     dzcb.gb3gf.Codeplug_to_gb3gf_opengd77_csv(
-        cp.order_zones(zone_order=zone_order),
+        cp=cp,
         output_dir=gd77_outdir,
     )
 
     # The following models use expand_static_talkgroups to create
     # one channel per talkgroup / one zone per repeater
     fw_cp = (
-        cp.expand_static_talkgroups(static_talkgroup_order=static_talkgroup_order)
-        .order_zones(
-            zone_order=zone_order_expanded,
-            exclude_zones=exclude_zones_expanded,
-        )
+        cp.expand_static_talkgroups()
+        .filter(**ordering)
         .replace_scanlists(scanlists)
     )
     logger.info("Expand static talkgroups %s", fw_cp)
