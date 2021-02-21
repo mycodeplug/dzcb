@@ -17,7 +17,7 @@ def reset_dzcb_model_Contact__all_contacts_by_id():
 
 def codeplug_from_relative_dir(dname):
     input_dir = Path(os.path.dirname(__file__)) / dname
-    return k7abd.Codeplug_from_k7abd(input_dir).order_zones()
+    return k7abd.Codeplug_from_k7abd(input_dir)
 
 
 def test_multiple_repeaters_one_talkgroups():
@@ -32,7 +32,7 @@ def test_multiple_repeaters_one_talkgroups():
     assert len(cp.contacts) == 3
     assert len(cp.channels) == 2
 
-    expanded_cp = cp.expand_static_talkgroups().order_zones()
+    expanded_cp = cp.expand_static_talkgroups()
     assert len(expanded_cp.zones) == 2
     assert len(expanded_cp.contacts) == 3
     assert len(expanded_cp.channels) == 6
@@ -96,7 +96,7 @@ def test_analog_weird_values():
     test validation of fields in the csv file
     """
 
-    cp = codeplug_from_relative_dir("analog-weird-values")
+    cp = codeplug_from_relative_dir("analog-weird-values").filter()
 
     assert len(cp.zones) == 6
     assert len(cp.channels) == 6
