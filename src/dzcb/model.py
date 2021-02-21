@@ -584,55 +584,6 @@ class Codeplug:
 
         return attr.evolve(self, **cp)
 
-    def order_zones(self, zone_order=None, exclude_zones=None):
-        if zone_order is None:
-            zone_order = []
-        if exclude_zones is None:
-            exclude_zones = []
-
-        zones = [
-            zone
-            for zone in dzcb.munge.ordered(
-                seq=self.zones,
-                order=zone_order,
-                key=lambda z: z.name,
-                log_sequence_name="zone list",
-            )
-            if zone.name not in exclude_zones and zone.unique_channels
-        ]
-
-        # prune any channels which are not in a zone
-        channels = []
-        for zone in zones:
-            channels.extend(zone.unique_channels)
-
-        return attr.evolve(self, channels=channels, zones=zones)
-
-    def order_grouplists(self, static_talkgroup_order=None, exclude_talkgroups=None):
-        """
-        Reorder the Talkgroups within each grouplist according to static_talkgroup_order.
-
-        Exclude any talkgroups by name in exclude_talkgroups
-        """
-        if static_talkgroup_order is None:
-            static_talkgroup_order = []
-        if exclude_talkgroups is None:
-            exclude_talkgroups = []
-
-        grouplists = [
-            attr.evolve(
-                gl,
-                contacts=dzcb.munge.ordered(
-                    seq=[c for c in gl.contacts if c not in exclude_talkgroups],
-                    order=static_talkgroup_order,
-                    key=lambda c: c.name,
-                    log_sequence_name="grouplist {}".format(gl.name),
-                ),
-            )
-            for gl in self.grouplists
-        ]
-        return attr.evolve(self, grouplists=grouplists)
-
     def replace_scanlists(self, scanlist_dicts):
         """
         Return a new codeplug with additional scanlists.
