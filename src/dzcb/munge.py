@@ -98,3 +98,23 @@ def ordered(seq, order, key=None, log_sequence_name=None, reverse=False):
         head.reverse()
         return tail + head
     return head + tail
+
+
+def ordered_re(seq, order_regexs, key=None, reverse=False):
+    """
+    Order the sequence preferring items that match regexes.
+
+    If the regex matches multiple items, the matched subsequence will retain its natural order.
+    """
+    head = []
+    tail = seq[:]
+    table = dict((item if key is None else key(item), item) for item in seq)
+    for p in (re.compile(p, re.IGNORECASE) for p in order_regexs):
+        for k, item in table.items():
+            if p.match(k):
+                head.append(item)
+                tail.remove(item)
+    if reverse:
+        head.reverse()
+        return tail + head
+    return head + tail
