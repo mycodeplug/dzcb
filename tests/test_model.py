@@ -58,7 +58,7 @@ def test_Codeplug_filter(simple_codeplug):
     assert len(filtered.zones) == 0  # empty zone is pruned
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def complex_codeplug():
     contacts = (
         dzcb.model.Talkgroup("CT1", 0xF01, dzcb.model.ContactType.GROUP, timeslot=1),
@@ -99,7 +99,7 @@ def complex_codeplug():
         dzcb.model.Zone("Z_ALL", channels[:], channels[:]),
         dzcb.model.Zone("Z_A", channels[:3], channels[:3]),
         dzcb.model.Zone("Z_D", channels[3:], channels[3:]),
-        dzcb.model.Zone("Z_A_D", channels[:3], channels[3:]),
+        dzcb.model.Zone("Z_A_D", channels[:3], channels[3:6]),
     )
     return dzcb.model.Codeplug(
         contacts=contacts,
@@ -137,3 +137,29 @@ def test_Codeplug_filter_contacts(complex_codeplug):
     assert len(exclude_cp.scanlists[1].channels) == 3
     assert len(exclude_cp.scanlists[2].channels) == 5
     assert len(exclude_cp.zones) == 4
+
+
+def test_Codeplug_order_contacts(complex_codeplug):
+    ct_order = dzcb.model.Ordering(contacts=["CT3", "CT2", "PC3"])
+    order_cp = complex_codeplug.filter(order=ct_order)
+    assert list(ct.name for ct in order_cp.contacts) == ["CT3", "CT2", "PC3", "CT1", "PC1", "PC2"]
+    rorder_cp = complex_codeplug.filter(reverse_order=ct_order)
+    assert list(ct.name for ct in rorder_cp.contacts) == ["CT1", "PC1", "PC2", "PC3", "CT2", "CT3"]
+
+
+def test_Channel_include_exclude(complex_codeplug):
+    ch_include_A = complex_codeplug.filter(include=dzcb.model.Ordering(channels=["A.*"]))
+    assert list(ch.name for ch in ch_include_A.channels) == ["A1", "A2", "A3"]
+    assert list(zn.name for zn in ch_include_A.zones) == ["Z_ALL", "Z_A", "Z_A_D"]
+    ch_exclude_2 = complex_codeplug.filter(exclude=dzcb.model.Ordering(channels=[".*2"]))
+    assert list(ch.name for ch in ch_exclude_2.channels) == ["A1", "A3", "D1", "D3", "DR1", "DR3"]
+
+
+def test_Zone_include_exclude(complex_codeplug):
+    # include doesn't imply ordering
+    zn_include_A = complex_codeplug.filter(include=dzcb.model.Ordering(zones=["Z_A_D", "Z_A$"]))
+    assert list(zn.name for zn in zn_include_A.zones) == ["Z_A", "Z_A_D"]
+    assert list(dict((ch.name, ch) for zn in zn_include_A.zones for ch in zn.unique_channels)) == ["A1", "A2", "A3", "D1", "D2", "D3"]
+    zn_exclude_A = complex_codeplug.filter(exclude=dzcb.model.Ordering(zones=["Z_ALL", "Z_A", "Z_A_D"]))
+    assert list(ch.name for zn in zn_exclude_A.zones for ch in zn.unique_channels) == ["D1", "D2", "D3", "DR1", "DR2", "DR3"]
+    assert list(zn.name for zn in zn_exclude_A.zones) == ["Z_D"]
