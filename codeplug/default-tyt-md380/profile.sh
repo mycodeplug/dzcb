@@ -2,7 +2,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 OUTPUT=${OUTPUT:-$DIR/../../OUTPUT}
-python -m dzcb \
+python -m cProfile -o $OUTPUT/profile -m dzcb \
     --pnwdigital \
     --seattledmr \
     --default-k7abd \
