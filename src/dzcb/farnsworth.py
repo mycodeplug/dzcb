@@ -4,7 +4,7 @@ import time
 
 import attr
 
-from dzcb.model import AnalogChannel, Contact, DigitalChannel, GroupList
+from dzcb.model import AnalogChannel, Contact, DigitalChannel, GroupList, uniquify_contacts
 import dzcb.munge
 
 logger = logging.getLogger(__name__)
@@ -229,7 +229,7 @@ def Codeplug_to_json(cp, based_on=None):
         cp = cp.filter(ranges=ranges)
     cp_dict.update(
         dict(
-            Contacts=[Contact_to_dict(c) for c in cp.contacts],
+            Contacts=[Contact_to_dict(c) for c in uniquify_contacts(cp.contacts, key=lambda ct: ct.name)],
             Channels=[Channel_to_dict(c) for c in cp.channels],
             GroupLists=[GroupList_to_dict(c) for c in cp.grouplists],
             ScanLists=[ScanList_to_dict(c) for c in cp.scanlists],
