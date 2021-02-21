@@ -107,7 +107,7 @@ def ordered_re(seq, order_regexs, key=None, reverse=False):
     If the regex matches multiple items, the matched subsequence will retain its natural order.
     """
     head = []
-    tail = seq[:]
+    tail = list(seq)
     table = dict((item if key is None else key(item), item) for item in seq)
     for p in (re.compile(p, re.IGNORECASE) for p in order_regexs):
         for k, item in table.items():
