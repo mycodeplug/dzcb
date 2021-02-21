@@ -356,11 +356,11 @@ class Zone:
 
     name = attr.ib(validator=attr.validators.instance_of(str))
     channels_a = attr.ib(
-        factory=list,
+        factory=tuple,
         validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
     )
     channels_b = attr.ib(
-        factory=list,
+        factory=tuple,
         validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
     )
 
