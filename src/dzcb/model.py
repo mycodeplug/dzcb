@@ -3,6 +3,7 @@ dzcb.model - data model for codeplug objects
 """
 import csv
 import enum
+import functools
 import logging
 import re
 
@@ -501,37 +502,42 @@ class Codeplug:
             scanlists=list(self.scanlists),
             zones=list(self.zones),
         )
+
+        def _filter_inplace(ordering, munge):
+            """
+            Filter ``cp`` in place according to the `ordering` object
+            calling the munge function with the object list and matching
+            ordering list for the object type.
+
+            If the munge function mutates the object list, it should
+            return None. Otherwise the return value is assigned back
+            to the codeplug dict and is expected to be a list.
+            """
+            for obj_type, objects in cp.items():
+                ordering_list = getattr(ordering, obj_type, None)
+                if ordering_list:
+                    munge_result = munge(objects, ordering_list)
+                    if munge_result:
+                        cp[obj_type] = munge_result
+
         # keep objects in the include list
-        for obj_type, objects in cp.items():
-            include_names = getattr(include, obj_type, None)
-            if include_names:
-                cp[obj_type] = [obj for obj in objects if obj.name in include_names]
+        def _include_filter(objects, ordering_list):
+            pats = tuple(re.compile(pat, flags=re.IGNORECASE) for pat in ordering_list)
+            return [o for o in objects if any(p.match(o.name) for p in pats)]
 
         # keep objects not in the exclude list
-        for obj_type, objects in cp.items():
-            exclude_names = getattr(exclude, obj_type, None)
-            if exclude_names:
-                cp[obj_type] = [obj for obj in objects if obj.name not in exclude_names]
+        def _exclude_filter(objects, ordering_list):
+            pats = tuple(re.compile(pat, flags=re.IGNORECASE) for pat in ordering_list)
+            return [o for o in objects if not any(p.match(o.name) for p in pats)]
 
         # order and reverse order the objects
-        for obj_type, objects in cp.items():
-            order_names = getattr(order, obj_type, None)
-            if order_names:
-                cp[obj_type] = dzcb.munge.ordered(
-                    seq=objects,
-                    order=order_names,
-                    key=lambda o: o.name,
-                    log_sequence_name="{} list".format(obj_type),
-                )
-            rorder_names = getattr(reverse_order, obj_type, None)
-            if rorder_names:
-                cp[obj_type] = dzcb.munge.ordered(
-                    seq=objects,
-                    order=rorder_names,
-                    reverse=True,
-                    key=lambda o: o.name,
-                    log_sequence_name="{} list".format(obj_type),
-                )
+        def _order_filter(objects, ordering_list, reverse=False):
+            return dzcb.munge.ordered_re(
+                seq=objects,
+                order_regexs=ordering_list,
+                key=lambda o: o.name,
+                reverse=reverse,
+            )
 
         # order static_talkgroups based on contact order
         def order_static_talkgroups(ch):
@@ -545,8 +551,17 @@ class Codeplug:
                 ],
             )
 
-        # remove any channels with a talkgroup that doesn't exist
-        contact_names = [tg.name for tg in cp["contacts"]]
+        if include:
+            _filter_inplace(include, _include_filter)
+        if exclude:
+            _filter_inplace(exclude, _exclude_filter)
+        if order:
+            _filter_inplace(order, _order_filter)
+        if reverse_order:
+            _filter_inplace(reverse_order, functools.partial(_order_filter, reverse=True))
+
+        # Reorder static talkgroups and remove channels with missing talkgroups
+        contact_names = set(tg.name for tg in cp["contacts"])
 
         def talkgroup_exists(ch):
             if isinstance(ch, AnalogChannel) or ch.talkgroup is None:
@@ -558,6 +573,7 @@ class Codeplug:
         ]
 
         # Prune orphan channels and contacts from containers
+        # and reorder objects in containers according to their primary order
         cp["grouplists"] = GroupList.prune_missing_contacts(
             cp["grouplists"], cp["contacts"]
         )
