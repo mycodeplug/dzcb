@@ -14,7 +14,7 @@ import logging
 from pathlib import Path
 
 from dzcb import AMATEUR_220, COMMERCIAL_UHF, COMMERCIAL_VHF
-from dzcb.model import AnalogChannel, DigitalChannel
+from dzcb.model import AnalogChannel, DigitalChannel, uniquify_contacts
 
 logger = logging.getLogger(__name__)
 
@@ -387,7 +387,6 @@ def AnalogChannel_to_dict(channel):
 def DigitalChannel_to_dict(channel):
     d = {
         "Color Code": str(channel.color_code),
-        "Scan List": channel.scanlist,
         "Busy Lock/TX Permit": TXPermit.value_from(channel),
         "DMR MODE": DMR_MODE.value_from(channel),
         # On the 578 and 878, DMR MODE = "Simplex" (0) channels
@@ -415,6 +414,7 @@ def Channel_to_dict(index, channel):
         "Transmit Power": str(channel.power),
         "Band Width": "25K" if channel.bandwidth > 19 else "12.5K",
         "PTT Prohibit": value_replacements[channel.rx_only],
+        "Scan List": channel.scanlist,
     }
     if isinstance(channel, AnalogChannel):
         d.update(AnalogChannel_to_dict(channel))
@@ -473,7 +473,7 @@ def Codeplug_to_anytone_csv(cp, output_dir, models=None):
         with (radio_dir / model["talkgroup_filename"]).open("w", newline="") as f:
             csvw = csv.DictWriter(f, model["talkgroup"])
             csvw.writeheader()
-            for ix, tg in enumerate(mcp.contacts):
+            for ix, tg in enumerate(uniquify_contacts(mcp.contacts, key=lambda ct: ct.name)):
                 csvw.writerow(Talkgroup_to_dict(ix, tg))
         with (radio_dir / model["channel_filename"]).open("w", newline="") as f:
             csvw = csv.DictWriter(f, tuple(model["channel"].keys()))
