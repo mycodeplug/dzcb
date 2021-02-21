@@ -53,7 +53,7 @@ class ContactType(ConvertibleEnum):
     PRIVATE = "Private"
 
 
-@attr.s(eq=True, frozen=True)
+@attr.s(eq=False)
 class Contact:
     """
     A Digital Contact: group or private
@@ -83,8 +83,11 @@ class Contact:
         all_contacts_by_id[self.dmrid] = self
 
 
-@attr.s(eq=True, frozen=True)
+@attr.s(eq=False)
 class Talkgroup(Contact):
+
+    _all_contacts_by_id_ts = {}
+
     timeslot = attr.ib(
         eq=True,
         order=True,
@@ -94,14 +97,16 @@ class Talkgroup(Contact):
     )
 
     def __attrs_post_init__(self):
-        try:
-            super().__attrs_post_init__()
-        except dzcb.exceptions.DuplicateDmrID as dup:
-            if (
-                isinstance(dup.existing_contact, type(self))
-                and self.timeslot == dup.existing_contact.timeslot
-            ):
-                raise
+        all_contacts_by_id_ts = type(self)._all_contacts_by_id_ts
+        existing_contact = all_contacts_by_id_ts.get((self.dmrid, self.timeslot), None)
+        if existing_contact:
+            raise dzcb.exceptions.DuplicateDmrID(
+                msg="{} ({}) ({}): DMR ID already exists as {}".format(
+                    self.name, self.dmrid, self.timeslot, existing_contact.name
+                ),
+                existing_contact=existing_contact,
+            )
+        all_contacts_by_id_ts[(self.dmrid, self.timeslot)] = self
 
     @property
     def name_with_timeslot(self):
@@ -128,13 +133,9 @@ class Power(ConvertibleEnum):
     HIGH = "High"
 
 
-@attr.s(frozen=True)
+@attr.s(eq=False)
 class Channel:
     """Common channel attributes"""
-
-    # keep track of short names to avoid duplicate names
-    _all_channels = {}
-    _short_names = {}
 
     name = attr.ib(validator=attr.validators.instance_of(str))
     frequency = attr.ib(validator=attr.validators.instance_of(float), converter=float)
@@ -157,29 +158,10 @@ class Channel:
         validator=attr.validators.optional(attr.validators.instance_of(str)),
     )
 
-    def __attrs_post_init__(self):
-        type(self)._all_channels[self.name] = self
-
     @property
     def short_name(self):
-        """Generate a unique short name for this channel"""
-        attempt = 0
-        maybe_this_channel = None
-        while maybe_this_channel != self:
-            maybe_short_name = dzcb.munge.channel_name(
-                self.name, NAME_MAX - (1 if attempt else 0)
-            ) + (str(attempt) if attempt else "")
-            maybe_this_channel = type(self)._short_names.setdefault(
-                maybe_short_name, self
-            )
-            attempt += 1
-            if attempt > 9:
-                raise RuntimeError(
-                    "Cannot find a non-conflicting channel short name for {}".format(
-                        self
-                    )
-                )
-        return maybe_short_name
+        """Generate a short name for this channel"""
+        return dzcb.munge.channel_name(self.name, NAME_MAX)
 
 
 def _tone_validator(instance, attribute, value):
@@ -198,7 +180,7 @@ def _tone_converter(value):
     return value.upper()
 
 
-@attr.s
+@attr.s(eq=False)
 class AnalogChannel(Channel):
     tone_encode = attr.ib(
         default=None,
@@ -224,7 +206,7 @@ class AnalogChannel(Channel):
     )
 
 
-@attr.s
+@attr.s(eq=False)
 class DigitalChannel(Channel):
     # fixed bandwidth for digital
     bandwidth = 12.5
@@ -267,7 +249,7 @@ class DigitalChannel(Channel):
         # return name
 
 
-@attr.s
+@attr.s(eq=False)
 class GroupList:
     """
     A GroupList specifies a set of contacts that will be received on the same
@@ -283,19 +265,17 @@ class GroupList:
         Return a sequence of new GroupList objects containing only contacts in `contacts`
         and in the order specified in contacts
         """
-        return [
-            gl
-            for gl in [
-                attr.evolve(
-                    gl, contacts=[ct for ct in contacts if ct.name in set(glct.name for glct in gl.contacts)]
-                )
-                for gl in grouplists
-            ]
-            if gl.contacts
-        ]
+        def contact_order(grouplist):
+            gl_contacts = set(glct for glct in grouplist.contacts)
+            return attr.evolve(
+                grouplist,
+                contacts=[ct for ct in contacts if ct in gl_contacts],
+            )
+        ordered_groupslists = tuple(contact_order(gl) for gl in grouplists)
+        return tuple(gl for gl in ordered_groupslists if gl.contacts)
 
 
-@attr.s
+@attr.s(eq=False)
 class ScanList:
     """
     A ScanList specifies a set of channels that can be sequentially scanned.
@@ -308,13 +288,14 @@ class ScanList:
     )
 
     @classmethod
-    def from_names(cls, name, channel_names):
-        channels = []
+    def from_names(cls, name, channel_names, channels):
+        sl_channels = []
+        channels_by_name = {ch.name: ch for ch in channels}
         for cn in channel_names:
             # TODO: require method to be called with a set of available channels
             #       because the global list may contain channels that have already
             #       been pruned in the given codeplug
-            channel = Channel._short_names.get(cn, Channel._all_channels.get(cn))
+            channel = channels_by_name.get(cn)
             if channel is None:
                 logger.debug(
                     "ScanList {!r} references unknown channel {!r}, ignoring".format(
@@ -323,20 +304,20 @@ class ScanList:
                     )
                 )
                 continue
-            channels.append(channel)
-        return cls(name=name, channels=channels)
+            sl_channels.append(channel)
+        return cls(name=name, channels=sl_channels)
 
     @classmethod
     def prune_missing_channels(cls, scanlists, channels):
         """
         Return a sequence of new ScanList objects containing only channels in `channels`
         """
-        channel_names = set(ch.name for ch in channels)
+        channels = set(ch for ch in channels)
         return [
             sl
             for sl in [
                 attr.evolve(
-                    sl, channels=[ch for ch in sl.channels if ch.name in channel_names]
+                    sl, channels=[ch for ch in sl.channels if ch in channels]
                 )
                 for sl in scanlists
             ]
@@ -348,7 +329,7 @@ class ScanList:
         return tuple(self.channels)
 
 
-@attr.s
+@attr.s(eq=False)
 class Zone:
     """
     A Zone groups channels together by name
@@ -371,18 +352,18 @@ class Zone:
         """
 
         def channel_order(zone):
-            unique_channels = set(zch.name for zch in zone.unique_channels)
-            zone_channels = [ch for ch in channels if ch.name in unique_channels]
-            channels_a = set(zch.name for zch in zone.channels_a)
-            channels_b = set(zch.name for zch in zone.channels_b)
+            unique_channels = set(zch for zch in zone.unique_channels)
+            zone_channels = [ch for ch in channels if ch in unique_channels]
+            channels_a = set(zch for zch in zone.channels_a)
+            channels_b = set(zch for zch in zone.channels_b)
             return attr.evolve(
                 zone,
-                channels_a=tuple(ch for ch in zone_channels if ch.name in channels_a),
-                channels_b=tuple(ch for ch in zone_channels if ch.name in channels_b)
+                channels_a=tuple(ch for ch in zone_channels if ch in channels_a),
+                channels_b=tuple(ch for ch in zone_channels if ch in channels_b)
             )
 
         ordered_zones = tuple(channel_order(zn) for zn in zones)
-        return [zn for zn in ordered_zones if zn.channels_a or zn.channels_b]
+        return [zn for zn in ordered_zones if zn.channels_a + zn.channels_b]
 
     @property
     def unique_channels(self):
@@ -546,15 +527,11 @@ class Codeplug:
 
         # order static_talkgroups based on contact order
         def order_static_talkgroups(ch):
-            if isinstance(ch, AnalogChannel) or not ch.static_talkgroups:
-                return ch
-            static_talkgroup_names = [tg.name for tg in ch.static_talkgroups]
-            return attr.evolve(
-                ch,
-                static_talkgroups=[
-                    tg for tg in cp["contacts"] if tg.name in static_talkgroup_names
-                ],
-            )
+            if isinstance(ch, DigitalChannel) and ch.static_talkgroups:
+                ch.static_talkgroups = [
+                    tg for tg in cp["contacts"] if tg in ch.static_talkgroups
+                ]
+            return ch
 
         if include:
             _filter_inplace(include, _include_filter)
@@ -566,12 +543,12 @@ class Codeplug:
             _filter_inplace(reverse_order, functools.partial(_order_filter, reverse=True))
 
         # Reorder static talkgroups and remove channels with missing talkgroups
-        contact_names = set(tg.name for tg in cp["contacts"])
+        contact_set = set(tg for tg in cp["contacts"])
 
         def talkgroup_exists(ch):
             if isinstance(ch, AnalogChannel) or ch.talkgroup is None:
                 return True
-            return ch.talkgroup.name in contact_names
+            return ch.talkgroup in contact_set
 
         cp["channels"] = [
             order_static_talkgroups(ch) for ch in cp["channels"] if talkgroup_exists(ch)
@@ -604,7 +581,7 @@ class Codeplug:
         scanlists = {sl.name: sl for sl in self.scanlists}
         for sl_name, channels in scanlist_dicts.items():
             scanlists[sl_name] = ScanList.from_names(
-                name=sl_name, channel_names=channels
+                name=sl_name, channel_names=channels, channels=self.channels,
             )
 
         return attr.evolve(self, scanlists=scanlists.values())
