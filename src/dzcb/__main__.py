@@ -131,6 +131,11 @@ if __name__ == "__main__":
         nargs="*",
         help="Specify one or more CSV files with object order by name (reverse)",
     )
+    parser.add_argument(
+        "--replacements",
+        nargs="*",
+        help="Specify one or more CSV files with object name replacements",
+    )
     parser.add_argument("outdir", help="Write code plug files to this directory")
     args = parser.parse_args()
 
@@ -140,6 +145,10 @@ if __name__ == "__main__":
         ordering[oarg_name] = dzcb.model.Ordering()
         for f in getattr(args, oarg_name) or tuple():
             ordering[oarg_name] += dzcb.model.Ordering.from_csv(Path(f).read_text().splitlines())
+
+    replacements = dzcb.model.Replacements()
+    for f in args.replacements or tuple():
+        replacements += dzcb.model.Replacements.from_csv(Path(f).read_text().splitlines())
 
     outdir = append_dir_and_create(Path(args.outdir))
     dzcb.log.init_logging(log_path=outdir)
@@ -185,7 +194,7 @@ if __name__ == "__main__":
     # create codeplug from a directory of k7abd CSVs
     cp = (
         dzcb.k7abd.Codeplug_from_k7abd(cache_dir)
-        .filter(**ordering)
+        .filter(replacements=replacements, **ordering)
         .replace_scanlists(scanlists)
     )
     logger.info("Generated %s", cp)
@@ -203,7 +212,7 @@ if __name__ == "__main__":
     # one channel per talkgroup / one zone per repeater
     fw_cp = (
         cp.expand_static_talkgroups()
-        .filter(**ordering)
+        .filter(replacements=replacements, **ordering)
         .replace_scanlists(scanlists)
     )
     logger.info("Expand static talkgroups %s", fw_cp)
