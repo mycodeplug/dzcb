@@ -371,23 +371,18 @@ class Zone:
         """
 
         def channel_order(zone):
-            if not zone.unique_channels:
-                return zone
-            zone_channels = [ch for ch in channels if ch.name in set(zch.name for zch in zone.unique_channels)]
+            unique_channels = set(zch.name for zch in zone.unique_channels)
+            zone_channels = [ch for ch in channels if ch.name in unique_channels]
+            channels_a = set(zch.name for zch in zone.channels_a)
+            channels_b = set(zch.name for zch in zone.channels_b)
             return attr.evolve(
                 zone,
-                channels_a=[ch for ch in zone_channels if ch.name in set(zch.name for zch in zone.channels_a)],
-                channels_b=[ch for ch in zone_channels if ch.name in set(zch.name for zch in zone.channels_b)],
+                channels_a=tuple(ch for ch in zone_channels if ch.name in channels_a),
+                channels_b=tuple(ch for ch in zone_channels if ch.name in channels_b)
             )
 
-        return [
-            zn
-            for zn in [
-                channel_order(zn)
-                for zn in zones
-            ]
-            if zn.unique_channels
-        ]
+        ordered_zones = tuple(channel_order(zn) for zn in zones)
+        return [zn for zn in ordered_zones if zn.channels_a or zn.channels_b]
 
     @property
     def unique_channels(self):
