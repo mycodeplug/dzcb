@@ -417,6 +417,16 @@ class Ordering:
                 order.setdefault(obj.lower(), []).append(item)
         return cls(**order)
 
+    def __add__(self, other):
+        if not isinstance(other, type(self)):
+            return None
+        return type(self)(
+            **{
+                attribute.name: getattr(self, attribute.name) + getattr(other, attribute.name)
+                for attribute in attr.fields(type(self))
+            }
+        )
+
 
 def uniquify_contacts(contacts):
     """
