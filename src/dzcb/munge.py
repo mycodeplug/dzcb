@@ -108,12 +108,15 @@ def ordered_re(seq, order_regexs, key=None, reverse=False):
     """
     head = []
     tail = list(seq)
-    table = dict((item if key is None else key(item), item) for item in seq)
+    table = tuple(item if key is None else key(item) for item in seq)
+    found_indexes = set()
     for p in (re.compile(p, re.IGNORECASE) for p in order_regexs):
-        for k, item in table.items():
-            if p.match(k):
-                head.append(item)
-                tail.remove(item)
+        for ix, k in enumerate(table):
+            if ix not in found_indexes and p.match(k):
+                head.append(seq[ix])
+                found_indexes.add(ix)
+    for ix in sorted(found_indexes, reverse=True):
+        del tail[ix]
     if reverse:
         head.reverse()
         return tail + head
