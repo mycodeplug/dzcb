@@ -226,7 +226,7 @@ def Codeplug_to_json(cp, based_on=None):
         ranges.append((basic_info["LowFrequencyA"], basic_info["HighFrequencyA"]))
         ranges.append((basic_info["LowFrequencyB"], basic_info["HighFrequencyB"]))
     if ranges:
-        cp = cp.filter_frequency_range(*ranges)
+        cp = cp.filter(ranges=ranges)
     cp_dict.update(
         dict(
             Contacts=[Contact_to_dict(c) for c in cp.contacts],

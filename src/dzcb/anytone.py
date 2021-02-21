@@ -469,7 +469,7 @@ def Codeplug_to_anytone_csv(cp, output_dir, models=None):
         radio_dir.mkdir(parents=True, exist_ok=True)
         model = SUPPORTED_RADIOS[model_id]
         # filter down to supported frequency ranges
-        mcp = cp.filter_frequency_range(*model["frequency_range"])
+        mcp = cp.filter(ranges=model["frequency_range"])
         with (radio_dir / model["talkgroup_filename"]).open("w", newline="") as f:
             csvw = csv.DictWriter(f, model["talkgroup"])
             csvw.writeheader()
