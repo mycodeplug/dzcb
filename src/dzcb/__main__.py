@@ -34,13 +34,6 @@ def append_dir_and_create(path, component=None):
     return new_path
 
 
-def repeaterbook_proximity_csv(csv_file, cache_dir):
-    proximity_csv = csv_file.read().splitlines()
-    rbcache = append_dir_and_create(cache_dir, "repeaterbook")
-    dzcb.repeaterbook.cache_zones_with_proximity(proximity_csv, rbcache)
-    dzcb.repeaterbook.zones_to_k7abd(proximity_csv, rbcache, cache_dir)
-
-
 def cache_user_or_default_json(object_name, user_path, default_path, cache_dir):
     """
     Read JSON from a user-specified or default path for object_name.
@@ -86,6 +79,15 @@ if __name__ == "__main__":
         nargs="*",
         help="Download repeaters from the given state(s). Default: '{}'".format(
             "' '".join(dzcb.repeaterbook.REPEATERBOOK_DEFAULT_STATES),
+        ),
+    )
+    parser.add_argument(
+        "--repeaterbook-name-format",
+        help=(
+            "Python format string used to generate channel names from repeaterbook. "
+            "See Repeaterbook API response for usable field names. Default: '{}'".format(
+                dzcb.repeaterbook.REPEATERBOOK_DEFAULT_NAME_FORMAT,
+            )
         ),
     )
     parser.add_argument(
@@ -152,6 +154,7 @@ if __name__ == "__main__":
             input_csv=args.repeaterbook_proximity_csv,
             output_dir=cache_dir,
             states=args.repeaterbook_state or dzcb.repeaterbook.REPEATERBOOK_DEFAULT_STATES,
+            name_format =args.repeaterbook_name_format,
         )
 
     if args.pnwdigital:
