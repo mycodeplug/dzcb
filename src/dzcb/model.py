@@ -53,7 +53,7 @@ class ContactType(ConvertibleEnum):
     PRIVATE = "Private"
 
 
-@attr.s(eq=False)
+@attr.s(frozen=True)
 class Contact:
     """
     A Digital Contact: group or private
@@ -61,10 +61,9 @@ class Contact:
 
     _all_contacts_by_id = {}
 
-    name = attr.ib(eq=True, converter=dzcb.munge.contact_name)
-    dmrid = attr.ib(eq=True, order=True, converter=int)
+    name = attr.ib(eq=False, converter=dzcb.munge.contact_name)
+    dmrid = attr.ib(order=True, converter=int)
     kind = attr.ib(
-        eq=True,
         default=ContactType.GROUP,
         validator=attr.validators.instance_of(ContactType),
         converter=ContactType.from_any,
@@ -83,13 +82,12 @@ class Contact:
         all_contacts_by_id[self.dmrid] = self
 
 
-@attr.s(eq=False)
+@attr.s(frozen=True)
 class Talkgroup(Contact):
 
     _all_contacts_by_id_ts = {}
 
     timeslot = attr.ib(
-        eq=True,
         order=True,
         default=Timeslot.ONE,
         validator=attr.validators.instance_of(Timeslot),
@@ -133,11 +131,11 @@ class Power(ConvertibleEnum):
     HIGH = "High"
 
 
-@attr.s(eq=False)
+@attr.s(frozen=True)
 class Channel:
     """Common channel attributes"""
 
-    name = attr.ib(validator=attr.validators.instance_of(str))
+    name = attr.ib(eq=False, validator=attr.validators.instance_of(str))
     frequency = attr.ib(validator=attr.validators.instance_of(float), converter=float)
     offset = attr.ib(
         default=None,
@@ -180,7 +178,7 @@ def _tone_converter(value):
     return value.upper()
 
 
-@attr.s(eq=False)
+@attr.s(frozen=True)
 class AnalogChannel(Channel):
     tone_encode = attr.ib(
         default=None,
@@ -206,7 +204,7 @@ class AnalogChannel(Channel):
     )
 
 
-@attr.s(eq=False)
+@attr.s(frozen=True)
 class DigitalChannel(Channel):
     # fixed bandwidth for digital
     bandwidth = 12.5
@@ -218,7 +216,9 @@ class DigitalChannel(Channel):
         validator=attr.validators.optional(attr.validators.instance_of(Talkgroup)),
     )
     # a list of other static talkgroups, which form the basis of an RX/scan list
-    static_talkgroups = attr.ib(factory=list)
+    # eq is False here because the static talkgroups can change without necessarily
+    # changing the identity of the channel itself
+    static_talkgroups = attr.ib(eq=False, factory=list)
 
     def from_talkgroups(self, talkgroups):
         """
@@ -249,15 +249,15 @@ class DigitalChannel(Channel):
         # return name
 
 
-@attr.s(eq=False)
+@attr.s(frozen=True)
 class GroupList:
     """
     A GroupList specifies a set of contacts that will be received on the same
     channel.
     """
 
-    name = attr.ib(validator=attr.validators.instance_of(str))
-    contacts = attr.ib(factory=list)
+    name = attr.ib(eq=False, validator=attr.validators.instance_of(str))
+    contacts = attr.ib(factory=tuple, converter=tuple)
 
     @classmethod
     def prune_missing_contacts(cls, grouplists, contacts):
@@ -269,22 +269,23 @@ class GroupList:
             gl_contacts = set(glct for glct in grouplist.contacts)
             return attr.evolve(
                 grouplist,
-                contacts=[ct for ct in contacts if ct in gl_contacts],
+                contacts=tuple(ct for ct in contacts if ct in gl_contacts),
             )
         ordered_groupslists = tuple(contact_order(gl) for gl in grouplists)
         return tuple(gl for gl in ordered_groupslists if gl.contacts)
 
 
-@attr.s(eq=False)
+@attr.s(frozen=True)
 class ScanList:
     """
     A ScanList specifies a set of channels that can be sequentially scanned.
     """
 
-    name = attr.ib(validator=attr.validators.instance_of(str))
+    name = attr.ib(eq=False, validator=attr.validators.instance_of(str))
     channels = attr.ib(
-        factory=list,
+        factory=tuple,
         validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
+        converter=tuple,
     )
 
     @classmethod
@@ -329,20 +330,22 @@ class ScanList:
         return tuple(self.channels)
 
 
-@attr.s(eq=False)
+@attr.s(frozen=True)
 class Zone:
     """
     A Zone groups channels together by name
     """
 
-    name = attr.ib(validator=attr.validators.instance_of(str))
+    name = attr.ib(eq=False, validator=attr.validators.instance_of(str))
     channels_a = attr.ib(
         factory=tuple,
         validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
+        converter=tuple,
     )
     channels_b = attr.ib(
         factory=tuple,
         validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
+        converter=tuple,
     )
 
     @classmethod
