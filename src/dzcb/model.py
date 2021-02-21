@@ -428,15 +428,22 @@ class Replacements(Ordering):
             f_r_tuples[obj] = tuple(zip(find_pats, f_r_map["replace"][obj]))
         return cls(**f_r_tuples)
 
-def uniquify_contacts(contacts):
+
+def uniquify_contacts(contacts, key=None):
     """
     Return a sequence of contacts with all duplicates removed.
 
     If any duplicate names are found without matching numbers, an exception is raised.
+
+    :param key: function determines the deduplication key, default: (name, timeslot)
     """
     ctd = {}
     for ct in contacts:
-        stored_ct = ctd.setdefault(ct.name, ct)
+        if key is None:
+            ct_key = (ct.name, ct.timeslot) if isinstance(ct, Talkgroup) else ct.name
+        else:
+            ct_key = key(ct)
+        stored_ct = ctd.setdefault(ct_key, ct)
         if stored_ct.dmrid != ct.dmrid:
             raise RuntimeError(
                 "Two contacts named {} have different IDs: {} {}".format(
