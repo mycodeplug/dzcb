@@ -237,7 +237,7 @@ class DigitalChannel(Channel):
     # a list of other static talkgroups, which form the basis of an RX/scan list
     static_talkgroups = attr.ib(factory=list)
 
-    def from_talkgroups(self, talkgroups, order=None):
+    def from_talkgroups(self, talkgroups):
         """
         Return a channel per talkgroup based on this channel's settings
         """
@@ -252,12 +252,7 @@ class DigitalChannel(Channel):
                 scanlist=self.short_name,
                 static_talkgroups=[],
             )
-            for tg in dzcb.munge.ordered(
-                seq=talkgroups,
-                order=order or [],
-                key=lambda tg: tg.name,
-                log_sequence_name="{} static talkgroup list".format(self.short_name),
-            )
+            for tg in talkgroups
         ]
 
     @property
@@ -654,7 +649,7 @@ class Codeplug:
                 channels.append(ch)
                 continue
             zone_channels = ch.from_talkgroups(
-                ch.static_talkgroups, order=static_talkgroup_order
+                ch.static_talkgroups,
             )
             zscanlist = ScanList(
                 name=ch.short_name,
