@@ -344,7 +344,7 @@ class ScanList:
 
     @property
     def unique_channels(self):
-        return list(self.channels)
+        return tuple(self.channels)
 
 
 @attr.s
@@ -388,7 +388,7 @@ class Zone:
         for ch in self.channels_b:
             if ch not in channels:
                 channels.append(ch)
-        return channels
+        return tuple(channels)
 
 
 @attr.s
