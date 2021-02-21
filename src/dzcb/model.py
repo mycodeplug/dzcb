@@ -376,11 +376,11 @@ class Zone:
 
 @attr.s
 class Ordering:
-    contacts = attr.ib(factory=list)
-    channels = attr.ib(factory=list)
-    grouplists = attr.ib(factory=list)
-    scanlists = attr.ib(factory=list)
-    zones = attr.ib(factory=list)
+    contacts = attr.ib(factory=tuple, converter=tuple)
+    channels = attr.ib(factory=tuple, converter=tuple)
+    grouplists = attr.ib(factory=tuple, converter=tuple)
+    scanlists = attr.ib(factory=tuple, converter=tuple)
+    zones = attr.ib(factory=tuple, converter=tuple)
 
     @classmethod
     def from_csv(cls, ordering_csv):
@@ -403,6 +403,30 @@ class Ordering:
             }
         )
 
+    def __bool__(self):
+        return any(attr.asdict(self, recurse=False).values())
+
+
+@attr.s
+class Replacements(Ordering):
+
+    @classmethod
+    def from_csv(cls, replacements_csv):
+        csvr = csv.DictReader(replacements_csv)
+        f_r_map = {
+            "find": {},
+            "replace": {}
+        }
+        for r in csvr:
+            for header, item in r.items():
+                if not item:
+                    continue
+                obj, _, f_r = header.partition("_")
+                f_r_map[f_r.lower()].setdefault(obj.lower(), []).append(item)
+        f_r_tuples = {}
+        for obj, find_pats in f_r_map["find"].items():
+            f_r_tuples[obj] = tuple(zip(find_pats, f_r_map["replace"][obj]))
+        return cls(**f_r_tuples)
 
 def uniquify_contacts(contacts):
     """
