@@ -499,7 +499,7 @@ class Codeplug:
     zones = attr.ib(factory=tuple, converter=tuple, repr=_seq_items_repr)
 
     def filter(
-        self, include=None, exclude=None, order=None, reverse_order=None, ranges=None
+        self, include=None, exclude=None, order=None, reverse_order=None, ranges=None, replacements=None
     ):
         """
         Filter codeplug objects and return a new Codeplug.
@@ -509,6 +509,7 @@ class Codeplug:
         :param order: Ordering object specifying top down order
         :param reverse_order: Ordering object specifying bottom up order
         :param ranges: Frequency ranges of channels to retain
+        :param replacements: Replacements of regex subs to make in channel names
         :return: New Codeplug with filtering applied
         """
         # create a mutable codeplug for sorting
@@ -556,6 +557,17 @@ class Codeplug:
                 reverse=reverse,
             )
 
+        # regex find and replace (in place)
+        def _replace_filter(objects, ordering_list):
+            pats = tuple((re.compile(p), r) for p, r in ordering_list)
+            for object in objects:
+                new_name = object.name
+                for pat, repl in pats:
+                    new_name = pat.sub(repl, new_name)
+                if new_name != object.name:
+                    object.name = new_name
+            return None
+
         # order static_talkgroups based on contact order
         def order_static_talkgroups(ch):
             if isinstance(ch, DigitalChannel) and ch.static_talkgroups:
@@ -572,6 +584,8 @@ class Codeplug:
             _filter_inplace(order, _order_filter)
         if reverse_order:
             _filter_inplace(reverse_order, functools.partial(_order_filter, reverse=True))
+        if replacements:
+            _filter_inplace(replacements, _replace_filter)
 
         # Reorder static talkgroups and remove channels with missing talkgroups
         contact_set = set(tg for tg in cp["contacts"])
