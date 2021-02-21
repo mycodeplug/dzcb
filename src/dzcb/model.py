@@ -368,15 +368,21 @@ class Zone:
         """
         Return a sequence of new Zone objects containing only channels in `channels`
         """
-        channel_names = [ch.name for ch in channels]
+
+        def channel_order(zone):
+            if not zone.unique_channels:
+                return zone
+            zone_channels = [ch for ch in channels if ch.name in set(zch.name for zch in zone.unique_channels)]
+            return attr.evolve(
+                zone,
+                channels_a=[ch for ch in zone_channels if ch.name in set(zch.name for zch in zone.channels_a)],
+                channels_b=[ch for ch in zone_channels if ch.name in set(zch.name for zch in zone.channels_b)],
+            )
+
         return [
             zn
             for zn in [
-                attr.evolve(
-                    zn,
-                    channels_a=[ch for ch in zn.channels_a if ch.name in channel_names],
-                    channels_b=[ch for ch in zn.channels_a if ch.name in channel_names],
-                )
+                channel_order(zn)
                 for zn in zones
             ]
             if zn.unique_channels
