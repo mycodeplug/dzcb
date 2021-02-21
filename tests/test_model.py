@@ -19,7 +19,7 @@ def test_ordering_zones_only():
     assert len(o.grouplists) == 0
     assert len(o.scanlists) == 0
     assert len(o.zones) == 3
-    assert o.zones == ["A", "Z", "G"]
+    assert o.zones == ("A", "Z", "G")
 
 
 def test_ordering_zones_contacts():
@@ -31,8 +31,8 @@ def test_ordering_zones_contacts():
     assert len(o.grouplists) == 0
     assert len(o.scanlists) == 0
     assert len(o.zones) == 4
-    assert o.zones == ["Z", "Y", "W", "S"]
-    assert o.contacts == ["GF 1", "HG 2"]
+    assert o.zones == ("Z", "Y", "W", "S")
+    assert o.contacts == ("GF 1", "HG 2")
 
 
 @pytest.fixture
