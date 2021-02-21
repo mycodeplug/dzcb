@@ -560,16 +560,19 @@ class Codeplug:
                 reverse=reverse,
             )
 
-        # regex find and replace (in place)
+        # regex find and replace
         def _replace_filter(objects, ordering_list):
             pats = tuple((re.compile(p), r) for p, r in ordering_list)
-            for object in objects:
+
+            def _replace_name(object):
                 new_name = object.name
                 for pat, repl in pats:
                     new_name = pat.sub(repl, new_name)
                 if new_name != object.name:
-                    object.name = new_name
-            return None
+                    return attr.evolve(object, name=new_name)
+                return object
+
+            return [_replace_name(o) for o in objects]
 
         # order static_talkgroups based on contact order
         def order_static_talkgroups(ch):
