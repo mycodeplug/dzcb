@@ -29,12 +29,12 @@ def test_multiple_repeaters_one_talkgroups():
 
     cp = codeplug_from_relative_dir("multiple-repeaters-one-talkgroups")
     assert len(cp.zones) == 2
-    assert len(cp.contacts) == 3
+    assert len(cp.contacts) == 6
     assert len(cp.channels) == 2
 
     expanded_cp = cp.expand_static_talkgroups()
     assert len(expanded_cp.zones) == 2
-    assert len(expanded_cp.contacts) == 3
+    assert len(expanded_cp.contacts) == 6
     assert len(expanded_cp.channels) == 6
 
     expect_channels = [
