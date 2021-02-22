@@ -390,18 +390,29 @@ class Replacements(Ordering):
     def from_csv(cls, replacements_csv):
         csvr = csv.DictReader(replacements_csv)
         f_r_map = {
-            "find": {},
-            "replace": {}
+            "pattern": {},
+            "repl": {}
         }
         for r in csvr:
             for header, item in r.items():
                 if not item:
                     continue
                 obj, _, f_r = header.partition("_")
-                f_r_map[f_r.lower()].setdefault(obj.lower(), []).append(item)
+                obj_l = obj.lower()
+                if obj_l not in cls.object_names:
+                    raise KeyError("{!r} not in {!r}".format(obj, cls.object_names))
+                try:
+                    f_r_map[f_r.lower()].setdefault(obj_l, []).append(item)
+                except KeyError as ke:
+                    raise KeyError(
+                        "Expecting one of {!r}, not {}".format(
+                            tuple(f"{obj_l}_{k}" for k in f_r_map),
+                            header,
+                        ),
+                    ) from ke
         f_r_tuples = {}
-        for obj, find_pats in f_r_map["find"].items():
-            f_r_tuples[obj] = tuple(zip(find_pats, f_r_map["replace"][obj]))
+        for obj, find_pats in f_r_map["pattern"].items():
+            f_r_tuples[obj] = tuple(zip(find_pats, f_r_map["repl"][obj]))
         return cls(**f_r_tuples)
 
 
