@@ -7,14 +7,6 @@ from dzcb import k7abd
 from dzcb.model import Contact, Timeslot
 
 
-@pytest.fixture(autouse=True)
-def reset_dzcb_model_Contact__all_contacts_by_id():
-    saved = Contact._all_contacts_by_id
-    Contact._all_contacts_by_id = {}
-    yield
-    Contact._all_contacts_by_id = saved
-
-
 def codeplug_from_relative_dir(dname):
     input_dir = Path(os.path.dirname(__file__)) / dname
     return k7abd.Codeplug_from_k7abd(input_dir)

@@ -59,8 +59,6 @@ class Contact:
     A Digital Contact: group or private
     """
 
-    _all_contacts_by_id = {}
-
     name = attr.ib(eq=False, converter=dzcb.munge.contact_name)
     dmrid = attr.ib(order=True, converter=int)
     kind = attr.ib(
@@ -69,23 +67,9 @@ class Contact:
         converter=ContactType.from_any,
     )
 
-    def __attrs_post_init__(self):
-        all_contacts_by_id = type(self)._all_contacts_by_id
-        existing_contact = all_contacts_by_id.get(self.dmrid, None)
-        if existing_contact:
-            raise dzcb.exceptions.DuplicateDmrID(
-                msg="{} ({}): DMR ID already exists as {}".format(
-                    self.name, self.dmrid, existing_contact.name
-                ),
-                existing_contact=existing_contact,
-            )
-        all_contacts_by_id[self.dmrid] = self
-
 
 @attr.s(frozen=True)
 class Talkgroup(Contact):
-
-    _all_contacts_by_id_ts = {}
 
     timeslot = attr.ib(
         order=True,
@@ -93,18 +77,6 @@ class Talkgroup(Contact):
         validator=attr.validators.instance_of(Timeslot),
         converter=Timeslot.from_any,
     )
-
-    def __attrs_post_init__(self):
-        all_contacts_by_id_ts = type(self)._all_contacts_by_id_ts
-        existing_contact = all_contacts_by_id_ts.get((self.dmrid, self.timeslot), None)
-        if existing_contact:
-            raise dzcb.exceptions.DuplicateDmrID(
-                msg="{} ({}) ({}): DMR ID already exists as {}".format(
-                    self.name, self.dmrid, self.timeslot, existing_contact.name
-                ),
-                existing_contact=existing_contact,
-            )
-        all_contacts_by_id_ts[(self.dmrid, self.timeslot)] = self
 
     @property
     def name_with_timeslot(self):
@@ -119,10 +91,7 @@ class Talkgroup(Contact):
     def from_contact(cls, contact, timeslot):
         fields = attr.asdict(contact)
         fields["timeslot"] = timeslot
-        try:
-            return cls(**fields)
-        except dzcb.exceptions.DuplicateDmrID as dup:
-            return dup.existing_contact  # return the talkgroup we already have
+        return cls(**fields)
 
 
 class Power(ConvertibleEnum):
@@ -438,6 +407,8 @@ def uniquify_contacts(contacts, key=None):
 
     If any duplicate names are found without matching numbers, an exception is raised.
 
+    If any two names point to the same number, a warning is emitted.
+
     :param key: function determines the deduplication key, default: (name, timeslot)
     """
     ctd = {}
@@ -449,11 +420,25 @@ def uniquify_contacts(contacts, key=None):
         stored_ct = ctd.setdefault(ct_key, ct)
         if stored_ct.dmrid != ct.dmrid:
             raise RuntimeError(
-                "Two contacts named {} have different IDs: {} {}".format(
+                "Two contacts named {} have different IDs: {} {}. "
+                "Rename one of the contacts.".format(
                     ct.name, ct.dmrid, stored_ct.dmrid
                 )
             )
-    return tuple(ctd.values())
+    # check for duplicate DMR numbers, drop and warn
+    contacts_by_id = {}
+    for ct in ctd.values():
+        ct_key = (ct.dmrid, ct.timeslot) if isinstance(ct, Talkgroup) else ct.dmrid
+        stored_ct = contacts_by_id.setdefault(ct_key, ct)
+        if stored_ct.name != ct.name:
+            warnings.warn(
+                "Two contacts with different names ({!r}, {!r}) "
+                "have the same ID: {}. Using {!r}.".format(
+                    stored_ct.name, ct.name, stored_ct.dmrid, stored_ct.name
+                ),
+                dzcb.exceptions.DuplicateDmrID(existing_contact=stored_ct.name),
+            )
+    return tuple(contacts_by_id.values())
 
 
 def filter_channel_frequency(channels, ranges):
