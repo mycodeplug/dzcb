@@ -354,6 +354,8 @@ class Ordering:
     scanlists = attr.ib(factory=tuple, converter=tuple)
     zones = attr.ib(factory=tuple, converter=tuple)
 
+    object_names = ("contacts", "channels", "grouplists", "scanlists", "zones")
+
     @classmethod
     def from_csv(cls, ordering_csv):
         order = {}
@@ -362,6 +364,8 @@ class Ordering:
             for obj, item in r.items():
                 if not item:
                     continue
+                if obj.lower() not in cls.object_names:
+                    raise KeyError("{!r} not in {!r}".format(obj, cls.object_names))
                 order.setdefault(obj.lower(), []).append(item)
         return cls(**order)
 
