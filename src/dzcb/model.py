@@ -119,7 +119,7 @@ class Channel:
     rx_only = attr.ib(
         default=False, validator=attr.validators.instance_of(bool), converter=bool
     )
-    scanlist = attr.ib(default=None)
+    scanlist = attr.ib(eq=False, default=None)
     code = attr.ib(
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(str)),
