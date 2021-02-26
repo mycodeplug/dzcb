@@ -34,6 +34,30 @@ def append_dir_and_create(path, component=None):
     return new_path
 
 
+def cache_user_or_default_text(object_name, user_path, default_path, cache_dir):
+    """
+    Read text from a user-specified or default path for object_name.
+
+    Side-effects:
+      * Logging at info level, mentioning object_name and the path used
+      * Copying either the user_path or default_path to cache_dir
+
+    Return:
+        Text of file content or empty string if neither path or default are specified
+    """
+    if user_path is None:
+        if not default_path:
+            return ''
+        path = Path(default_path)
+        logger.info("Cache default %s: '%s'", object_name, path.absolute())
+    else:
+        path = Path(user_path)
+        logger.info("Cache user-specified %s: '%s'", object_name, path.absolute())
+    dest = cache_dir / path.name
+    shutil.copy(path, dest)
+    return dest.read_text()
+
+
 def cache_user_or_default_json(object_name, user_path, default_path, cache_dir):
     """
     Read JSON from a user-specified or default path for object_name.
@@ -45,15 +69,14 @@ def cache_user_or_default_json(object_name, user_path, default_path, cache_dir):
     Return:
         Python objects
     """
-    if user_path is None:
-        logger.info("Cache default %s: '%s'", object_name, default_path)
-        path = default_path
-    else:
-        logger.info("Cache user-specified %s: '%s'", object_name, user_path)
-        path = Path(user_path)
-    dest = cache_dir / path.name
-    shutil.copy(path, dest)
-    return json.loads(dest.read_text())
+    return json.loads(
+        cache_user_or_default_text(
+            object_name=object_name,
+            user_path=user_path,
+            default_path=default_path,
+            cache_dir=cache_dir,
+        )
+    )
 
 
 if __name__ == "__main__":
@@ -139,23 +162,37 @@ if __name__ == "__main__":
     parser.add_argument("outdir", help="Write code plug files to this directory")
     args = parser.parse_args()
 
-    # get overall ordering objects first and raise any validation errors
-    ordering = {}
-    for oarg_name in ["include", "exclude", "order", "reverse_order"]:
-        ordering[oarg_name] = dzcb.model.Ordering()
-        for f in getattr(args, oarg_name) or tuple():
-            ordering[oarg_name] += dzcb.model.Ordering.from_csv(Path(f).read_text().splitlines())
-
-    replacements = dzcb.model.Replacements()
-    for f in args.replacements or tuple():
-        replacements += dzcb.model.Replacements.from_csv(Path(f).read_text().splitlines())
-
     outdir = append_dir_and_create(Path(args.outdir))
     dzcb.log.init_logging(log_path=outdir)
     logger.info("dzcb %s outdir='%s'", __version__, outdir)
 
     cache_dir = append_dir_and_create(outdir, "cache")
     logger.debug("Using cache_dir: '%s'", cache_dir)
+
+    # get overall ordering objects first and raise any validation errors
+    ordering = {}
+    for oarg_name in ["include", "exclude", "order", "reverse_order"]:
+        ordering[oarg_name] = dzcb.model.Ordering()
+        for f in getattr(args, oarg_name) or tuple():
+            ordering[oarg_name] += dzcb.model.Ordering.from_csv(
+                cache_user_or_default_text(
+                    object_name=oarg_name,
+                    user_path=f,
+                    default_path=None,
+                    cache_dir=cache_dir,
+                ).splitlines()
+            )
+
+    replacements = dzcb.model.Replacements()
+    for f in args.replacements or tuple():
+        replacements += dzcb.model.Replacements.from_csv(
+            cache_user_or_default_text(
+                object_name="replacements",
+                user_path=f,
+                default_path=None,
+                cache_dir=cache_dir,
+            ).splitlines()
+        )
 
     # fetch data from the internet
     if args.repeaterbook_proximity_csv:
