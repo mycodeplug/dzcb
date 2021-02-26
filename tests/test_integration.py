@@ -14,17 +14,18 @@ def get_diff_files(dcmp, top_level=False):
     msg = []
     for name in dcmp.diff_files:
         l, r = Path(dcmp.left) / name, Path(dcmp.right) / name
-        print(
-            "\n".join(
-                difflib.unified_diff(
-                    l.read_text().splitlines(keepends=True),
-                    r.read_text().splitlines(keepends=True),
-                    fromfile=str(l),
-                    tofile=str(r),
-                )
+        diff = tuple(
+            difflib.unified_diff(
+                l.read_text().splitlines(),
+                r.read_text().splitlines(),
+                fromfile=str(l),
+                tofile=str(r),
+                lineterm="",
             )
         )
-        msg.append(f"diff in: {l.parts[-3:]}")
+        if diff:
+            print("\n".join(diff))
+            msg.append(f"diff in: {l.parts[-3:]}")
     if dcmp.left_only:
         msg.append(f"left only: {dcmp.left_only}")
     if dcmp.right_only:
