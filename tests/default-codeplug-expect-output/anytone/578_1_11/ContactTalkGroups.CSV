@@ -1,0 +1,65 @@
+No.,Radio ID,Name,Call Type,Call Alert
+1,3141,Oregon 1,Group Call,None
+2,103153,Washington 2,Group Call,None
+3,3153,Washington 1,Group Call,None
+4,3191,Cascades 1,Group Call,None
+5,3181,Local 1,Group Call,None
+6,3166,Local 2,Group Call,None
+7,9998,Parrot 1,Group Call,None
+8,31418,AARG 2,Group Call,None
+9,9999,Audio Test 2,Group Call,None
+10,3027,BC 1,Group Call,None
+11,103027,BC 2,Group Call,None
+12,31075,Baynet 2,Group Call,None
+13,3100,Bridge 2,Group Call,None
+14,3185,Cactus 2,Group Call,None
+15,3106,California 1,Group Call,None
+16,302,Canada 2,Group Call,None
+17,3115,Hawaii 1-2,Group Call,None
+18,3168,I-5 1,Group Call,None
+19,31419,I-84 2,Group Call,None
+20,3116,Idaho 1,Group Call,None
+21,31160,Idaho ARES 2,Group Call,None
+22,465263,Inland 2,Group Call,None
+23,333153,King County,Group Call,None
+24,8801,Link 1,Group Call,None
+25,8802,Link 2,Group Call,None
+26,8803,Link 3,Group Call,None
+27,8804,Link 4,Group Call,None
+28,8805,Link 5,Group Call,None
+29,8806,Link 6,Group Call,None
+30,31301,MPRG 1-2,Group Call,None
+31,3126,Michigan 1,Group Call,None
+32,3130,Montana 2,Group Call,None
+33,3177,Mountain 2,Group Call,None
+34,3163,N.America 2,Group Call,None
+35,31002,Net 2,Group Call,None
+36,3023,Ontario 2,Group Call,None
+37,3187,PNW 1,Group Call,None
+38,103187,PNW 2,Group Call,None
+39,31771,PNW Rgnl 2,Group Call,None
+40,91111,PS1-DNU,Group Call,None
+41,92222,PS2-DNU,Group Call,None
+42,31532,Puget Sound,Group Call,None
+43,31328,SNARS 1-2,Group Call,None
+44,803153,Seattle 1,Group Call,None
+45,813153,Seattle 2,Group Call,None
+46,99,Simplex 99,Group Call,None
+47,31066,SoCal 2,Group Call,None
+48,8951,TAC 1,Group Call,None
+49,8952,TAC 2,Group Call,None
+50,8953,TAC 3,Group Call,None
+51,310,TAC 310,Group Call,None
+52,311,TAC 311,Group Call,None
+53,312,TAC 312,Group Call,None
+54,313,TAC 313,Group Call,None
+55,314,TAC 314,Group Call,None
+56,319,TAC 319,Group Call,None
+57,123,TAC Eng 123,Group Call,None
+58,9,TG 9,Group Call,None
+59,1776,USA 2,Group Call,None
+60,3149,Utah 2,Group Call,None
+61,5156,WVisayas5156,Group Call,None
+62,113,WW Eng 113-2,Group Call,None
+63,13,WW English 2,Group Call,None
+64,3161,Worldwide 2,Group Call,None

@@ -39,7 +39,7 @@ value_replacements = {
 
 def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
     # filter down to supported frequency ranges
-    cp = cp.filter_frequency_range((136.0, 174.0), (400.0, 480.0))
+    cp = cp.filter(ranges=((136.0, 174.0), (400.0, 480.0)))
     # will keep track of contacts separately and write them at the end
     # using name_with_timeslot
     contacts = set()

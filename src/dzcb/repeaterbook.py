@@ -1,5 +1,5 @@
 """
-dzcb.repeaterbook - export CSV from Repeaterbook, convert to K7ABD format
+dzcb.repeaterbook - export JSON from Repeaterbook, convert to K7ABD CSV format
 """
 import argparse
 import csv
@@ -28,6 +28,7 @@ REPEATERBOOK_LAST_FETCH = 0
 # TODO: Geocode Lat/Long from the CSV file
 REPEATERBOOK_DEFAULT_STATES = ("Washington", "Oregon")
 REPEATERBOOK_CACHE_MAX_AGE = 3600 * 12.1  # 12 hours (and some change)
+REPEATERBOOK_DEFAULT_NAME_FORMAT = "{Callsign} {Nearest City} {Landmark}"
 CSV_ZONE_NAME = "Zone Name"
 CSV_LAT = "Lat"
 CSV_LONG = "Long"
@@ -137,14 +138,12 @@ def normalize_tone(tone):
     return tone if tone.upper() not in ("", "CSQ") else k7abd.OFF
 
 
-def repeater_to_k7abd_row(repeater, zone_name):
+def repeater_to_k7abd_row(repeater, zone_name, name_format=None):
+    if name_format is None:
+        name_format = REPEATERBOOK_DEFAULT_NAME_FORMAT
     return {
         k7abd.ZONE: zone_name,
-        k7abd.CHANNEL_NAME: "{} {} {}".format(
-            repeater["Callsign"],
-            repeater["Nearest City"],
-            repeater["Landmark"],
-        ).strip(),
+        k7abd.CHANNEL_NAME: name_format.format(**repeater).strip(),
         k7abd.BANDWIDTH: "25K",
         k7abd.POWER: "High",
         k7abd.RX_FREQ: repeater["Frequency"],
@@ -155,7 +154,7 @@ def repeater_to_k7abd_row(repeater, zone_name):
     }
 
 
-def zones_to_k7abd(input_csv, output_dir, states=None):
+def zones_to_k7abd(input_csv, output_dir, states=None, name_format=None):
     repeaters = list(iter_cached_repeaters(states=states))
     for name, slug, zone in proximity_zones(input_csv):
         out_file = Path(output_dir) / "Analog__{}.csv".format(slug)
@@ -167,7 +166,11 @@ def zones_to_k7abd(input_csv, output_dir, states=None):
             )
             csvw.writeheader()
             for repeater in filter_repeaters(repeaters, zone):
-                csvw.writerow(repeater_to_k7abd_row(repeater, zone_name=name))
+                csvw.writerow(
+                    repeater_to_k7abd_row(
+                        repeater, zone_name=name, name_format=name_format
+                    )
+                )
                 total_channels += 1
         logger.debug(
             "Generate '%s' k7abd zones (%s channels) to '%s'",

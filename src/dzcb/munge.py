@@ -20,11 +20,6 @@ Talkgroup_Channel_name_replacements = {
 
 
 def channel_name(ch_name, max_length):
-    # Replace Long strings with shorter ones
-    replacements = Talkgroup_Channel_name_replacements.copy()
-    for find, repl in replacements.items():
-        ch_name = ch_name.replace(find, repl)
-
     # Truncate the channel name (try to preserve the tail  characters
     # which are typically TG# and 3-digit Code)
     tail_code = re.search(r"[12]?\s[A-Z]+$", ch_name)
@@ -67,7 +62,7 @@ class MissingItemsWarning(UserWarning):
         )
 
 
-def ordered(seq, order, key=None, log_sequence_name=None):
+def ordered(seq, order, key=None, log_sequence_name=None, reverse=False):
     """
     If `log_sequence_name` is specified, use that text instead of
     "the sequence to be ordered" when emitting a log message about
@@ -94,4 +89,30 @@ def ordered(seq, order, key=None, log_sequence_name=None):
             stacklevel=2,
         )
         head = [item for item in head if item is not NotFound]
+    if reverse:
+        head.reverse()
+        return tail + head
+    return head + tail
+
+
+def ordered_re(seq, order_regexs, key=None, reverse=False):
+    """
+    Order the sequence preferring items that match regexes.
+
+    If the regex matches multiple items, the matched subsequence will retain its natural order.
+    """
+    head = []
+    tail = list(seq)
+    table = tuple(item if key is None else key(item) for item in seq)
+    found_indexes = set()
+    for p in (re.compile(p, re.IGNORECASE) for p in order_regexs):
+        for ix, k in enumerate(table):
+            if ix not in found_indexes and p.match(k):
+                head.append(seq[ix])
+                found_indexes.add(ix)
+    for ix in sorted(found_indexes, reverse=True):
+        del tail[ix]
+    if reverse:
+        head.reverse()
+        return tail + head
     return head + tail

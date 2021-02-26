@@ -25,7 +25,7 @@ setuptools.setup(
     package_data={'dzcb': ['data/*.json', 'data/*.csv', 'data/k7abd/*.csv', 'data/farnsworth/*.json']},
     packages=setuptools.find_packages('src'),
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
-    python_requires='>=3.5,<4',
+    python_requires='>=3.6,<4',
     setup_requires=[
         'setuptools_scm >= 3.3',
     ],

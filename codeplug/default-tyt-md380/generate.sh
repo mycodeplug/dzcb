@@ -11,5 +11,5 @@ python -m dzcb \
                                $DIR/md390-uhf.json \
                                $DIR/md390-vhf.json \
     --scanlists-json $DIR/scanlists.json \
-    --order-json $DIR/order.json \
+    --exclude $DIR/exclude.csv -- \
 $OUTPUT/default-tyt-md380

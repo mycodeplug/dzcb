@@ -7,17 +7,9 @@ from dzcb import k7abd
 from dzcb.model import Contact, Timeslot
 
 
-@pytest.fixture(autouse=True)
-def reset_dzcb_model_Contact__all_contacts_by_id():
-    saved = Contact._all_contacts_by_id
-    Contact._all_contacts_by_id = {}
-    yield
-    Contact._all_contacts_by_id = saved
-
-
 def codeplug_from_relative_dir(dname):
     input_dir = Path(os.path.dirname(__file__)) / dname
-    return k7abd.Codeplug_from_k7abd(input_dir).order_zones()
+    return k7abd.Codeplug_from_k7abd(input_dir)
 
 
 def test_multiple_repeaters_one_talkgroups():
@@ -29,12 +21,12 @@ def test_multiple_repeaters_one_talkgroups():
 
     cp = codeplug_from_relative_dir("multiple-repeaters-one-talkgroups")
     assert len(cp.zones) == 2
-    assert len(cp.contacts) == 3
+    assert len(cp.contacts) == 6
     assert len(cp.channels) == 2
 
-    expanded_cp = cp.expand_static_talkgroups().order_zones()
+    expanded_cp = cp.expand_static_talkgroups()
     assert len(expanded_cp.zones) == 2
-    assert len(expanded_cp.contacts) == 3
+    assert len(expanded_cp.contacts) == 6
     assert len(expanded_cp.channels) == 6
 
     expect_channels = [
@@ -47,7 +39,9 @@ def test_multiple_repeaters_one_talkgroups():
     ]
 
     print("EXPECT CHANNELS:\n{}".format("\n".join(str(ch) for ch in expect_channels)))
-    print("ACTUAL CHANNELS:\n{}".format("\n".join(str(ch) for ch in expanded_cp.channels)))
+    print(
+        "ACTUAL CHANNELS:\n{}".format("\n".join(str(ch) for ch in expanded_cp.channels))
+    )
 
     for ch, exp_ch in zip(expanded_cp.channels, expect_channels):
         assert ch.name == exp_ch[0]
@@ -96,7 +90,7 @@ def test_analog_weird_values():
     test validation of fields in the csv file
     """
 
-    cp = codeplug_from_relative_dir("analog-weird-values")
+    cp = codeplug_from_relative_dir("analog-weird-values").filter()
 
     assert len(cp.zones) == 6
     assert len(cp.channels) == 6

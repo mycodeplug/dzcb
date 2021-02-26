@@ -34,11 +34,28 @@ def append_dir_and_create(path, component=None):
     return new_path
 
 
-def repeaterbook_proximity_csv(csv_file, cache_dir):
-    proximity_csv = csv_file.read().splitlines()
-    rbcache = append_dir_and_create(cache_dir, "repeaterbook")
-    dzcb.repeaterbook.cache_zones_with_proximity(proximity_csv, rbcache)
-    dzcb.repeaterbook.zones_to_k7abd(proximity_csv, rbcache, cache_dir)
+def cache_user_or_default_text(object_name, user_path, default_path, cache_dir):
+    """
+    Read text from a user-specified or default path for object_name.
+
+    Side-effects:
+      * Logging at info level, mentioning object_name and the path used
+      * Copying either the user_path or default_path to cache_dir
+
+    Return:
+        Text of file content or empty string if neither path or default are specified
+    """
+    if user_path is None:
+        if not default_path:
+            return ""
+        path = Path(default_path)
+        logger.info("Cache default %s: '%s'", object_name, path.absolute())
+    else:
+        path = Path(user_path)
+        logger.info("Cache user-specified %s: '%s'", object_name, path.absolute())
+    dest = cache_dir / path.name
+    shutil.copy(path, dest)
+    return dest.read_text()
 
 
 def cache_user_or_default_json(object_name, user_path, default_path, cache_dir):
@@ -52,15 +69,14 @@ def cache_user_or_default_json(object_name, user_path, default_path, cache_dir):
     Return:
         Python objects
     """
-    if user_path is None:
-        logger.info("Cache default %s: '%s'", object_name, default_path)
-        path = default_path
-    else:
-        logger.info("Cache user-specified %s: '%s'", object_name, user_path)
-        path = Path(user_path)
-    dest = cache_dir / path.name
-    shutil.copy(path, dest)
-    return json.loads(dest.read_text())
+    return json.loads(
+        cache_user_or_default_text(
+            object_name=object_name,
+            user_path=user_path,
+            default_path=default_path,
+            cache_dir=cache_dir,
+        )
+    )
 
 
 if __name__ == "__main__":
@@ -89,6 +105,15 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
+        "--repeaterbook-name-format",
+        help=(
+            "Python format string used to generate channel names from repeaterbook. "
+            "See Repeaterbook API response for usable field names. Default: '{}'".format(
+                dzcb.repeaterbook.REPEATERBOOK_DEFAULT_NAME_FORMAT,
+            )
+        ),
+    )
+    parser.add_argument(
         "--default-k7abd",
         action="store_true",
         help="Include bundled K7ABD input files (simplex + unlicensed)",
@@ -110,9 +135,29 @@ if __name__ == "__main__":
         help="JSON dict mapping scanlist name to list of channel names.",
     )
     parser.add_argument(
-        "--order-json",
-        default=None,
-        help="JSON dict specifying zone and talkgroup orderings.",
+        "--include",
+        nargs="*",
+        help="Specify one or more CSV files with object names to include",
+    )
+    parser.add_argument(
+        "--exclude",
+        nargs="*",
+        help="Specify one or more CSV files with object names to exclude",
+    )
+    parser.add_argument(
+        "--order",
+        nargs="*",
+        help="Specify one or more CSV files with object order by name",
+    )
+    parser.add_argument(
+        "--reverse-order",
+        nargs="*",
+        help="Specify one or more CSV files with object order by name (reverse)",
+    )
+    parser.add_argument(
+        "--replacements",
+        nargs="*",
+        help="Specify one or more CSV files with object name replacements",
     )
     parser.add_argument("outdir", help="Write code plug files to this directory")
     args = parser.parse_args()
@@ -124,12 +169,39 @@ if __name__ == "__main__":
     cache_dir = append_dir_and_create(outdir, "cache")
     logger.debug("Using cache_dir: '%s'", cache_dir)
 
+    # get overall ordering objects first and raise any validation errors
+    ordering = {}
+    for oarg_name in ["include", "exclude", "order", "reverse_order"]:
+        ordering[oarg_name] = dzcb.model.Ordering()
+        for f in getattr(args, oarg_name) or tuple():
+            ordering[oarg_name] += dzcb.model.Ordering.from_csv(
+                cache_user_or_default_text(
+                    object_name=oarg_name,
+                    user_path=f,
+                    default_path=None,
+                    cache_dir=cache_dir,
+                ).splitlines()
+            )
+
+    replacements = dzcb.model.Replacements()
+    for f in args.replacements or tuple():
+        replacements += dzcb.model.Replacements.from_csv(
+            cache_user_or_default_text(
+                object_name="replacements",
+                user_path=f,
+                default_path=None,
+                cache_dir=cache_dir,
+            ).splitlines()
+        )
+
     # fetch data from the internet
     if args.repeaterbook_proximity_csv:
         dzcb.repeaterbook.zones_to_k7abd(
             input_csv=args.repeaterbook_proximity_csv,
             output_dir=cache_dir,
-            states=args.repeaterbook_state or dzcb.repeaterbook.REPEATERBOOK_DEFAULT_STATES,
+            states=args.repeaterbook_state
+            or dzcb.repeaterbook.REPEATERBOOK_DEFAULT_STATES,
+            name_format=args.repeaterbook_name_format,
         )
 
     if args.pnwdigital:
@@ -156,21 +228,11 @@ if __name__ == "__main__":
         default_path=files(dzcb.data).joinpath("scanlists.json"),
         cache_dir=cache_dir,
     )
-    order = cache_user_or_default_json(
-        object_name="zone order",
-        user_path=args.order_json,
-        default_path=files(dzcb.data).joinpath("order.json"),
-        cache_dir=cache_dir,
-    )
-    zone_order = order.get("zone", {}).get("default", [])
-    zone_order_expanded = order.get("zone", {}).get("expanded", [])
-    exclude_zones_expanded = order.get("zone", {}).get("exclude_expanded", [])
-    static_talkgroup_order = order.get("static_talkgroup", [])
 
     # create codeplug from a directory of k7abd CSVs
     cp = (
         dzcb.k7abd.Codeplug_from_k7abd(cache_dir)
-        .order_grouplists(static_talkgroup_order=static_talkgroup_order)
+        .filter(replacements=replacements, **ordering)
         .replace_scanlists(scanlists)
     )
     logger.info("Generated %s", cp)
@@ -180,18 +242,15 @@ if __name__ == "__main__":
     gb3gf_outdir = append_dir_and_create(outdir, "gb3gf")
     gd77_outdir = append_dir_and_create(gb3gf_outdir, "opengd77")
     dzcb.gb3gf.Codeplug_to_gb3gf_opengd77_csv(
-        cp.order_zones(zone_order=zone_order),
+        cp=cp,
         output_dir=gd77_outdir,
     )
 
     # The following models use expand_static_talkgroups to create
     # one channel per talkgroup / one zone per repeater
     fw_cp = (
-        cp.expand_static_talkgroups(static_talkgroup_order=static_talkgroup_order)
-        .order_zones(
-            zone_order=zone_order_expanded,
-            exclude_zones=exclude_zones_expanded,
-        )
+        cp.expand_static_talkgroups()
+        .filter(replacements=replacements, **ordering)
         .replace_scanlists(scanlists)
     )
     logger.info("Expand static talkgroups %s", fw_cp)

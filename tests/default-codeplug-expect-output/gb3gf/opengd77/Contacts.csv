@@ -1,0 +1,65 @@
+Contact Name;ID;ID Type;TS Override
+AARG 2;31418;Group;2
+Audio Test 2;9999;Group;2
+BC 1;3027;Group;1
+BC 2 1;103027;Group;1
+Baynet 2;31075;Group;2
+Bridge 2;3100;Group;2
+Cactus 2;3185;Group;2
+California 1;3106;Group;1
+Canada 2;302;Group;2
+Cascades 1;3191;Group;1
+Hawaii 1-2;3115;Group;2
+I-5 1;3168;Group;1
+I-84 2;31419;Group;2
+Idaho 1;3116;Group;1
+Idaho ARES 2;31160;Group;2
+Inland 2;465263;Group;2
+King County 2;333153;Group;2
+Link 1;8801;Group;1
+Link 2;8802;Group;2
+Link 3 1;8803;Group;1
+Link 4 2;8804;Group;2
+Link 5 1;8805;Group;1
+Link 6 2;8806;Group;2
+Local 1;3181;Group;1
+Local 2;3166;Group;2
+MPRG 1-2;31301;Group;2
+Michigan 1;3126;Group;1
+Montana 2;3130;Group;2
+Mountain 2;3177;Group;2
+N.America 2;3163;Group;2
+Net 2;31002;Group;2
+Ontario 2;3023;Group;2
+Oregon 1;3141;Group;1
+PNW 1;3187;Group;1
+PNW 2;103187;Group;2
+PNW Rgnl 2;31771;Group;2
+PS1-DNU 1;91111;Group;1
+PS2-DNU 2;92222;Group;2
+Parrot 1;9998;Group;1
+Puget Sound 2;31532;Group;2
+SNARS 1-2;31328;Group;2
+Seattle 1;803153;Group;1
+Seattle 2;813153;Group;2
+Simplex 99 1;99;Group;1
+SoCal 2;31066;Group;2
+TAC 1 2;8951;Group;2
+TAC 2 2;8952;Group;2
+TAC 3 2;8953;Group;2
+TAC 310 2;310;Group;2
+TAC 311 2;311;Group;2
+TAC 312 2;312;Group;2
+TAC 313 2;313;Group;2
+TAC 314 2;314;Group;2
+TAC 319 2;319;Group;2
+TAC Eng 123 2;123;Group;2
+TG 9 1;9;Group;1
+USA 2;1776;Group;2
+Utah 2;3149;Group;2
+WVisayas5156 1;5156;Group;1
+WW Eng 113-2;113;Group;2
+WW English 2;13;Group;2
+Washington 1;3153;Group;1
+Washington 2;103153;Group;2
+Worldwide 2;3161;Group;2

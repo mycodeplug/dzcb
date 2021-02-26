@@ -1,0 +1,4 @@
+CoNtActS_PATTERN,cHAnnels_pattern,CONTACTS_repl,channels_repl,grouplists_pattern,grouplists_repl,scanlists_repl,scanlists_pattern,ZONEs_pattern,ZONEs_repl
+^CT([1-2])$,A,ct\1,a,GROP,not found,_analog,_A$,_A(_)?,_a\1
+,,,,GL_,gl_,,,,
+,,,,gl_,g_L_,,,,

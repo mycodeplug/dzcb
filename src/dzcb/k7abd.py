@@ -121,8 +121,13 @@ def Codeplug_from_zone_dicts(zone_dicts):
                     contacts.add(ch.talkgroup)
             if ch.scanlist is None:
                 ch = attr.evolve(ch, scanlist=zname)
-            if ch.short_name not in all_channels:
-                all_channels[ch.short_name] = ch
+            # if the existing channel with this short name doesn't hash to
+            # the current channel, then append a number until it does.
+            # This will ensure all same short named channels get the same
+            # unique suffix
+            while all_channels.get(ch.short_name) not in (ch, None):
+                ch = attr.evolve(ch, dedup_key=ch._dedup_key + 1)
+            all_channels[ch.short_name] = ch
             updated_channels.append(ch)
         zscanlist = ScanList(
             name=zname,
@@ -322,18 +327,18 @@ def Codeplug_from_k7abd(input_dir):
     talkgroups = {}
     all_talkgroups_by_name = {}
     total_files = 0
-    for p in d.glob("Analog__*.csv"):
+    for p in sorted(d.glob("Analog__*.csv")):
         update_zones_channels(
             zones, Analog_from_csv(p.read_text().splitlines()), log_filename=p
         )
         total_files += 1
-    for p in d.glob("Talkgroups__*.csv"):
+    for p in sorted(d.glob("Talkgroups__*.csv")):
         name = p.name.replace("Talkgroups__", "").replace(".csv", "")
         talkgroups[name] = Talkgroups_map_from_csv(p.read_text().splitlines())
         logger.debug("Load %s talkgroups from %s", len(talkgroups[name]), p)
         # XXX: potential bug here if talkgroup definitions differ between files
         all_talkgroups_by_name.update(talkgroups[name])
-    for p in d.glob("Digital-Others__*.csv"):
+    for p in sorted(d.glob("Digital-Others__*.csv")):
         update_zones_channels(
             zones,
             DigitalChannels_from_k7abd_csv(
@@ -342,7 +347,7 @@ def Codeplug_from_k7abd(input_dir):
             log_filename=p,
         )
         total_files += 1
-    for p in d.glob("Digital-Repeaters__*.csv"):
+    for p in sorted(d.glob("Digital-Repeaters__*.csv")):
         zname = p.name.replace("Digital-Repeaters__", "").replace(".csv", "")
         # merge Talkgroup files, but prefer talkgroup names from this zone
         tg_csv = all_talkgroups_by_name.copy()

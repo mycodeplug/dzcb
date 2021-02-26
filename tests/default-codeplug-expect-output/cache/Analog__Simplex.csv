@@ -1,0 +1,27 @@
+Zone,Channel Name,Bandwidth,Power,RX Freq,TX Freq,CTCSS Decode,CTCSS Encode,TX Prohibit
+APRS - Analog,APRS Raw 144.39,25K,High,144.39,144.39,Off,Off,Off
+APRS - Analog,APRS VA 100,25K,High,144.39,144.39,Off,100,Off
+Simplex A VHF,FM 146.52,25K,High,146.52,146.52,Off,Off,Off
+Simplex A VHF,FM 146.53,25K,High,146.53,146.53,Off,Off,Off
+Simplex A VHF,FM 146.54,25K,High,146.54,146.54,Off,Off,Off
+Simplex A VHF,FM 146.55,25K,High,146.55,146.55,Off,Off,Off
+Simplex A VHF,FM 146.56,25K,High,146.56,146.56,Off,Off,Off
+Simplex A VHF,FM 146.57,25K,High,146.57,146.57,Off,Off,Off
+Simplex A VHF,FM 146.58,25K,High,146.58,146.58,Off,Off,Off
+Simplex A VHF,FM 147.52,25K,High,147.52,147.52,Off,Off,Off
+Simplex A VHF,FM 147.53,25K,High,147.53,147.53,Off,Off,Off
+Simplex A VHF,FM 147.54,25K,High,147.54,147.54,Off,Off,Off
+Simplex A VHF,FM 147.55,25K,High,147.55,147.55,Off,Off,Off
+Simplex A VHF,FM 147.56,25K,High,147.56,147.56,Off,Off,Off
+Simplex A VHF,FM 147.57,25K,High,147.57,147.57,Off,Off,Off
+Simplex A VHF,FM 147.58,25K,High,147.58,147.58,Off,Off,Off
+Simplex A VHF,FM 147.59,25K,High,147.59,147.59,Off,Off,Off
+Simplex A VHF,FM 147.60,25K,High,147.6,147.6,Off,Off,Off
+Simplex A UHF,FM 446.000,25K,High,446,446,Off,Off,Off
+Simplex A UHF,FM 446.025,25K,High,446.025,446.025,Off,Off,Off
+Simplex A UHF,FM 445.8,25K,High,445.8,445.8,Off,Off,Off
+Simplex A UHF,FM 445.825,25K,High,445.825,445.825,Off,Off,Off
+Simplex A UHF,FM 445.85,25K,High,445.85,445.85,Off,Off,Off
+Simplex A UHF,FM 445.875,25K,High,445.875,445.875,Off,Off,Off
+Simplex A UHF,FM 445.9,25K,High,445.9,445.9,Off,Off,Off
+Simplex A UHF,FM 445.975,25K,High,445.975,445.975,Off,Off,Off

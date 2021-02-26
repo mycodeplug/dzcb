@@ -4,7 +4,13 @@ import time
 
 import attr
 
-from dzcb.model import AnalogChannel, Contact, DigitalChannel, GroupList
+from dzcb.model import (
+    AnalogChannel,
+    Contact,
+    DigitalChannel,
+    GroupList,
+    uniquify_contacts,
+)
 import dzcb.munge
 
 logger = logging.getLogger(__name__)
@@ -45,10 +51,7 @@ GroupList_name_maps = dict(
 
 
 def GroupList_to_dict(g):
-    return {
-        "Name": g.name,
-        "Contact": [tg.name for tg in g.contacts]
-    }
+    return {"Name": g.name, "Contact": [tg.name for tg in g.contacts]}
 
 
 def ScanList_to_dict(s):
@@ -226,10 +229,13 @@ def Codeplug_to_json(cp, based_on=None):
         ranges.append((basic_info["LowFrequencyA"], basic_info["HighFrequencyA"]))
         ranges.append((basic_info["LowFrequencyB"], basic_info["HighFrequencyB"]))
     if ranges:
-        cp = cp.filter_frequency_range(*ranges)
+        cp = cp.filter(ranges=ranges)
     cp_dict.update(
         dict(
-            Contacts=[Contact_to_dict(c) for c in cp.contacts],
+            Contacts=[
+                Contact_to_dict(c)
+                for c in uniquify_contacts(cp.contacts, key=lambda ct: ct.name)
+            ],
             Channels=[Channel_to_dict(c) for c in cp.channels],
             GroupLists=[GroupList_to_dict(c) for c in cp.grouplists],
             ScanLists=[ScanList_to_dict(c) for c in cp.scanlists],

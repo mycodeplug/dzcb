@@ -172,6 +172,64 @@ and [Analog](./src/dzcb/data/k7abd/Analog__Simplex.csv) simplex frequencies,
 and [GMRS/FRS and MURS channels](./src/dzcb/data/k7abd/Analog__Unlicensed.csv) are
 included if `--default-k7abd` is specified.
 
+# Customization
+
+The channels, zones, and contacts present and the ordering of such in the
+final generated codeplug is controlled by one or more CSV files passed
+as parameters.
+
+The column headers correspond to the codeplug objects (zones, contacts, channels,
+etc) and may appear in any order or be omitted (if no change is requested to
+that type of codeplug object).
+
+The names used in include, exclude, and order are *python regular expressions*
+that match from the beginning of the object name. They are prefix match by
+default.  To opt-out of prefix match, add a `$` at the end. All regular
+expression special characters should be escaped (`\`).
+
+## `--include`
+
+If the CSV file is passed as a `--include` parameter, then any objects not explicitly
+mentioned in the file will be removed.
+
+## `--exclude`
+
+If the CSV file is passed as an `--exclude` parameter, then any objects mentioned
+will be removed.
+
+## `--order`
+
+The remaining objects are sorted alphabetically after processing removals.
+
+Any remaining objects are sorted according to the order specified in the file
+passed to `--order`. Similarly, a file may be specified as `--reverse-order` which
+will sort in reverse, starting from the end of the list.
+
+See example: [`codeplug/default/order.csv`](/codeplug/default/order.csv)
+
+## `--replacements`
+
+The replacements CSV column headers are like `object_pattern,object_repl` and
+correspond exactly to the arguments passed to python's
+[`re.sub`](https://docs.python.org/3/library/re.html#re.sub). Similar to the
+ordering csv, `object` would refer to zones, contacts, channels, etc.
+
+The replacements will be applied to the name of each object of the given
+type in the listed order. Subsequent patterns will affect previous
+replacements. Unlike the previous group, these regular expressions are
+case sensitive, support capturing groups, and indexed replacement.
+
+See example: [`codeplug/default/replacements.csv`](/codeplug/default/replacements.csv)
+
+## `--repeaterbook-name-format`
+
+Python format string used to generate channel names from repeaterbook.
+
+The format string will be passed the Repeaterbook API response dictionary
+for the repeater, so all valid fields are usable in the format string.
+
+The default name format is: `"{Callsign} {Nearest City} {Landmark}"`
+
 # Bonus: Trim the Contact List
 
 Download the usersDB.bin with Farnsworth editcp.
