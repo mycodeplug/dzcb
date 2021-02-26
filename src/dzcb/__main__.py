@@ -47,7 +47,7 @@ def cache_user_or_default_text(object_name, user_path, default_path, cache_dir):
     """
     if user_path is None:
         if not default_path:
-            return ''
+            return ""
         path = Path(default_path)
         logger.info("Cache default %s: '%s'", object_name, path.absolute())
     else:
@@ -199,8 +199,9 @@ if __name__ == "__main__":
         dzcb.repeaterbook.zones_to_k7abd(
             input_csv=args.repeaterbook_proximity_csv,
             output_dir=cache_dir,
-            states=args.repeaterbook_state or dzcb.repeaterbook.REPEATERBOOK_DEFAULT_STATES,
-            name_format =args.repeaterbook_name_format,
+            states=args.repeaterbook_state
+            or dzcb.repeaterbook.REPEATERBOOK_DEFAULT_STATES,
+            name_format=args.repeaterbook_name_format,
         )
 
     if args.pnwdigital:

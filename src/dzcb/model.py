@@ -131,7 +131,7 @@ class Channel:
     @property
     def short_name(self):
         """Generate a short name for this channel"""
-        suffix = str(self._dedup_key or '')
+        suffix = str(self._dedup_key or "")
         return dzcb.munge.channel_name(self.name, NAME_MAX - len(suffix)) + suffix
 
 
@@ -238,12 +238,14 @@ class GroupList:
         Return a sequence of new GroupList objects containing only contacts in `contacts`
         and in the order specified in contacts
         """
+
         def contact_order(grouplist):
             gl_contacts = set(glct for glct in grouplist.contacts)
             return attr.evolve(
                 grouplist,
                 contacts=tuple(ct for ct in contacts if ct in gl_contacts),
             )
+
         ordered_groupslists = tuple(contact_order(gl) for gl in grouplists)
         return tuple(gl for gl in ordered_groupslists if gl.contacts)
 
@@ -290,9 +292,7 @@ class ScanList:
         return [
             sl
             for sl in [
-                attr.evolve(
-                    sl, channels=[ch for ch in sl.channels if ch in channels]
-                )
+                attr.evolve(sl, channels=[ch for ch in sl.channels if ch in channels])
                 for sl in scanlists
             ]
             if sl.channels
@@ -335,7 +335,7 @@ class Zone:
             return attr.evolve(
                 zone,
                 channels_a=tuple(ch for ch in zone_channels if ch in channels_a),
-                channels_b=tuple(ch for ch in zone_channels if ch in channels_b)
+                channels_b=tuple(ch for ch in zone_channels if ch in channels_b),
             )
 
         # not sure if we even want channel order as this throws off the proximity
@@ -391,7 +391,8 @@ class Ordering:
             return None
         return type(self)(
             **{
-                attribute.name: getattr(self, attribute.name) + getattr(other, attribute.name)
+                attribute.name: getattr(self, attribute.name)
+                + getattr(other, attribute.name)
                 for attribute in attr.fields(type(self))
             }
         )
@@ -402,14 +403,10 @@ class Ordering:
 
 @attr.s
 class Replacements(Ordering):
-
     @classmethod
     def from_csv(cls, replacements_csv):
         csvr = csv.DictReader(replacements_csv)
-        f_r_map = {
-            "pattern": {},
-            "repl": {}
-        }
+        f_r_map = {"pattern": {}, "repl": {}}
         for r in csvr:
             for header, item in r.items():
                 if not item:
@@ -453,9 +450,7 @@ def uniquify_contacts(contacts, key=None):
         if stored_ct.dmrid != ct.dmrid:
             raise RuntimeError(
                 "Two contacts named {} have different IDs: {} {}. "
-                "Rename one of the contacts.".format(
-                    ct.name, ct.dmrid, stored_ct.dmrid
-                )
+                "Rename one of the contacts.".format(ct.name, ct.dmrid, stored_ct.dmrid)
             )
     # check for duplicate DMR numbers, drop and warn
     contacts_by_id = {}
@@ -519,7 +514,13 @@ class Codeplug:
     zones = attr.ib(factory=tuple, converter=tuple, repr=_seq_items_repr)
 
     def filter(
-        self, include=None, exclude=None, order=None, reverse_order=None, ranges=None, replacements=None
+        self,
+        include=None,
+        exclude=None,
+        order=None,
+        reverse_order=None,
+        ranges=None,
+        replacements=None,
     ):
         """
         Filter codeplug objects and return a new Codeplug.
@@ -609,7 +610,9 @@ class Codeplug:
         if order:
             _filter_inplace(order, _order_filter)
         if reverse_order:
-            _filter_inplace(reverse_order, functools.partial(_order_filter, reverse=True))
+            _filter_inplace(
+                reverse_order, functools.partial(_order_filter, reverse=True)
+            )
         if replacements:
             _filter_inplace(replacements, _replace_filter)
 
@@ -652,7 +655,9 @@ class Codeplug:
         scanlists = {sl.name: sl for sl in self.scanlists}
         for sl_name, channels in scanlist_dicts.items():
             scanlists[sl_name] = ScanList.from_names(
-                name=sl_name, channel_names=channels, channels=self.channels,
+                name=sl_name,
+                channel_names=channels,
+                channels=self.channels,
             )
 
         return attr.evolve(self, scanlists=scanlists.values())

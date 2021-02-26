@@ -473,7 +473,9 @@ def Codeplug_to_anytone_csv(cp, output_dir, models=None):
         with (radio_dir / model["talkgroup_filename"]).open("w", newline="") as f:
             csvw = csv.DictWriter(f, model["talkgroup"])
             csvw.writeheader()
-            for ix, tg in enumerate(uniquify_contacts(mcp.contacts, key=lambda ct: ct.name)):
+            for ix, tg in enumerate(
+                uniquify_contacts(mcp.contacts, key=lambda ct: ct.name)
+            ):
                 csvw.writerow(Talkgroup_to_dict(ix, tg))
         with (radio_dir / model["channel_filename"]).open("w", newline="") as f:
             csvw = csv.DictWriter(f, tuple(model["channel"].keys()))

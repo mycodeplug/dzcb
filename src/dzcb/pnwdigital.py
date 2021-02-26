@@ -34,9 +34,7 @@ def cache_repeaters(output_dir):
                 )
             )
         output_repeaters = Path(output_dir) / REPEATER_FILENAME
-        output_repeaters.write_bytes(
-            zf.read(zip_repeater_filename[0])
-        )
+        output_repeaters.write_bytes(zf.read(zip_repeater_filename[0]))
         logger.info("Cache PNWDigital k7abd zones to '%s'", output_repeaters)
 
         zip_talkgroups_filename = [
@@ -49,9 +47,7 @@ def cache_repeaters(output_dir):
                 )
             )
         output_talkgroups = Path(output_dir) / TALKGROUPS_FILENAME
-        output_talkgroups.write_bytes(
-            zf.read(zip_talkgroups_filename[0])
-        )
+        output_talkgroups.write_bytes(zf.read(zip_talkgroups_filename[0]))
         logger.info("Cache PNWDigital k7abd talkgroups to '%s'", output_talkgroups)
 
 

@@ -166,7 +166,11 @@ def zones_to_k7abd(input_csv, output_dir, states=None, name_format=None):
             )
             csvw.writeheader()
             for repeater in filter_repeaters(repeaters, zone):
-                csvw.writerow(repeater_to_k7abd_row(repeater, zone_name=name, name_format=name_format))
+                csvw.writerow(
+                    repeater_to_k7abd_row(
+                        repeater, zone_name=name, name_format=name_format
+                    )
+                )
                 total_channels += 1
         logger.debug(
             "Generate '%s' k7abd zones (%s channels) to '%s'",
