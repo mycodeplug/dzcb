@@ -124,11 +124,15 @@ class Channel:
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(str)),
     )
+    # dedupe_key is used to force unique channels,
+    # even when the short name would overlap
+    _dedup_key = attr.ib(default=0, repr=False)
 
     @property
     def short_name(self):
         """Generate a short name for this channel"""
-        return dzcb.munge.channel_name(self.name, NAME_MAX)
+        suffix = str(self._dedup_key or '')
+        return dzcb.munge.channel_name(self.name, NAME_MAX - len(suffix)) + suffix
 
 
 def _tone_validator(instance, attribute, value):
