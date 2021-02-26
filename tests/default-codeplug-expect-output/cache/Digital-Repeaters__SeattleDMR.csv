@@ -1,0 +1,5 @@
+Zone Name,Comment,Power,RX Freq,TX Freq,Color Code,Audio Test 2,Baynet 2,Bridge 2,King County,Link 1,Link 2,Link 3,Link 4,Link 5,Link 6,Local 1,Local 2,Parrot 1,PNW Rgnl 2,Puget Sound,Seattle 1,Seattle 2,TAC 1-2,TAC 2-2,TAC 313-2,TG 9,Washington 1,Washington 2
+Seattle/Central;SCE,,High,440.775,445.775,2,2,2,-,2,1,2,1,2,1,2,1,2,1,2,2,1,2,2,2,2,1,1,2
+Seattle/North;LFP,,High,441.025,446.025,2,2,2,-,2,1,2,1,2,1,2,1,2,1,2,2,1,2,2,2,2,1,1,2
+Seattle/South;SSO,,High,440.975,445.975,2,2,2,-,2,1,2,1,2,1,2,1,2,1,2,2,1,2,2,2,2,1,1,2
+Buck Mt.;BUC,,High,440.7625,445.7625,2,2,2,-,2,1,2,1,2,1,2,1,2,1,2,2,1,2,2,2,2,1,1,2

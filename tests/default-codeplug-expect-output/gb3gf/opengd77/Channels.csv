@@ -1,0 +1,269 @@
+Channel Number;Channel Name;Channel Type;Rx Frequency;Tx Frequency;Colour Code;Timeslot;Contact;TG List;RX Tone;TX Tone;Power;Bandwidth;Squelch;Rx Only;Zone Skip;All Skip;TOT;VOX
+1;Longview 444.900;Analog;444.9;449.9;None;1;N/A;None;None;114.8;High;25KHz;1;No;No;No;90;No
+2;Longview 442.125;Analog;442.125;447.125;None;1;N/A;None;114.8;114.8;High;25KHz;1;No;No;No;90;No
+3;Longview 147.260;Analog;147.26;147.86;None;1;N/A;None;None;114.8;High;25KHz;1;No;No;No;90;No
+4;Longview 147.100;Analog;147.1;147.7;None;1;N/A;None;114.8;114.8;High;25KHz;1;No;No;No;90;No
+5;Longview 440.375;Analog;440.375;445.375;None;1;N/A;None;None;123.0;High;25KHz;1;No;No;No;90;No
+6;Rainier 441.7000;Analog;441.7;446.7;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+7;Kalama 442.82500;Analog;442.825;447.825;None;1;N/A;None;131.8;131.8;High;25KHz;1;No;No;No;90;No
+8;Deer Island 146.;Analog;146.88;146.28;None;1;N/A;None;114.8;114.8;High;25KHz;1;No;No;No;90;No
+9;Chehalis 444.450;Analog;444.45;449.45;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+10;Woodland 147.300;Analog;147.3;147.9;None;1;N/A;None;None;114.8;High;25KHz;1;No;No;No;90;No
+11;Woodland 442.175;Analog;442.175;447.175;None;1;N/A;None;114.8;114.8;High;25KHz;1;No;No;No;90;No
+12;Woodland 440.575;Analog;440.575;445.575;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+13;Woodland 444.475;Analog;444.475;449.475;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+14;Warren 444.62500;Analog;444.625;449.625;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+15;Warren 146.68000;Analog;146.68;146.08;None;1;N/A;None;114.8;114.8;High;25KHz;1;No;No;No;90;No
+16;Astoria 146.7600;Analog;146.76;146.16;None;1;N/A;None;None;118.8;High;25KHz;1;No;No;No;90;No
+17;Astoria 444.5000;Analog;444.5;449.5;None;1;N/A;None;None;118.8;High;25KHz;1;No;No;No;90;No
+18;Scappoose 441.86;Analog;441.8625;446.8625;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+19;Chehalis 147.060;Analog;147.06;147.66;None;1;N/A;None;110.9;110.9;High;25KHz;1;No;No;No;90;No
+20;La Center 444.92;Analog;444.925;449.925;None;1;N/A;None;None;94.8;High;25KHz;1;No;No;No;90;No
+21;Timber 441.82500;Analog;441.825;446.825;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+22;Chehalis 443.450;Analog;443.45;448.45;None;1;N/A;None;None;110.9;High;25KHz;1;No;No;No;90;No
+23;Chehalis 146.740;Analog;146.74;146.14;None;1;N/A;None;None;110.9;High;25KHz;1;No;No;No;90;No
+24;Yacolt 441.20000;Analog;441.2;446.2;None;1;N/A;None;None;107.2;High;25KHz;1;No;No;No;90;No
+25;Cathlamet 147.02;Analog;147.02;147.62;None;1;N/A;None;None;118.8;High;25KHz;1;No;No;No;90;No
+26;Astoria 146.6600;Analog;146.66;146.06;None;1;N/A;None;118.8;118.8;High;25KHz;1;No;No;No;90;No
+27;Astoria 146.7200;Analog;146.72;146.12;None;1;N/A;None;114.8;114.8;High;25KHz;1;No;No;No;90;No
+28;Yacolt 443.12500;Analog;443.125;448.125;None;1;N/A;None;94.8;94.8;High;25KHz;1;No;No;No;90;No
+29;Yacolt 440.32500;Analog;440.325;445.325;None;1;N/A;None;100.0;100.0;High;25KHz;1;No;No;No;90;No
+30;Timber 145.27000;Analog;145.27;144.67;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+31;Hazel Dell 443.8;Analog;443.8;448.8;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+32;Hockinson 444.72;Analog;444.725;449.725;None;1;N/A;None;None;107.2;High;25KHz;1;No;No;No;90;No
+33;Seaside 147.0000;Analog;147.0;147.6;None;1;N/A;None;None;118.8;High;25KHz;1;No;No;No;90;No
+34;Vancouver 440.15;Analog;440.15;445.15;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+35;Portland 443.225;Analog;443.225;448.225;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+36;Portland 440.825;Analog;440.825;445.825;None;1;N/A;None;110.9;110.9;High;25KHz;1;No;No;No;90;No
+37;Portland 440.512;Analog;440.5125;445.5125;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+38;Portland 442.700;Analog;442.7;447.7;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+39;Portland 440.350;Analog;440.35;445.35;None;1;N/A;None;127.3;127.3;High;25KHz;1;No;No;No;90;No
+40;Portland 443.050;Analog;443.05;448.05;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+41;Portland 443.275;Analog;443.275;448.275;None;1;N/A;None;167.9;167.9;High;25KHz;1;No;No;No;90;No
+42;Portland 442.650;Analog;442.65;447.65;None;1;N/A;None;100.0;100.0;High;25KHz;1;No;No;No;90;No
+43;Portland 440.400;Analog;440.4;445.4;None;1;N/A;None;123.0;123.0;High;25KHz;1;No;No;No;90;No
+44;Portland 442.225;Analog;442.225;447.225;None;1;N/A;None;103.5;103.5;High;25KHz;1;No;No;No;90;No
+45;Portland 443.300;Analog;443.3;448.3;None;1;N/A;None;100.0;100.0;High;25KHz;1;No;No;No;90;No
+46;Portland 444.837;Analog;444.8375;449.8375;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+47;Portland 441.350;Analog;441.35;446.35;None;1;N/A;None;100.0;100.0;High;25KHz;1;No;No;No;90;No
+48;Portland 443.625;Analog;443.625;448.625;None;1;N/A;None;77.0;77.0;High;25KHz;1;No;No;No;90;No
+49;Portland 440.200;Analog;440.2;445.2;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+50;Portland 440.500;Analog;440.5;445.5;None;1;N/A;None;D125;D125;High;25KHz;1;No;No;No;90;No
+51;Portland 440.450;Analog;440.45;445.45;None;1;N/A;None;103.5;103.5;High;25KHz;1;No;No;No;90;No
+52;Portland 442.250;Analog;442.25;447.25;None;1;N/A;None;100.0;100.0;High;25KHz;1;No;No;No;90;No
+53;Beaverton 444.85;Analog;444.85;449.85;None;1;N/A;None;None;123.0;High;25KHz;1;No;No;No;90;No
+54;Portland 443.550;Analog;443.55;448.55;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+55;Cedar Mill 444.8;Analog;444.8;449.8;None;1;N/A;None;None;107.2;High;25KHz;1;No;No;No;90;No
+56;Beaverton 444.75;Analog;444.75;449.75;None;1;N/A;None;None;123.0;High;25KHz;1;No;No;No;90;No
+57;Lake Oswego 444.;Analog;444.3;449.3;None;1;N/A;None;82.5;82.5;High;25KHz;1;No;No;No;90;No
+58;Clackamas 441.32;Analog;441.325;446.325;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+59;Clackamas 440.30;Analog;440.3;445.3;None;1;N/A;None;None;167.9;High;25KHz;1;No;No;No;90;No
+60;Clackamas 443.47;Analog;443.475;448.475;None;1;N/A;None;167.9;167.9;High;25KHz;1;No;No;No;90;No
+61;Clackamas 443.15;Analog;443.15;448.15;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+62;Vancouver 443.82;Analog;443.825;448.825;None;1;N/A;None;94.8;94.8;High;25KHz;1;No;No;No;90;No
+63;Aloha 443.35000;Analog;443.35;448.35;None;1;N/A;None;None;156.7;High;25KHz;1;No;No;No;90;No
+64;Portland 443.200;Analog;443.2;448.2;None;1;N/A;None;None;173.8;High;25KHz;1;No;No;No;90;No
+65;Tigard 440.17500;Analog;440.175;445.175;None;1;N/A;None;110.9;110.9;High;25KHz;1;No;No;No;90;No
+66;Vancouver 442.10;Analog;442.1;447.1;None;1;N/A;None;127.3;127.3;High;25KHz;1;No;No;No;90;No
+67;Aloha 442.52500;Analog;442.525;447.525;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+68;Hillsboro 440.55;Analog;440.55;445.55;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+69;Tualatin 444.525;Analog;444.525;449.525;None;1;N/A;None;None;136.5;High;25KHz;1;No;No;No;90;No
+70;West Linn 441.65;Analog;441.65;446.65;None;1;N/A;None;None;107.2;High;25KHz;1;No;No;No;90;No
+71;Gresham 446.2750;Analog;446.275;446.275;None;1;N/A;None;None;167.9;High;25KHz;1;No;No;No;90;No
+72;OR City 442.0750;Analog;442.075;447.075;None;1;N/A;None;103.5;103.5;High;25KHz;1;No;No;No;90;No
+73;Camas 444.52500;Analog;444.525;449.525;None;1;N/A;None;103.5;103.5;High;25KHz;1;No;No;No;90;No
+74;Gresham 443.0750;Analog;443.075;448.075;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+75;Hillsboro 444.97;Analog;444.975;449.975;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+76;Sherwood 442.275;Analog;442.275;447.275;None;1;N/A;None;None;107.2;High;25KHz;1;No;No;No;90;No
+77;Sherwood 444.312;Analog;444.3125;449.3125;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+78;Sherwood 443.425;Analog;443.425;448.425;None;1;N/A;None;None;107.2;High;25KHz;1;No;No;No;90;No
+79;Sherwood 442.575;Analog;442.575;447.575;None;1;N/A;None;None;123.0;High;25KHz;1;No;No;No;90;No
+80;Boring 441.95000;Analog;441.95;446.95;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+81;Canby 442.90000;Analog;442.9;447.9;None;1;N/A;None;None;123.0;High;25KHz;1;No;No;No;90;No
+82;Canby 444.45000;Analog;444.45;449.45;None;1;N/A;None;None;131.8;High;25KHz;1;No;No;No;90;No
+83;Newberg 442.6750;Analog;442.675;447.675;None;1;N/A;None;100.0;100.0;High;25KHz;1;No;No;No;90;No
+84;Vancouver 442.37;Analog;442.375;447.375;None;1;N/A;None;100.0;123.0;High;25KHz;1;No;No;No;90;No
+85;Camas 443.92500;Analog;443.925;448.925;None;1;N/A;None;94.8;94.8;High;25KHz;1;No;No;No;90;No
+86;Newberg 443.7500;Analog;443.75;448.75;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+87;Corbett 443.1000;Analog;443.1;448.1;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+88;Laurelwood 443.6;Analog;443.65;448.65;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+89;Newberg 444.4875;Analog;444.4875;449.4875;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+90;Sandy 442.42500;Analog;442.425;447.425;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+91;Newberg 442.5500;Analog;442.55;447.55;None;1;N/A;None;None;114.8;High;25KHz;1;No;No;No;90;No
+92;Sandy 442.87500;Analog;442.875;447.875;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+93;Vancouver 443.67;Analog;443.675;448.675;None;1;N/A;None;None;107.2;High;25KHz;1;No;No;No;90;No
+94;Vancouver 443.90;Analog;443.9;448.9;None;1;N/A;None;94.8;94.8;High;25KHz;1;No;No;No;90;No
+95;Vancouver 440.01;Analog;440.0125;445.0125;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+96;Vancouver 442.96;Analog;442.9625;447.9625;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+97;Beavercreek 444.;Analog;444.6;449.6;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+98;Molalla 440.7000;Analog;440.7;445.7;None;1;N/A;None;77.0;77.0;High;25KHz;1;No;No;No;90;No
+99;Colton 442.92500;Analog;442.925;447.925;None;1;N/A;None;None;107.2;High;25KHz;1;No;No;No;90;No
+100;Portland 145.230;Analog;145.23;144.63;None;1;N/A;None;123.0;None;High;25KHz;1;No;No;No;90;No
+101;Portland 146.700;Analog;146.7;146.1;None;1;N/A;None;100.0;100.0;High;25KHz;1;No;No;No;90;No
+102;Portland 147.040;Analog;147.04;147.64;None;1;N/A;None;100.0;100.0;High;25KHz;1;No;No;No;90;No
+103;Portland 145.310;Analog;145.31;144.71;None;1;N/A;None;123.0;123.0;High;25KHz;1;No;No;No;90;No
+104;Portland 146.980;Analog;146.98;146.38;None;1;N/A;None;D023;D023;High;25KHz;1;No;No;No;90;No
+105;Portland 147.140;Analog;147.14;147.74;None;1;N/A;None;None;107.2;High;25KHz;1;No;No;No;90;No
+106;Portland 145.390;Analog;145.39;144.79;None;1;N/A;None;100.0;100.0;High;25KHz;1;No;No;No;90;No
+107;Cedar Mill 147.3;Analog;147.38;147.98;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+108;Clackamas 146.94;Analog;146.94;146.34;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+109;Clackamas 147.28;Analog;147.28;147.88;None;1;N/A;None;167.9;167.9;High;25KHz;1;No;No;No;90;No
+110;Clackamas 147.18;Analog;147.18;147.78;None;1;N/A;None;103.5;103.5;High;25KHz;1;No;No;No;90;No
+111;Vancouver 146.76;Analog;146.76;146.16;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+112;Clackamas 146.80;Analog;146.8;146.2;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+113;Aloha 147.36000;Analog;147.36;147.96;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+114;Sherwood 146.620;Analog;146.62;146.02;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+115;Sherwood 145.470;Analog;145.47;144.87;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+116;North Plains 145;Analog;145.45;144.85;None;1;N/A;None;None;136.5;High;25KHz;1;No;No;No;90;No
+117;Vancouver 145.37;Analog;145.37;144.77;None;1;N/A;None;None;123.0;High;25KHz;1;No;No;No;90;No
+118;Camas 147.24000;Analog;147.24;147.84;None;1;N/A;None;94.8;94.8;High;25KHz;1;No;No;No;90;No
+119;Hockinson 147.08;Analog;147.08;147.68;None;1;N/A;None;None;107.2;High;25KHz;1;No;No;No;90;No
+120;Newberg 146.9000;Analog;146.9;146.3;None;1;N/A;None;127.3;127.3;High;25KHz;1;No;No;No;90;No
+121;Newberg 145.1100;Analog;145.11;144.51;None;1;N/A;None;None;103.5;High;25KHz;1;No;No;No;90;No
+122;Beavercreek 146.;Analog;146.92;146.32;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+123;Vancouver 146.84;Analog;146.84;146.24;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+124;Corbett 145.4100;Analog;145.41;144.81;None;1;N/A;None;100.0;100.0;High;25KHz;1;No;No;No;90;No
+125;Colton 145.43000;Analog;145.43;144.83;None;1;N/A;None;107.2;107.2;High;25KHz;1;No;No;No;90;No
+126;APRS Raw 144.39;Analog;144.39;144.39;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+127;APRS VA 100;Analog;144.39;144.39;None;1;N/A;None;None;100.0;High;25KHz;1;No;No;No;90;No
+128;FM 146.52;Analog;146.52;146.52;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+129;FM 146.53;Analog;146.53;146.53;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+130;FM 146.54;Analog;146.54;146.54;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+131;FM 146.55;Analog;146.55;146.55;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+132;FM 146.56;Analog;146.56;146.56;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+133;FM 146.57;Analog;146.57;146.57;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+134;FM 146.58;Analog;146.58;146.58;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+135;FM 147.52;Analog;147.52;147.52;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+136;FM 147.53;Analog;147.53;147.53;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+137;FM 147.54;Analog;147.54;147.54;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+138;FM 147.55;Analog;147.55;147.55;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+139;FM 147.56;Analog;147.56;147.56;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+140;FM 147.57;Analog;147.57;147.57;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+141;FM 147.58;Analog;147.58;147.58;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+142;FM 147.59;Analog;147.59;147.59;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+143;FM 147.60;Analog;147.6;147.6;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+144;FM 446.000;Analog;446.0;446.0;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+145;FM 446.025;Analog;446.025;446.025;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+146;FM 445.8;Analog;445.8;445.8;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+147;FM 445.825;Analog;445.825;445.825;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+148;FM 445.85;Analog;445.85;445.85;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+149;FM 445.875;Analog;445.875;445.875;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+150;FM 445.9;Analog;445.9;445.9;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+151;FM 445.975;Analog;445.975;445.975;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+152;FRS 1;Analog;462.5625;462.5625;None;1;N/A;None;None;None;Medium;12.5KHz;1;No;No;No;90;No
+153;FRS 2;Analog;462.5875;462.5875;None;1;N/A;None;None;None;Medium;12.5KHz;1;No;No;No;90;No
+154;FRS 3;Analog;462.6125;462.6125;None;1;N/A;None;None;None;Medium;12.5KHz;1;No;No;No;90;No
+155;FRS 4;Analog;462.6375;462.6375;None;1;N/A;None;None;None;Medium;12.5KHz;1;No;No;No;90;No
+156;FRS 5;Analog;462.6675;462.6675;None;1;N/A;None;None;None;Medium;12.5KHz;1;No;No;No;90;No
+157;FRS 6;Analog;462.6875;462.6875;None;1;N/A;None;None;None;Medium;12.5KHz;1;No;No;No;90;No
+158;FRS 7;Analog;462.7125;462.7125;None;1;N/A;None;None;None;Medium;12.5KHz;1;No;No;No;90;No
+159;FRS 8 (IS);Analog;467.5625;467.5625;None;1;N/A;None;None;None;Low;12.5KHz;1;No;No;No;90;No
+160;FRS 9 (IS);Analog;467.5875;467.5875;None;1;N/A;None;None;None;Low;12.5KHz;1;No;No;No;90;No
+161;FRS 10 (IS);Analog;467.6125;467.6125;None;1;N/A;None;None;None;Low;12.5KHz;1;No;No;No;90;No
+162;FRS 11 (IS);Analog;467.6375;467.6375;None;1;N/A;None;None;None;Low;12.5KHz;1;No;No;No;90;No
+163;FRS 12 (IS);Analog;467.6625;467.6625;None;1;N/A;None;None;None;Low;12.5KHz;1;No;No;No;90;No
+164;FRS 13 (IS);Analog;467.6875;467.6875;None;1;N/A;None;None;None;Low;12.5KHz;1;No;No;No;90;No
+165;FRS 14 (IS);Analog;467.7125;467.7125;None;1;N/A;None;None;None;Low;12.5KHz;1;No;No;No;90;No
+166;GMRS 1 (15);Analog;462.55;462.55;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+167;GMRS 2 (16);Analog;462.575;462.575;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+168;GMRS 3 (17);Analog;462.6;462.6;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+169;GMRS 4 (18);Analog;462.625;462.625;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+170;GMRS 5 (19);Analog;462.65;462.65;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+171;GMRS 6 (20);Analog;462.675;462.675;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+172;GMRS 7 (21);Analog;462.7;462.7;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+173;GMRS 8 (22);Analog;462.725;462.725;None;1;N/A;None;None;None;High;25KHz;1;No;No;No;90;No
+174;MURS 1;Analog;151.82;151.82;None;1;N/A;None;None;None;Medium;12.5KHz;1;No;No;No;90;No
+175;MURS 2;Analog;151.88;151.88;None;1;N/A;None;None;None;Medium;12.5KHz;1;No;No;No;90;No
+176;MURS 3;Analog;151.94;151.94;None;1;N/A;None;None;None;Medium;12.5KHz;1;No;No;No;90;No
+177;MURS 4 (Blue);Analog;154.57;154.57;None;1;N/A;None;None;None;Medium;25KHz;1;No;No;No;90;No
+178;MURS 5 (Green);Analog;154.6;154.6;None;1;N/A;None;None;None;Medium;25KHz;1;No;No;No;90;No
+179;SP V01 145.790;Digital;145.79;145.79;1;1;Simplex 99 1;None;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+180;SP V02 145.510;Digital;145.51;145.51;1;1;Simplex 99 1;None;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+181;SP U01 441.000;Digital;441.0;441.0;1;1;Simplex 99 1;None;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+182;SP U02 446.5;Digital;446.5;446.5;1;1;Simplex 99 1;None;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+183;SP U03 446.075;Digital;446.075;446.075;1;1;Simplex 99 1;None;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+184;SP U04 433.45;Digital;433.45;433.45;1;1;Simplex 99 1;None;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+185;SP U05 430.4125;Digital;430.4125;430.4125;1;1;Simplex 99 1;None;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+186;SP U06 439.4125;Digital;439.4125;439.4125;1;1;Simplex 99 1;None;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+187;SP U07 430.425;Digital;430.425;430.425;1;1;Simplex 99 1;None;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+188;SP U08 439.425;Digital;439.425;439.425;1;1;Simplex 99 1;None;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+189;R U09 430.4375;Digital;430.4375;439.4375;1;1;Local 1;None;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+190;R U10 430.450;Digital;430.45;439.45;1;1;Local 1;None;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+191;R U11 430.4625;Digital;430.4625;439.4625;1;1;Local 1;None;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+192;R U12 430.475;Digital;430.475;439.475;1;1;Local 1;None;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+193;R U09R 430.4375;Digital;439.4375;430.4375;1;1;Local 1;None;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+194;R U10R 430.450;Digital;439.45;430.45;1;1;Local 1;None;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+195;R U11R 430.4625;Digital;439.4625;430.4625;1;1;Local 1;None;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+196;R U12R 430.475;Digital;439.475;430.475;1;1;Local 1;None;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+197;Ariel/Ariel VHF;Digital;147.4125;146.4125;1;1;N/A;ARA TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+198;BC:Whisler/Black;Digital;443.85;448.85;2;1;N/A;BCB TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+199;BC:NewWstmnstr;Digital;444.6;449.6;1;1;N/A;BCW TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+200;BC:Vancouver/Sey;Digital;443.4;448.4;1;1;N/A;BCS TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+201;BC:Squamish;Digital;443.85;448.85;3;1;N/A;BSQ TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+202;BC:W.Vancvr/Ambl;Digital;443.85;448.85;1;1;N/A;BCA TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+203;Bellevue/Cougar;Digital;441.2875;446.2875;1;1;N/A;BVC TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+204;Bellingham UHF;Digital;440.925;445.925;1;1;N/A;BEU TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+205;Bellingham VHF;Digital;146.5;147.5;1;1;N/A;BEV TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+206;Biggs/Juniper Pt;Digital;443.325;448.325;1;1;N/A;BIJ TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+207;Bordmn/GolG;Digital;443.375;448.375;1;1;N/A;BOG TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+208;Boistfort/BawFaw;Digital;146.5;147.5;1;1;N/A;BOB TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+209;Bremerton/Gold;Digital;440.7;445.7;1;1;N/A;BRG TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+210;Cascad Lock/Hill;Digital;443.325;448.325;1;1;N/A;CAH TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+211;Chinook/Megler U;Digital;440.9625;445.9625;1;1;N/A;CMU TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+212;Coeur d'Alene;Digital;440.925;445.925;1;1;N/A;CDA TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+213;Corbett/Lookout;Digital;443.1;448.1;1;1;N/A;COL TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+214;Ellens/SunE UHF;Digital;440.925;445.925;1;1;N/A;ELU TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+215;Ellens/SunE VHF;Digital;147.4125;146.4125;1;1;N/A;ELV TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+216;Ephrata/Beasley;Digital;147.4125;146.4125;1;1;N/A;EPB TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+217;Everson WA;Digital;440.375;445.375;1;1;N/A;EVE TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+218;Gresham/Hospital;Digital;443.075;448.075;1;1;N/A;GRH TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+219;HoodRiver/Burd;Digital;443.075;448.075;1;1;N/A;HOB TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+220;IssaquahTiger;Digital;442.025;447.025;1;1;N/A;IST TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+221;Kelso/Columbia;Digital;444.7125;449.7125;1;1;N/A;KEC TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+222;Lewiston ID;Digital;442.1;447.1;1;1;N/A;LEW TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+223;Longview/Rainier;Digital;441.7;446.7;1;1;N/A;LVR TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+224;Mazama VHF;Digital;145.21;148.01;3;1;N/A;MAZ TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+225;MM/Wes 430;Digital;430.4125;430.4125;1;1;N/A;MMW TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+226;MM/Peter 430;Digital;430.4125;430.4125;1;1;N/A;MMP TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+227;MM/Otis 430;Digital;430.4125;430.4125;1;1;N/A;MMO TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+228;MM/Bridget 430;Digital;430.4125;430.4125;1;1;N/A;MMB TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+229;MM/Suzy 430;Digital;430.4125;430.4125;1;1;N/A;MMS TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+230;MM/RexX 2Slot;Digital;430.4375;439.4375;1;1;N/A;MMR TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+231;Moses Lk/Frechmn;Digital;440.925;445.925;1;1;N/A;MOF TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+232;Newberg/MtnTopRd;Digital;444.4875;449.4875;1;1;N/A;NEM TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+233;NBend/ValleyCamp;Digital;440.725;445.725;1;1;N/A;NBV TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+234;Olympia/Cap Pk;Digital;440.7125;445.7125;1;1;N/A;OLC TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+235;Oso/Frailey;Digital;444.15;449.15;1;1;N/A;OSF TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+236;Portland/MtScott;Digital;441.325;446.325;7;1;N/A;POM TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+237;Portland/PPMC;Digital;444.8375;449.8375;7;1;N/A;POP TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+238;Portland/Sylvan;Digital;440.5125;445.5125;1;1;N/A;POS TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+239;Poteros/Goat Mtn;Digital;444.125;449.125;1;1;N/A;POG TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+240;Prineville/Town;Digital;441.25;446.25;1;1;N/A;PRT TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+241;Pullman/Pullman;Digital;440.1;445.1;1;1;N/A;PUW TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+242;Saint Maries ID;Digital;443.75;448.75;1;1;N/A;SAI TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+243;Salem/Orchard;Digital;442.8875;447.8875;1;1;N/A;SAL TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+244;Salem S/Prospect;Digital;441.275;446.275;1;1;N/A;SPH TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+245;Seattle/South;Digital;440.925;445.925;1;1;N/A;SES TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+246;Seattle/Metro;Digital;441.325;446.325;1;1;N/A;SEM TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+247;Sequim/Blyn Mtn;Digital;440.4875;445.4875;1;1;N/A;SEQ TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+248;Shelton/SpncrLk;Digital;147.18;147.78;1;1;N/A;SHL TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+249;Snoq/RttlsnakeU;Digital;440.7375;445.7375;1;1;N/A;SRU TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+250;Snoq/RttlsnakeV;Digital;147.02;147.62;1;1;N/A;SRV TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+251;Spokane/Lkout U;Digital;444.15;449.15;1;1;N/A;SPL TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+252;Spokane/Krell U;Digital;444.125;449.125;1;1;N/A;SKU TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+253;Spokane/Krell V;Digital;147.4125;146.4125;1;1;N/A;SKV TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+254;SpknVly/RdgcrstU;Digital;440.7875;445.7875;1;1;N/A;SRu TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+255;SpknVly/RdgcrstV;Digital;146.4625;147.4625;1;1;N/A;SRv TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+256;Sultan/Haystack;Digital;444.4;449.4;1;1;N/A;SUL TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+257;Tacoma/Ruston;Digital;440.725;445.725;1;1;N/A;TAR TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+258;Tacoma/Baldi;Digital;441.35;446.35;1;1;N/A;TBA TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+259;TheDall/StackrBu;Digital;443.1;448.1;1;1;N/A;THS TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+260;Tri-Citi/JOJ UHF;Digital;440.7375;445.7375;1;1;N/A;TRU TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+261;Tri-Citi/JOJ VHF;Digital;147.425;146.425;1;1;N/A;TRV TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+262;Tulalip/Tulalip;Digital;444.1;449.1;1;1;N/A;TUL TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+263;Wenatchee/LilBad;Digital;443.75;448.75;1;1;N/A;WEN TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+264;Yakima/Elephant;Digital;147.12;147.72;1;1;N/A;YAK TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+265;Seattle/Central;Digital;440.775;445.775;2;1;N/A;SCE TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+266;Seattle/North;Digital;441.025;446.025;2;1;N/A;LFP TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+267;Seattle/South1;Digital;440.975;445.975;2;1;N/A;SSO TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
+268;Buck Mt.;Digital;440.7625;445.7625;2;1;N/A;BUC TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
