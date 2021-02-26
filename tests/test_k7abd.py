@@ -39,7 +39,9 @@ def test_multiple_repeaters_one_talkgroups():
     ]
 
     print("EXPECT CHANNELS:\n{}".format("\n".join(str(ch) for ch in expect_channels)))
-    print("ACTUAL CHANNELS:\n{}".format("\n".join(str(ch) for ch in expanded_cp.channels)))
+    print(
+        "ACTUAL CHANNELS:\n{}".format("\n".join(str(ch) for ch in expanded_cp.channels))
+    )
 
     for ch, exp_ch in zip(expanded_cp.channels, expect_channels):
         assert ch.name == exp_ch[0]

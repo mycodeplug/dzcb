@@ -142,45 +142,101 @@ def test_Codeplug_filter_contacts(complex_codeplug):
 def test_Codeplug_order_contacts(complex_codeplug):
     ct_order = dzcb.model.Ordering(contacts=["CT3", "CT2", "PC3"])
     order_cp = complex_codeplug.filter(order=ct_order)
-    assert list(ct.name for ct in order_cp.contacts) == ["CT3", "CT2", "PC3", "CT1", "PC1", "PC2"]
+    assert list(ct.name for ct in order_cp.contacts) == [
+        "CT3",
+        "CT2",
+        "PC3",
+        "CT1",
+        "PC1",
+        "PC2",
+    ]
     rorder_cp = complex_codeplug.filter(reverse_order=ct_order)
-    assert list(ct.name for ct in rorder_cp.contacts) == ["CT1", "PC1", "PC2", "PC3", "CT2", "CT3"]
+    assert list(ct.name for ct in rorder_cp.contacts) == [
+        "CT1",
+        "PC1",
+        "PC2",
+        "PC3",
+        "CT2",
+        "CT3",
+    ]
 
 
 def test_Channel_include_exclude(complex_codeplug):
-    ch_include_A = complex_codeplug.filter(include=dzcb.model.Ordering(channels=["A.*"]))
+    ch_include_A = complex_codeplug.filter(
+        include=dzcb.model.Ordering(channels=["A.*"])
+    )
     assert list(ch.name for ch in ch_include_A.channels) == ["A1", "A2", "A3"]
     assert list(zn.name for zn in ch_include_A.zones) == ["Z_ALL", "Z_A", "Z_A_D"]
-    ch_exclude_2 = complex_codeplug.filter(exclude=dzcb.model.Ordering(channels=[".*2"]))
-    assert list(ch.name for ch in ch_exclude_2.channels) == ["A1", "A3", "D1", "D3", "DR1", "DR3"]
+    ch_exclude_2 = complex_codeplug.filter(
+        exclude=dzcb.model.Ordering(channels=[".*2"])
+    )
+    assert list(ch.name for ch in ch_exclude_2.channels) == [
+        "A1",
+        "A3",
+        "D1",
+        "D3",
+        "DR1",
+        "DR3",
+    ]
 
 
 def test_Zone_include_exclude(complex_codeplug):
     # include doesn't imply ordering
-    zn_include_A = complex_codeplug.filter(include=dzcb.model.Ordering(zones=["Z_A_D", "Z_A$"]))
+    zn_include_A = complex_codeplug.filter(
+        include=dzcb.model.Ordering(zones=["Z_A_D", "Z_A$"])
+    )
     assert list(zn.name for zn in zn_include_A.zones) == ["Z_A", "Z_A_D"]
-    assert list(dict((ch.name, ch) for zn in zn_include_A.zones for ch in zn.unique_channels)) == ["A1", "A2", "A3", "D1", "D2", "D3"]
-    zn_exclude_A = complex_codeplug.filter(exclude=dzcb.model.Ordering(zones=["Z_ALL", "Z_A", "Z_A_D"]))
-    assert list(ch.name for zn in zn_exclude_A.zones for ch in zn.unique_channels) == ["D1", "D2", "D3", "DR1", "DR2", "DR3"]
+    assert list(
+        dict((ch.name, ch) for zn in zn_include_A.zones for ch in zn.unique_channels)
+    ) == ["A1", "A2", "A3", "D1", "D2", "D3"]
+    zn_exclude_A = complex_codeplug.filter(
+        exclude=dzcb.model.Ordering(zones=["Z_ALL", "Z_A", "Z_A_D"])
+    )
+    assert list(ch.name for zn in zn_exclude_A.zones for ch in zn.unique_channels) == [
+        "D1",
+        "D2",
+        "D3",
+        "DR1",
+        "DR2",
+        "DR3",
+    ]
     assert list(zn.name for zn in zn_exclude_A.zones) == ["Z_D"]
 
 
 @pytest.fixture(scope="session")
 def replacements():
-    return dzcb.model.Replacements.from_csv(csv_from_relative_dir("model-replacements", "replacements.csv"))
+    return dzcb.model.Replacements.from_csv(
+        csv_from_relative_dir("model-replacements", "replacements.csv")
+    )
+
 
 def names(l):
     return tuple(o.name for o in l)
 
+
 def test_replacements(complex_codeplug, replacements):
-    assert replacements.contacts == (('^CT([1-2])$', 'ct\\1'),)
-    assert replacements.channels == (('A', 'a'),)
-    assert replacements.grouplists == (('GROP', 'not found'), ('GL_', 'gl_'), ('gl_', 'g_L_'))
-    assert replacements.scanlists == (('_A$', '_analog'),)
-    assert replacements.zones == (('_A(_)?', '_a\\1'),)
+    assert replacements.contacts == (("^CT([1-2])$", "ct\\1"),)
+    assert replacements.channels == (("A", "a"),)
+    assert replacements.grouplists == (
+        ("GROP", "not found"),
+        ("GL_", "gl_"),
+        ("gl_", "g_L_"),
+    )
+    assert replacements.scanlists == (("_A$", "_analog"),)
+    assert replacements.zones == (("_A(_)?", "_a\\1"),)
     rcp = complex_codeplug.filter(replacements=replacements)
-    assert names(rcp.contacts) == ('ct1', 'ct2', 'CT3', 'PC1', 'PC2', 'PC3')
-    assert names(rcp.channels) == ('a1', 'a2', 'a3', 'D1', 'D2', 'D3', 'DR1', 'DR2', 'DR3')
-    assert names(rcp.grouplists) == ('g_L_ALL', 'g_L_GRP', 'g_L_PRV')
-    assert names(rcp.scanlists) == ('SL_ALL', 'SL_analog', 'SL_D')
-    assert names(rcp.zones) == ('Z_aLL', 'Z_a', 'Z_D', 'Z_a_D')
+    assert names(rcp.contacts) == ("ct1", "ct2", "CT3", "PC1", "PC2", "PC3")
+    assert names(rcp.channels) == (
+        "a1",
+        "a2",
+        "a3",
+        "D1",
+        "D2",
+        "D3",
+        "DR1",
+        "DR2",
+        "DR3",
+    )
+    assert names(rcp.grouplists) == ("g_L_ALL", "g_L_GRP", "g_L_PRV")
+    assert names(rcp.scanlists) == ("SL_ALL", "SL_analog", "SL_D")
+    assert names(rcp.zones) == ("Z_aLL", "Z_a", "Z_D", "Z_a_D")

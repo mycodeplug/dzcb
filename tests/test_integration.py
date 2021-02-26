@@ -40,14 +40,21 @@ def test_default_codeplug(tmp_path):
     output_dir = tmp_path / "default"
     output_dir.mkdir()
     cache_dir = output_dir / "cache"
-    input_dir = Path(os.path.dirname(__file__)) / "default-codeplug-expect-output" / "cache"
+    input_dir = (
+        Path(os.path.dirname(__file__)) / "default-codeplug-expect-output" / "cache"
+    )
     shutil.copytree(input_dir, cache_dir)
     proc = subprocess.run(
         [
-            sys.executable, "-m", "dzcb",
-            "--scanlists-json", str(input_dir / "scanlists.json"),
-            "--replacements", str(input_dir / "replacements.csv"),
-            "--order", str(input_dir / "order.csv"),
+            sys.executable,
+            "-m",
+            "dzcb",
+            "--scanlists-json",
+            str(input_dir / "scanlists.json"),
+            "--replacements",
+            str(input_dir / "replacements.csv"),
+            "--order",
+            str(input_dir / "order.csv"),
             "--",
             str(output_dir),
         ],
@@ -58,4 +65,3 @@ def test_default_codeplug(tmp_path):
     dcmp = dircmp(input_dir.parent, output_dir, ignore=[".DS_Store"])
     diff_files = get_diff_files(dcmp, top_level=True)
     assert not diff_files
-
