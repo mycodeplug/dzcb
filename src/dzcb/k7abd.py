@@ -121,8 +121,13 @@ def Codeplug_from_zone_dicts(zone_dicts):
                     contacts.add(ch.talkgroup)
             if ch.scanlist is None:
                 ch = attr.evolve(ch, scanlist=zname)
-            if ch.short_name not in all_channels:
-                all_channels[ch.short_name] = ch
+            # if the existing channel with this short name doesn't hash to
+            # the current channel, then append a number until it does.
+            # This will ensure all same short named channels get the same
+            # unique suffix
+            while all_channels.get(ch.short_name) not in (ch, None):
+                ch = attr.evolve(ch, dedup_key=ch._dedup_key + 1)
+            all_channels[ch.short_name] = ch
             updated_channels.append(ch)
         zscanlist = ScanList(
             name=zname,
