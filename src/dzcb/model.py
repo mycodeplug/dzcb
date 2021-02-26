@@ -338,7 +338,20 @@ class Zone:
                 channels_b=tuple(ch for ch in zone_channels if ch in channels_b)
             )
 
-        ordered_zones = tuple(channel_order(zn) for zn in zones)
+        # not sure if we even want channel order as this throws off the proximity
+        # ordering
+        # ordered_zones = tuple(channel_order(zn) for zn in zones)
+
+        channels = set(channels)
+
+        def zone_order(zone):
+            return attr.evolve(
+                zone,
+                channels_a=tuple(ch for ch in zone.channels_a if ch in channels),
+                channels_b=tuple(ch for ch in zone.channels_b if ch in channels),
+            )
+
+        ordered_zones = tuple(zone_order(zn) for zn in zones)
         return [zn for zn in ordered_zones if zn.channels_a + zn.channels_b]
 
     @property
