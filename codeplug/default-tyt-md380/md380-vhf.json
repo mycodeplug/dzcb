@@ -161,7 +161,7 @@
 		"DisableAllTones": "Off",
 		"GroupCallHangTime": "3000",
 		"IntroScreen": "Character String",
-		"IntroScreenLine1": "2021/01/01",
+		"IntroScreenLine1": "$DATE",
 		"IntroScreenLine2": "PNWDigital",
 		"KeypadTones": "Off",
 		"LoneWorkerReminderTime": "10",
