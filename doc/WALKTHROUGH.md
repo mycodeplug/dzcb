@@ -152,28 +152,23 @@ on timeslot 1 or timeslot 2.
 
 Save the file. **Use Text CSV Format!**
 
-### Edit `order.json`
+### Edit `order.csv`, `exclude.csv`, and `replacements.csv`
 
 The newly added zone can be placed at the top of the zone list
-by editing `order.json` and adding a line matching the
+by editing `order.csv` and adding a line matching the
 new zone name.
 
-**Any zones not in the list will follow in alphabetical order**.
+**Any zones not in the list will follow in alphabetical order
+(by K7ABD CSV filename)**.
 
-The first list, "default", orders zones based on the CSV file name
-and is used for radios that do NOT expand static talkgroups into
-channels (Radioddity OpenGD77).
+The columns in these CSV files correspond to codeplug objects,
+most commonly used are `contacts`, `channels`, and `zones`.
 
-The second list, "expanded", orders zones based on the zone name
-_inside_ the CSV file and affects the zone order on Anytone and TYT radios.
+Each column should contain regular expressions that match
+the name of the object of interest. See [README.md](/README.md#customization)
+for further explaination of customizations.
 
-Add a line to the top of the "expanded" list for the "New Hotspot".
-(if you used a different name in the previous step, use that same
-name here).
-
-<img src="./walkthrough/notepad-order.png">
-
-Close Notepad and save the file.
+Save the files. **Use Text CSV Format!**
 
 ### Commit changes
 
