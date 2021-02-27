@@ -70,8 +70,8 @@ def complex_codeplug():
     )
     channels = (
         dzcb.model.AnalogChannel("A1", "146.520", "6.0"),
-        dzcb.model.AnalogChannel("A2", "146.520", "6.0"),
-        dzcb.model.AnalogChannel("A3", "146.520", "6.0"),
+        dzcb.model.AnalogChannel("A2", "146.530", "6.0"),
+        dzcb.model.AnalogChannel("A3", "146.540", "6.0"),
         dzcb.model.DigitalChannel("D1", "443.4375", "9", talkgroup=contacts[0]),
         dzcb.model.DigitalChannel("D2", "443.4375", "9", talkgroup=contacts[1]),
         dzcb.model.DigitalChannel("D3", "443.4375", "9", talkgroup=contacts[2]),
@@ -79,10 +79,10 @@ def complex_codeplug():
             "DR1", "443.4375", "9", static_talkgroups=contacts[:]
         ),
         dzcb.model.DigitalChannel(
-            "DR2", "443.4375", "9", static_talkgroups=[contacts[0], contacts[1]]
+            "DR2", "444.4375", "9", static_talkgroups=[contacts[0], contacts[1]]
         ),
         dzcb.model.DigitalChannel(
-            "DR3", "443.4375", "9", static_talkgroups=[contacts[3], contacts[4]]
+            "DR3", "445.4375", "9", static_talkgroups=[contacts[3], contacts[4]]
         ),
     )
     grouplists = (

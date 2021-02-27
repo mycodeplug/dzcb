@@ -244,7 +244,8 @@ def Codeplug_to_json(cp, based_on=None):
     )
     # Set the programming date in intro text
     general_settings = cp_dict.setdefault("GeneralSettings", {})
-    general_settings["IntroScreenLine1"] = time.strftime("%Y-%m-%d")
+    if general_settings.get("IntroScreenLine1", None) == "$DATE":
+        general_settings["IntroScreenLine1"] = time.strftime("%Y-%m-%d")
     logger.info(
         "Assemble JSON for %s",
         basic_info.get("Model", "Unknown. (probably won't work!)"),
