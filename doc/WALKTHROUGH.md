@@ -158,14 +158,14 @@ The newly added zone can be placed at the top of the zone list
 by editing `order.csv` and adding a line matching the
 new zone name.
 
-**Any zones not in the list will follow in alphabetical order,
+**Any zones not in the list will follow in alphabetical order
 (by K7ABD CSV filename)**.
 
 The columns in these CSV files correspond to codeplug objects,
 most commonly used are `contacts`, `channels`, and `zones`.
 
-In each column, should follow regular expressions that match
-the name of the object. See [README.md](/README.md#customization)
+Each column should contain regular expressions that match
+the name of the object of interest. See [README.md](/README.md#customization)
 for further explaination of customizations.
 
 Save the files. **Use Text CSV Format!**
