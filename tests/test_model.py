@@ -79,10 +79,10 @@ def complex_codeplug():
             "DR1", "443.4375", "9", static_talkgroups=contacts[:]
         ),
         dzcb.model.DigitalChannel(
-            "DR2", "443.4375", "9", static_talkgroups=[contacts[0], contacts[1]]
+            "DR2", "444.4375", "9", static_talkgroups=[contacts[0], contacts[1]]
         ),
         dzcb.model.DigitalChannel(
-            "DR3", "443.4375", "9", static_talkgroups=[contacts[3], contacts[4]]
+            "DR3", "445.4375", "9", static_talkgroups=[contacts[3], contacts[4]]
         ),
     )
     grouplists = (
