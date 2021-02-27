@@ -292,7 +292,9 @@ class ScanList:
         return [
             sl
             for sl in [
-                attr.evolve(sl, channels=[channels[ch] for ch in sl.channels if ch in channels])
+                attr.evolve(
+                    sl, channels=[channels[ch] for ch in sl.channels if ch in channels]
+                )
                 for sl in scanlists
             ]
             if sl.channels
@@ -333,8 +335,12 @@ class Zone:
             for zn in [
                 attr.evolve(
                     zn,
-                    channels_a=tuple(channels[ch] for ch in zn.channels_a if ch in channels),
-                    channels_b=tuple(channels[ch] for ch in zn.channels_b if ch in channels),
+                    channels_a=tuple(
+                        channels[ch] for ch in zn.channels_a if ch in channels
+                    ),
+                    channels_b=tuple(
+                        channels[ch] for ch in zn.channels_b if ch in channels
+                    ),
                 )
                 for zn in zones
             ]
