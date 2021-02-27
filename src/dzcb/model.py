@@ -288,11 +288,11 @@ class ScanList:
         """
         Return a sequence of new ScanList objects containing only channels in `channels`
         """
-        channels = set(ch for ch in channels)
+        channels = {ch: ch for ch in channels}
         return [
             sl
             for sl in [
-                attr.evolve(sl, channels=[ch for ch in sl.channels if ch in channels])
+                attr.evolve(sl, channels=[channels[ch] for ch in sl.channels if ch in channels])
                 for sl in scanlists
             ]
             if sl.channels
@@ -327,32 +327,19 @@ class Zone:
         Return a sequence of new Zone objects containing only channels in `channels`
         """
 
-        def channel_order(zone):
-            unique_channels = set(zch for zch in zone.unique_channels)
-            zone_channels = [ch for ch in channels if ch in unique_channels]
-            channels_a = set(zch for zch in zone.channels_a)
-            channels_b = set(zch for zch in zone.channels_b)
-            return attr.evolve(
-                zone,
-                channels_a=tuple(ch for ch in zone_channels if ch in channels_a),
-                channels_b=tuple(ch for ch in zone_channels if ch in channels_b),
-            )
-
-        # not sure if we even want channel order as this throws off the proximity
-        # ordering
-        # ordered_zones = tuple(channel_order(zn) for zn in zones)
-
-        channels = set(channels)
-
-        def zone_order(zone):
-            return attr.evolve(
-                zone,
-                channels_a=tuple(ch for ch in zone.channels_a if ch in channels),
-                channels_b=tuple(ch for ch in zone.channels_b if ch in channels),
-            )
-
-        ordered_zones = tuple(zone_order(zn) for zn in zones)
-        return [zn for zn in ordered_zones if zn.channels_a + zn.channels_b]
+        channels = {ch: ch for ch in channels}
+        return [
+            zn
+            for zn in [
+                attr.evolve(
+                    zn,
+                    channels_a=tuple(channels[ch] for ch in zn.channels_a if ch in channels),
+                    channels_b=tuple(channels[ch] for ch in zn.channels_b if ch in channels),
+                )
+                for zn in zones
+            ]
+            if zn.channels_a + zn.channels_b
+        ]
 
     @property
     def unique_channels(self):
