@@ -223,12 +223,12 @@ Channel Number;Channel Name;Channel Type;Rx Frequency;Tx Frequency;Colour Code;T
 222;Lewiston ID;Digital;442.1;447.1;1;1;N/A;LEW TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
 223;Longview/Rainier;Digital;441.7;446.7;1;1;N/A;LVR TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
 224;Mazama VHF;Digital;145.21;148.01;3;1;N/A;MAZ TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
-225;MM/Wes 430;Digital;430.4125;430.4125;1;1;N/A;MMW TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
-226;MM/Peter 430;Digital;430.4125;430.4125;1;1;N/A;MMP TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
-227;MM/Otis 430;Digital;430.4125;430.4125;1;1;N/A;MMO TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
-228;MM/Bridget 430;Digital;430.4125;430.4125;1;1;N/A;MMB TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
-229;MM/Suzy 430;Digital;430.4125;430.4125;1;1;N/A;MMS TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
-230;MM/RexX 2Slot;Digital;430.4375;439.4375;1;1;N/A;MMR TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+225;MM/RexX 2Slot;Digital;430.4375;439.4375;1;1;N/A;MMR TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+226;MM/Wes 430;Digital;430.4125;430.4125;1;1;N/A;MMW TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+227;MM/Peter 430;Digital;430.4125;430.4125;1;1;N/A;MMP TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+228;MM/Otis 430;Digital;430.4125;430.4125;1;1;N/A;MMO TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+229;MM/Bridget 430;Digital;430.4125;430.4125;1;1;N/A;MMB TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
+230;MM/Suzy 430;Digital;430.4125;430.4125;1;1;N/A;MMS TGS;None;None;Low;12.5KHz;Disabled;No;No;No;90;No
 231;Moses Lk/Frechmn;Digital;440.925;445.925;1;1;N/A;MOF TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
 232;Newberg/MtnTopRd;Digital;444.4875;449.4875;1;1;N/A;NEM TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
 233;NBend/ValleyCamp;Digital;440.725;445.725;1;1;N/A;NBV TGS;None;None;High;12.5KHz;Disabled;No;No;No;90;No
