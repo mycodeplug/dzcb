@@ -131,6 +131,8 @@ interest.
 
 * Zone Name,Lat,Long,Distance,Unit,Band(2m;1.25m;70cm),Use,Operational Status,etc
 
+See example: [`src/dzcb/data/repeaterbook_proximity_zones.csv`](/src/dzcb/data/repeaterbook_proximity_zones.csv)
+
 The fields after Band are optional and correspond directly to the field names
 and values in the [Repeaterbook API](https://www.repeaterbook.com/wiki/doku.php?id=api)
 (see examples).
@@ -159,11 +161,6 @@ Longview WA UHF 35mi,46.13819885,-122.93800354,35,miles,70cm,OPEN,On-Air
 ```
 
 (it's easy to search on repeaterbook and copy the info from the URL!)
-
-### [Local](./src/dzcb/data/k7abd/Digital-Repeaters__Local.csv)
-
-Information on these Western Washington standalone DMR repeaters was
-retrieved from Repeaterbook and respective websites in 2020 October.
 
 ### Simplex, GMRS, etc
 
@@ -196,6 +193,9 @@ mentioned in the file will be removed.
 
 If the CSV file is passed as an `--exclude` parameter, then any objects mentioned
 will be removed.
+
+See example: [`codeplug/default-tyt-md380/exclude.csv`](/codeplug/default-tyt-md380/exclude.csv)
+(for radios with lower channel/zone capacity)
 
 ## `--order`
 
