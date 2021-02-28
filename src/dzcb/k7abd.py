@@ -105,6 +105,10 @@ def Codeplug_from_zone_dicts(zone_dicts):
     all_channels = {}
     for zname, zchannels in zone_dicts.items():
         updated_channels = []
+        zscanlist = ScanList(
+            name=zname,
+            channels=updated_channels,
+        )
         for ch in zchannels:
             if isinstance(ch, DigitalChannel):
                 if ch.static_talkgroups:
@@ -112,7 +116,7 @@ def Codeplug_from_zone_dicts(zone_dicts):
                 if ch.talkgroup:
                     contacts.add(ch.talkgroup)
             if ch.scanlist is None:
-                ch = attr.evolve(ch, scanlist=zname)
+                ch = attr.evolve(ch, scanlist=zscanlist)
             # if the existing channel with this short name doesn't hash to
             # the current channel, then append a number until it does.
             # This will ensure all same short named channels get the same
@@ -121,11 +125,9 @@ def Codeplug_from_zone_dicts(zone_dicts):
                 ch = attr.evolve(ch, dedup_key=ch._dedup_key + 1)
             all_channels[ch.short_name] = ch
             updated_channels.append(ch)
-        zscanlist = ScanList(
-            name=zname,
-            channels=updated_channels,
+        scanlists.append(
+            attr.evolve(zscanlist, channels=updated_channels)
         )
-        scanlists.append(zscanlist)
         zones.append(
             Zone(
                 name=zname,
