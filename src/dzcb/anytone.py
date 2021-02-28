@@ -404,7 +404,7 @@ def DigitalChannel_to_dict(channel):
     return d
 
 
-def Channel_to_dict(index, channel):
+def Channel_to_dict(index, channel, codeplug):
     d = {
         "No.": str(index + 1),
         "Channel Name": channel.short_name,
@@ -414,7 +414,7 @@ def Channel_to_dict(index, channel):
         "Transmit Power": str(channel.power),
         "Band Width": "25K" if channel.bandwidth > 19 else "12.5K",
         "PTT Prohibit": value_replacements[channel.rx_only],
-        "Scan List": channel.scanlist,
+        "Scan List": channel.scanlist_name(codeplug),
     }
     if isinstance(channel, AnalogChannel):
         d.update(AnalogChannel_to_dict(channel))
@@ -482,7 +482,7 @@ def Codeplug_to_anytone_csv(cp, output_dir, models=None):
             csvw.writeheader()
             for ix, channel in enumerate(mcp.channels):
                 d = model["channel"].copy()
-                d.update(Channel_to_dict(ix, channel))
+                d.update(Channel_to_dict(ix, channel, mcp))
                 csvw.writerow(replace_field_names(remove_fields(d, model), model))
         with (radio_dir / model["zone_filename"]).open("w", newline="") as f:
             csvw = csv.DictWriter(f, tuple(model["zone"].keys()))

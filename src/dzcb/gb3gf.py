@@ -85,7 +85,7 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
                     "TX Tone": "None",
                     "Colour Code": channel.color_code,
                     "Contact": "N/A",
-                    "TG List": channel.grouplist.name if channel.grouplist else "None",
+                    "TG List": channel.grouplist_name(cp) if channel.grouplist else "None",
                 }
                 if channel.talkgroup:
                     d["Contact"] = channel.talkgroup.name_with_timeslot
