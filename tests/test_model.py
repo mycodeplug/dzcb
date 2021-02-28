@@ -281,3 +281,12 @@ def test_Grouplist_replacements(complex_codeplug):
     )
     assert gl_replacements.channels[0].grouplist_name(complex_codeplug) == old
     assert gl_replacements.channels[0].grouplist_name(gl_replacements) == new
+
+
+def test_lookup_table_regen(complex_codeplug):
+    with pytest.raises(KeyError):
+        complex_codeplug.lookup("foo")
+    assert complex_codeplug._lookup_table is not None
+    new_cp = complex_codeplug.filter()
+    assert new_cp._lookup_table is None
+    assert complex_codeplug._lookup_table is not None
