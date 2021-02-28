@@ -283,6 +283,25 @@ def test_Grouplist_replacements(complex_codeplug):
     assert gl_replacements.channels[0].grouplist_name(gl_replacements) == new
 
 
+def test_Contact_replacements(complex_codeplug):
+    ct_replacements = complex_codeplug.filter(
+        replacements=dzcb.model.Replacements(contacts=(("CT1", "ContactOne"),)),
+        include=dzcb.model.Ordering(contacts=["ContactOne", "CT2"]),
+        exclude=dzcb.model.Ordering(channels=["A"]),
+    )
+    assert [ch.name for ch in ct_replacements.channels] == ["D1", "D2", "DR1", "DR2"]
+    assert ct_replacements.channels[0].talkgroup.name == "ContactOne"
+    assert ct_replacements.channels[1].talkgroup.name == "CT2"
+    assert [tg.name for tg in ct_replacements.channels[2].static_talkgroups] == [
+        "ContactOne",
+        "CT2",
+    ]
+    assert [tg.name for tg in ct_replacements.channels[3].static_talkgroups] == [
+        "ContactOne",
+        "CT2",
+    ]
+
+
 def test_lookup_table_regen(complex_codeplug):
     with pytest.raises(KeyError):
         complex_codeplug.lookup("foo")
