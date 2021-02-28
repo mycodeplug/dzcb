@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from dzcb import k7abd
-from dzcb.model import Contact, Timeslot
+from dzcb.model import Timeslot, ContactType
 
 
 def codeplug_from_relative_dir(dname):
@@ -111,3 +111,24 @@ def test_analog_weird_values():
         elif ch.name == "split-tone":
             assert ch.tone_decode == "74.4"
             assert ch.tone_encode == "254.1"
+
+
+def test_digital_repeaters_private_contacts():
+    """
+    Private contacts in Digital-Repeaters__ZoneName.csv
+    """
+
+    cp = codeplug_from_relative_dir("talkgroups-private")
+    assert len(cp.zones) == 1
+    assert len(cp.contacts) == 3
+    assert len(cp.channels) == 1
+
+    assert cp.channels[0].name == "Foo"
+    assert [
+        (st.name, st.dmrid, st.timeslot, st.kind)
+        for st in cp.channels[0].static_talkgroups
+    ] == [
+        ("BM Parrot", 9990, Timeslot.ONE, ContactType.PRIVATE),
+        ("Disconnect", 4000, Timeslot.ONE, ContactType.PRIVATE),
+        ("Parrot", 9998, Timeslot.ONE, ContactType.GROUP),
+    ]
