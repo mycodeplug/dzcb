@@ -142,6 +142,33 @@ class Power(ConvertibleEnum):
     LOW = "Low"
     MED = "Medium"
     HIGH = "High"
+    TURBO = "Turbo"
+
+    def flattened(self, allowed_powers):
+        if self in allowed_powers:
+            return self
+        if self is self.MED:
+            return self.LOW
+        if self is self.TURBO:
+            return self.HIGH
+        if self is self.LOW:
+            return self.HIGH
+        if self is self.HIGH:
+            return self.LOW
+        raise ValueError("No known powers are allowed {!r} from {!r}".format(self, allowed_powers))
+
+
+class Bandwidth(enum.Enum):
+    _125 = "12.5"
+    _20 = "20"
+    _25 = "25"
+
+    def flattened(self, allowed_bandwidths):
+        if self in allowed_bandwidths:
+            return self
+        if self is self._20:
+            return self._25
+        raise ValueError("No known bandwidths are allowed {!r} from {!r}".format(self, allowed_bandwidths))
 
 
 @attr.s(frozen=True)
