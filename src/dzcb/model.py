@@ -558,6 +558,7 @@ class Codeplug:
     grouplists = attr.ib(factory=tuple, converter=tuple, repr=_seq_items_repr)
     scanlists = attr.ib(factory=tuple, converter=tuple, repr=_seq_items_repr)
     zones = attr.ib(factory=tuple, converter=tuple, repr=_seq_items_repr)
+    _lookup_table = attr.ib(default=None, init=False, eq=False, repr=False)
 
     def _generate_lookup_table(self):
         """
@@ -578,9 +579,9 @@ class Codeplug:
         """
         Lookup a codeplug object by ID
         """
-        if not hasattr(self, "__lookup_table"):
-            self.__lookup_table = self._generate_lookup_table()
-        return self.__lookup_table[object_id]
+        if self._lookup_table is None:
+            self._lookup_table = self._generate_lookup_table()
+        return self._lookup_table[object_id]
 
     def filter(
         self,
