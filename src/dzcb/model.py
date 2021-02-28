@@ -596,8 +596,6 @@ class Codeplug:
                 )
             return ch
 
-        if include:
-            _filter_inplace(include, _include_filter)
         if exclude:
             _filter_inplace(exclude, _exclude_filter)
         if order:
@@ -608,6 +606,21 @@ class Codeplug:
             )
         if replacements:
             _filter_inplace(replacements, _replace_filter)
+            # Perform exclude, order, reverse_order after making replacements
+            # so callers can provider either the original name or replaced name
+            # in the in Ordering CSV file
+            if exclude:
+                _filter_inplace(exclude, _exclude_filter)
+            if order:
+                _filter_inplace(order, _order_filter)
+            if reverse_order:
+                _filter_inplace(
+                    reverse_order, functools.partial(_order_filter, reverse=True)
+                )
+        # Check the include list last; must use the final "replaced" name
+        # if replacements are used
+        if include:
+            _filter_inplace(include, _include_filter)
 
         # Reorder static talkgroups and remove channels with missing talkgroups
         contact_set = set(tg for tg in cp["contacts"])

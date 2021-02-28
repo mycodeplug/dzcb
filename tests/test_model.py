@@ -240,3 +240,15 @@ def test_replacements(complex_codeplug, replacements):
     assert names(rcp.grouplists) == ("g_L_ALL", "g_L_GRP", "g_L_PRV")
     assert names(rcp.scanlists) == ("SL_ALL", "SL_analog", "SL_D")
     assert names(rcp.zones) == ("Z_aLL", "Z_a", "Z_D", "Z_a_D")
+
+
+def test_Channel_exclude_replacements(complex_codeplug):
+    ch_exclude_A = complex_codeplug.filter(
+        exclude=dzcb.model.Ordering(channels=["A", "d3", "dr2", "digitalrepeater3"]),
+        replacements=dzcb.model.Replacements(channels=(("DR", "DigitalRepeater"),)),
+    )
+    assert list(ch.name for ch in ch_exclude_A.channels) == [
+        "D1",
+        "D2",
+        "DigitalRepeater1",
+    ]
