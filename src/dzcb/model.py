@@ -453,7 +453,7 @@ def uniquify_contacts(contacts, key=None):
     # check for duplicate DMR numbers, drop and warn
     contacts_by_id = {}
     for ct in ctd.values():
-        ct_key = (ct.dmrid, ct.timeslot) if isinstance(ct, Talkgroup) else ct.dmrid
+        ct_key = (ct.dmrid, ct.kind, ct.timeslot) if isinstance(ct, Talkgroup) else (ct.dmrid, ct.kind)
         stored_ct = contacts_by_id.setdefault(ct_key, ct)
         if stored_ct.name != ct.name:
             warnings.warn(
