@@ -26,7 +26,6 @@ from pathlib import Path
 
 import attr
 
-import dzcb.exceptions
 from dzcb.model import (
     AnalogChannel,
     Codeplug,
@@ -73,27 +72,14 @@ def Talkgroups_map_from_csv(talkgroups_csv):
         if tg_id.endswith(("P", "p")):
             tg_id = tg_id[:-1]
             ct_type = ContactType.PRIVATE
-        try:
-            talkgroups_by_name.setdefault(
-                tg_name,
-                Contact(
-                    name=tg_name,
-                    dmrid=tg_id,
-                    kind=ct_type,
-                ),
-            )
-        except dzcb.exceptions.DuplicateDmrID as dup:
-            talkgroups_by_name.setdefault(
-                tg_name,
-                dup.existing_contact,
-            )
-            logger.debug(
-                "Mapping %s (%s) to existing contact %s (%s)",
-                tg_name,
-                tg_id,
-                dup.existing_contact.name,
-                dup.existing_contact.dmrid,
-            )
+        talkgroups_by_name.setdefault(
+            tg_name,
+            Contact(
+                name=tg_name,
+                dmrid=tg_id,
+                kind=ct_type,
+            ),
+        )
     return talkgroups_by_name
 
 
