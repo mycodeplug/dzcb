@@ -256,9 +256,11 @@ class DigitalChannel(Channel):
         ),
     )
 
-    def from_talkgroups(self, talkgroups):
+    def from_talkgroups(self, talkgroups, **kwargs):
         """
-        Return a new channel per talkgroup based on this channel's settings
+        Return a new channel per talkgroup based on this channel's settings.
+
+        Additional kwargs will be applied to the new channel.
         """
 
         return [
@@ -269,8 +271,8 @@ class DigitalChannel(Channel):
                     (self.code if self.code else self.name)[:3],
                 ),
                 talkgroup=tg,
-                scanlist=self.scanlist,
                 static_talkgroups=[],
+                **kwargs,
             )
             for tg in talkgroups
         ]
@@ -771,14 +773,15 @@ class Codeplug:
             if not isinstance(ch, DigitalChannel) or not ch.static_talkgroups:
                 channels.append(ch)
                 continue
-            zone_channels = ch.from_talkgroups(
-                ch.static_talkgroups,
-            )
             zscanlist = ScanList(
                 name=ch.short_name,
-                channels=zone_channels,
+                channels=[],
             )
-            exp_scanlists.append(zscanlist)
+            zone_channels = ch.from_talkgroups(
+                ch.static_talkgroups,
+                scanlist=zscanlist,
+            )
+            exp_scanlists.append(attr.evolve(zscanlist, channels=zone_channels))
             zones.append(
                 Zone(
                     name=ch.short_name,
