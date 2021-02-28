@@ -6,6 +6,7 @@ import enum
 import functools
 import logging
 import re
+import uuid
 import warnings
 
 import attr
@@ -19,6 +20,10 @@ import dzcb.tone
 NAME_MAX = 16
 
 logger = logging.getLogger(__name__)
+
+
+def exclude_id(a, _):
+    return not a.name == "_id"
 
 
 class ConvertibleEnum(enum.Enum):
@@ -90,9 +95,39 @@ class Talkgroup(Contact):
 
     @classmethod
     def from_contact(cls, contact, timeslot):
-        fields = attr.asdict(contact)
+        fields = attr.asdict(contact, recurse=False)
         fields["timeslot"] = timeslot
         return cls(**fields)
+
+
+@attr.s(frozen=True)
+class GroupList:
+    """
+    A GroupList specifies a set of contacts that will be received on the same
+    channel.
+    """
+
+    name = attr.ib(eq=False, validator=attr.validators.instance_of(str))
+    contacts = attr.ib(factory=tuple, eq=False, validator=attr.validators.deep_iterable(member_validator=attr.validators.instance_of(Contact), iterable_validator=attr.validators.instance_of(tuple)), converter=tuple)
+    # stable id can track object across name and contents changes
+    _id = attr.ib(factory=uuid.uuid4, repr=False)
+
+    @classmethod
+    def prune_missing_contacts(cls, grouplists, contacts):
+        """
+        Return a sequence of new GroupList objects containing only contacts in `contacts`
+        and in the order specified in contacts
+        """
+
+        def contact_order(grouplist):
+            gl_contacts = set(glct for glct in grouplist.contacts)
+            return attr.evolve(
+                grouplist,
+                contacts=tuple(ct for ct in contacts if ct in gl_contacts),
+            )
+
+        ordered_groupslists = tuple(contact_order(gl) for gl in grouplists)
+        return tuple(gl for gl in ordered_groupslists if gl.contacts)
 
 
 class Power(ConvertibleEnum):
@@ -196,8 +231,9 @@ class DigitalChannel(Channel):
 
     def from_talkgroups(self, talkgroups):
         """
-        Return a channel per talkgroup based on this channel's settings
+        Return a new channel per talkgroup based on this channel's settings
         """
+
         return [
             attr.evolve(
                 self,
@@ -206,7 +242,7 @@ class DigitalChannel(Channel):
                     (self.code if self.code else self.name)[:3],
                 ),
                 talkgroup=tg,
-                scanlist=self.short_name,
+                scanlist=self.scanlist,
                 static_talkgroups=[],
             )
             for tg in talkgroups
@@ -224,34 +260,6 @@ class DigitalChannel(Channel):
 
 
 @attr.s(frozen=True)
-class GroupList:
-    """
-    A GroupList specifies a set of contacts that will be received on the same
-    channel.
-    """
-
-    name = attr.ib(eq=False, validator=attr.validators.instance_of(str))
-    contacts = attr.ib(factory=tuple, converter=tuple)
-
-    @classmethod
-    def prune_missing_contacts(cls, grouplists, contacts):
-        """
-        Return a sequence of new GroupList objects containing only contacts in `contacts`
-        and in the order specified in contacts
-        """
-
-        def contact_order(grouplist):
-            gl_contacts = set(glct for glct in grouplist.contacts)
-            return attr.evolve(
-                grouplist,
-                contacts=tuple(ct for ct in contacts if ct in gl_contacts),
-            )
-
-        ordered_groupslists = tuple(contact_order(gl) for gl in grouplists)
-        return tuple(gl for gl in ordered_groupslists if gl.contacts)
-
-
-@attr.s(frozen=True)
 class ScanList:
     """
     A ScanList specifies a set of channels that can be sequentially scanned.
@@ -259,10 +267,13 @@ class ScanList:
 
     name = attr.ib(eq=False, validator=attr.validators.instance_of(str))
     channels = attr.ib(
+        eq=False,
         factory=tuple,
         validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
         converter=tuple,
     )
+    # stable id can track object across name and contents changes
+    _id = attr.ib(factory=uuid.uuid4, repr=False)
 
     @classmethod
     def from_names(cls, name, channel_names, channels):
@@ -510,6 +521,29 @@ class Codeplug:
     grouplists = attr.ib(factory=tuple, converter=tuple, repr=_seq_items_repr)
     scanlists = attr.ib(factory=tuple, converter=tuple, repr=_seq_items_repr)
     zones = attr.ib(factory=tuple, converter=tuple, repr=_seq_items_repr)
+
+    def _generate_lookup_table(self):
+        """
+        Build a UUID -> object dict for quick lookups when building the codeplug.
+
+        Not an attrs attribute, because new instances should NOT inherit
+        the previous instances lookup table, and we don't necessarily
+        want to build the table until it's going to be used.
+        """
+        lookup_table = {}
+        for obj_list in [self.grouplists, self.scanlists]:
+            for obj in obj_list:
+                assert obj._id not in obj_list, "UUID Key collision: {}".format(obj.id)
+                lookup_table[obj._id] = obj
+        return lookup_table
+
+    def lookup(self, object_id):
+        """
+        Lookup a codeplug object by ID
+        """
+        if not hasattr(self, "__lookup_table"):
+            self.__lookup_table = self._generate_lookup_table()
+        return self.__lookup_table[object_id]
 
     def filter(
         self,
