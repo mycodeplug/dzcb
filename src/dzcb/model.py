@@ -685,9 +685,16 @@ class Codeplug:
             return ch
 
         def talkgroup_exists(ch, contact_set):
-            if isinstance(ch, AnalogChannel) or ch.talkgroup is None:
+            if isinstance(ch, AnalogChannel):
                 return True
-            return ch.talkgroup in contact_set
+            if ch.static_talkgroups:
+                # missing talkgroups will be pruned by `order_static_talkgroups`
+                return any(tg in contact_set for tg in ch.static_talkgroups)
+            elif ch.talkgroup is not None:
+                return ch.talkgroup in contact_set
+            else:
+                # No talkgroup or static_talkgroups, prune channel
+                return False
 
         if exclude:
             _filter_inplace(exclude, _exclude_filter)
