@@ -155,7 +155,7 @@ class Channel:
     rx_only = attr.ib(
         default=False, validator=attr.validators.instance_of(bool), converter=bool
     )
-    scanlist = attr.ib(eq=False, default=None)
+    scanlist = attr.ib(eq=False, default=None, validator=attr.validators.optional(attr.validators.instance_of(uuid.UUID)))
     code = attr.ib(
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(str)),
@@ -223,7 +223,7 @@ class DigitalChannel(Channel):
     bandwidth = 12.5
     squelch = 0
     color_code = attr.ib(default=1)
-    grouplist = attr.ib(default=None)
+    grouplist = attr.ib(default=None, validator=attr.validators.optional(attr.validators.instance_of(uuid.UUID)), converter=lambda gl: gl._id if isinstance(gl, GroupList) else gl)
     talkgroup = attr.ib(
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(Talkgroup)),
@@ -231,7 +231,7 @@ class DigitalChannel(Channel):
     # a list of other static talkgroups, which form the basis of an RX/scan list
     # eq is False here because the static talkgroups can change without necessarily
     # changing the identity of the channel itself
-    static_talkgroups = attr.ib(eq=False, factory=list)
+    static_talkgroups = attr.ib(eq=False, factory=list, validator=attr.validators.deep_iterable(member_validator=attr.validators.instance_of(Talkgroup)))
 
     def from_talkgroups(self, talkgroups):
         """
@@ -277,7 +277,10 @@ class ScanList:
     channels = attr.ib(
         eq=False,
         factory=tuple,
-        validator=attr.validators.deep_iterable(attr.validators.instance_of(Channel)),
+        validator=attr.validators.deep_iterable(
+            member_validator=attr.validators.instance_of(Channel),
+            iterable_validator=attr.validators.instance_of(tuple),
+        ),
         converter=tuple,
     )
     # stable id can track object across name and contents changes
