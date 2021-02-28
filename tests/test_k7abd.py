@@ -120,7 +120,7 @@ def test_digital_repeaters_private_contacts():
 
     cp = codeplug_from_relative_dir("talkgroups-private")
     assert len(cp.zones) == 1
-    assert len(cp.contacts) == 3
+    assert len(cp.contacts) == 4
     assert len(cp.channels) == 1
 
     assert cp.channels[0].name == "Foo"
@@ -131,4 +131,5 @@ def test_digital_repeaters_private_contacts():
         ("BM Parrot", 9990, Timeslot.ONE, ContactType.PRIVATE),
         ("Disconnect", 4000, Timeslot.ONE, ContactType.PRIVATE),
         ("Parrot", 9998, Timeslot.ONE, ContactType.GROUP),
+        ("Private Parrot", 9998, Timeslot.ONE, ContactType.PRIVATE),
     ]
