@@ -92,6 +92,7 @@ Particularly be wary of trucated names.
   * Zone, Channel Name, Bandwidth, Power, RX Freq, TX Freq, CTCSS Decode, CTCSS Encode, TX Prohibit
 * `Talkgroups__ZoneName.csv`
   * **No Header Row** tuples of: talkgroup_name,talkgroup_number
+  * To specify a **Private** call, suffix the talkgroup number with a "P"
 * `Digital-Other__ZoneName.csv` -- only really useful for digital simplex channels or private call
   * Zone, Channel Name, Power, RX Freq, TX Freq, Color Code, Talk Group, TimeSlot, Call Type, TX Permit
 * `Digital-Repeaters__ZoneName.csv` -- each line is a digital channel with static talkgroup timeslot assignments
