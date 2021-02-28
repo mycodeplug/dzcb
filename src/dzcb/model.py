@@ -291,9 +291,6 @@ class ScanList:
         sl_channels = []
         channels_by_name = {ch.name: ch for ch in channels}
         for cn in channel_names:
-            # TODO: require method to be called with a set of available channels
-            #       because the global list may contain channels that have already
-            #       been pruned in the given codeplug
             channel = channels_by_name.get(cn)
             if channel is None:
                 logger.debug(
