@@ -108,7 +108,15 @@ class GroupList:
     """
 
     name = attr.ib(eq=False, validator=attr.validators.instance_of(str))
-    contacts = attr.ib(factory=tuple, eq=False, validator=attr.validators.deep_iterable(member_validator=attr.validators.instance_of(Contact), iterable_validator=attr.validators.instance_of(tuple)), converter=tuple)
+    contacts = attr.ib(
+        factory=tuple,
+        eq=False,
+        validator=attr.validators.deep_iterable(
+            member_validator=attr.validators.instance_of(Contact),
+            iterable_validator=attr.validators.instance_of(tuple),
+        ),
+        converter=tuple,
+    )
     # stable id can track object across name and contents changes
     _id = attr.ib(factory=uuid.uuid4, repr=False)
 
@@ -155,7 +163,11 @@ class Channel:
     rx_only = attr.ib(
         default=False, validator=attr.validators.instance_of(bool), converter=bool
     )
-    scanlist = attr.ib(eq=False, default=None, validator=attr.validators.optional(attr.validators.instance_of(uuid.UUID)))
+    scanlist = attr.ib(
+        eq=False,
+        default=None,
+        validator=attr.validators.optional(attr.validators.instance_of(uuid.UUID)),
+    )
     code = attr.ib(
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(str)),
@@ -223,7 +235,11 @@ class DigitalChannel(Channel):
     bandwidth = 12.5
     squelch = 0
     color_code = attr.ib(default=1)
-    grouplist = attr.ib(default=None, validator=attr.validators.optional(attr.validators.instance_of(uuid.UUID)), converter=lambda gl: gl._id if isinstance(gl, GroupList) else gl)
+    grouplist = attr.ib(
+        default=None,
+        validator=attr.validators.optional(attr.validators.instance_of(uuid.UUID)),
+        converter=lambda gl: gl._id if isinstance(gl, GroupList) else gl,
+    )
     talkgroup = attr.ib(
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(Talkgroup)),
@@ -231,7 +247,13 @@ class DigitalChannel(Channel):
     # a list of other static talkgroups, which form the basis of an RX/scan list
     # eq is False here because the static talkgroups can change without necessarily
     # changing the identity of the channel itself
-    static_talkgroups = attr.ib(eq=False, factory=list, validator=attr.validators.deep_iterable(member_validator=attr.validators.instance_of(Talkgroup)))
+    static_talkgroups = attr.ib(
+        eq=False,
+        factory=list,
+        validator=attr.validators.deep_iterable(
+            member_validator=attr.validators.instance_of(Talkgroup)
+        ),
+    )
 
     def from_talkgroups(self, talkgroups):
         """
@@ -472,7 +494,11 @@ def uniquify_contacts(contacts, key=None):
     # check for duplicate DMR numbers, drop and warn
     contacts_by_id = {}
     for ct in ctd.values():
-        ct_key = (ct.dmrid, ct.kind, ct.timeslot) if isinstance(ct, Talkgroup) else (ct.dmrid, ct.kind)
+        ct_key = (
+            (ct.dmrid, ct.kind, ct.timeslot)
+            if isinstance(ct, Talkgroup)
+            else (ct.dmrid, ct.kind)
+        )
         stored_ct = contacts_by_id.setdefault(ct_key, ct)
         if stored_ct.name != ct.name:
             warnings.warn(
@@ -644,7 +670,9 @@ class Codeplug:
                     )
                 # update talkgroup reference to get the latest name
                 elif ch.talkgroup:
-                    updated_talkgroup = cp["contacts"][cp["contacts"].index(ch.talkgroup)]
+                    updated_talkgroup = cp["contacts"][
+                        cp["contacts"].index(ch.talkgroup)
+                    ]
                     if ch.talkgroup.name != updated_talkgroup.name:
                         return attr.evolve(
                             ch,
@@ -686,7 +714,9 @@ class Codeplug:
         # Reorder static talkgroups and remove channels with missing talkgroups
         contact_set = set(tg for tg in cp["contacts"])
         cp["channels"] = [
-            order_static_talkgroups(ch) for ch in cp["channels"] if talkgroup_exists(ch, contact_set)
+            order_static_talkgroups(ch)
+            for ch in cp["channels"]
+            if talkgroup_exists(ch, contact_set)
         ]
 
         # Prune orphan channels and contacts from containers
