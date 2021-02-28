@@ -37,11 +37,16 @@ def test_ordering_zones_contacts():
 
 @pytest.fixture
 def simple_codeplug():
+    contacts = (
+        dzcb.model.Talkgroup(
+            "Foo", 0xF00, dzcb.model.ContactType.GROUP, dzcb.model.Timeslot.ONE
+        ),
+    )
     return dzcb.model.Codeplug(
-        contacts=(dzcb.model.Contact("Foo", 0xF00, dzcb.model.ContactType.GROUP),),
+        contacts=contacts,
         channels=(
             dzcb.model.AnalogChannel("Bar", "146.520", "6.0"),
-            dzcb.model.DigitalChannel("Baz", "443.4375", "9"),
+            dzcb.model.DigitalChannel("Baz", "443.4375", "9", talkgroup=contacts[0]),
         ),
         grouplists=(dzcb.model.GroupList("Quuc", []),),
         scanlists=(dzcb.model.ScanList("Flar", []),),
