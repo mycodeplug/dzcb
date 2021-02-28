@@ -6,6 +6,7 @@ import enum
 import functools
 import logging
 import re
+import warnings
 
 import attr
 
@@ -423,6 +424,10 @@ class Replacements(Ordering):
         return cls(**f_r_tuples)
 
 
+class DuplicateDmrID(Warning):
+    """2 contacts with different names have the same ID."""
+
+
 def uniquify_contacts(contacts, key=None):
     """
     Return a sequence of contacts with all duplicates removed.
@@ -456,7 +461,7 @@ def uniquify_contacts(contacts, key=None):
                 "have the same ID: {}. Using {!r}.".format(
                     stored_ct.name, ct.name, stored_ct.dmrid, stored_ct.name
                 ),
-                dzcb.exceptions.DuplicateDmrID(existing_contact=stored_ct.name),
+                DuplicateDmrID,
             )
     return tuple(contacts_by_id.values())
 
