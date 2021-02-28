@@ -164,6 +164,10 @@ class Channel:
     # even when the short name would overlap
     _dedup_key = attr.ib(default=0, repr=False)
 
+    def scanlist_name(self, codeplug):
+        if self.scanlist:
+            return codeplug.lookup(self.scanlist).name
+
     @property
     def short_name(self):
         """Generate a short name for this channel"""
@@ -247,6 +251,10 @@ class DigitalChannel(Channel):
             )
             for tg in talkgroups
         ]
+
+    def grouplist_name(self, codeplug):
+        if self.grouplist:
+            return codeplug.lookup(self.grouplist).name
 
     @property
     def zone_name(self):
