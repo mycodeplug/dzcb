@@ -31,6 +31,7 @@ from dzcb.model import (
     AnalogChannel,
     Codeplug,
     Contact,
+    ContactType,
     DigitalChannel,
     GroupList,
     ScanList,
@@ -68,12 +69,17 @@ ANALOG_CSV_FIELDS = [
 def Talkgroups_map_from_csv(talkgroups_csv):
     talkgroups_by_name = {}
     for tg_name, tg_id in csv.reader(talkgroups_csv):
+        ct_type = ContactType.GROUP
+        if tg_id.endswith(("P", "p")):
+            tg_id = tg_id[:-1]
+            ct_type = ContactType.PRIVATE
         try:
             talkgroups_by_name.setdefault(
                 tg_name,
                 Contact(
                     name=tg_name,
                     dmrid=tg_id,
+                    kind=ct_type,
                 ),
             )
         except dzcb.exceptions.DuplicateDmrID as dup:
