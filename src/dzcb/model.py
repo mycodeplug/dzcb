@@ -634,14 +634,28 @@ class Codeplug:
 
         # order static_talkgroups based on contact order
         def order_static_talkgroups(ch):
-            if isinstance(ch, DigitalChannel) and ch.static_talkgroups:
-                return attr.evolve(
-                    ch,
-                    static_talkgroups=[
-                        tg for tg in cp["contacts"] if tg in ch.static_talkgroups
-                    ],
-                )
+            if isinstance(ch, DigitalChannel):
+                if ch.static_talkgroups:
+                    return attr.evolve(
+                        ch,
+                        static_talkgroups=[
+                            tg for tg in cp["contacts"] if tg in ch.static_talkgroups
+                        ],
+                    )
+                # update talkgroup reference to get the latest name
+                elif ch.talkgroup:
+                    updated_talkgroup = cp["contacts"][cp["contacts"].index(ch.talkgroup)]
+                    if ch.talkgroup.name != updated_talkgroup.name:
+                        return attr.evolve(
+                            ch,
+                            talkgroup=updated_talkgroup,
+                        )
             return ch
+
+        def talkgroup_exists(ch, contact_set):
+            if isinstance(ch, AnalogChannel) or ch.talkgroup is None:
+                return True
+            return ch.talkgroup in contact_set
 
         if exclude:
             _filter_inplace(exclude, _exclude_filter)
@@ -671,14 +685,8 @@ class Codeplug:
 
         # Reorder static talkgroups and remove channels with missing talkgroups
         contact_set = set(tg for tg in cp["contacts"])
-
-        def talkgroup_exists(ch):
-            if isinstance(ch, AnalogChannel) or ch.talkgroup is None:
-                return True
-            return ch.talkgroup in contact_set
-
         cp["channels"] = [
-            order_static_talkgroups(ch) for ch in cp["channels"] if talkgroup_exists(ch)
+            order_static_talkgroups(ch) for ch in cp["channels"] if talkgroup_exists(ch, contact_set)
         ]
 
         # Prune orphan channels and contacts from containers
