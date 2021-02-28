@@ -167,6 +167,7 @@ class Channel:
         eq=False,
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(uuid.UUID)),
+        converter=lambda sl: sl._id if isinstance(sl, ScanList) else sl,
     )
     code = attr.ib(
         default=None,
