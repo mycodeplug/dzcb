@@ -37,11 +37,16 @@ def test_ordering_zones_contacts():
 
 @pytest.fixture
 def simple_codeplug():
+    contacts = (
+        dzcb.model.Talkgroup(
+            "Foo", 0xF00, dzcb.model.ContactType.GROUP, dzcb.model.Timeslot.ONE
+        ),
+    )
     return dzcb.model.Codeplug(
-        contacts=(dzcb.model.Contact("Foo", 0xF00, dzcb.model.ContactType.GROUP),),
+        contacts=contacts,
         channels=(
             dzcb.model.AnalogChannel("Bar", "146.520", "6.0"),
-            dzcb.model.DigitalChannel("Baz", "443.4375", "9"),
+            dzcb.model.DigitalChannel("Baz", "443.4375", "9", talkgroup=contacts[0]),
         ),
         grouplists=(dzcb.model.GroupList("Quuc", []),),
         scanlists=(dzcb.model.ScanList("Flar", []),),
@@ -68,27 +73,45 @@ def complex_codeplug():
         dzcb.model.Talkgroup("PC2", 0xE02, dzcb.model.ContactType.PRIVATE, timeslot=2),
         dzcb.model.Talkgroup("PC3", 0xE03, dzcb.model.ContactType.PRIVATE, timeslot=1),
     )
-    channels = (
-        dzcb.model.AnalogChannel("A1", "146.520", "6.0"),
-        dzcb.model.AnalogChannel("A2", "146.530", "6.0"),
-        dzcb.model.AnalogChannel("A3", "146.540", "6.0"),
-        dzcb.model.DigitalChannel("D1", "443.4375", "9", talkgroup=contacts[0]),
-        dzcb.model.DigitalChannel("D2", "443.4375", "9", talkgroup=contacts[1]),
-        dzcb.model.DigitalChannel("D3", "443.4375", "9", talkgroup=contacts[2]),
-        dzcb.model.DigitalChannel(
-            "DR1", "443.4375", "9", static_talkgroups=contacts[:]
-        ),
-        dzcb.model.DigitalChannel(
-            "DR2", "444.4375", "9", static_talkgroups=[contacts[0], contacts[1]]
-        ),
-        dzcb.model.DigitalChannel(
-            "DR3", "445.4375", "9", static_talkgroups=[contacts[3], contacts[4]]
-        ),
-    )
     grouplists = (
         dzcb.model.GroupList("GL_ALL", contacts[:]),
         dzcb.model.GroupList("GL_GRP", contacts[:3]),
         dzcb.model.GroupList("GL_PRV", contacts[3:]),
+    )
+    channels = (
+        dzcb.model.AnalogChannel("A1", "146.520", "6.0"),
+        dzcb.model.AnalogChannel("A2", "146.530", "6.0"),
+        dzcb.model.AnalogChannel("A3", "146.540", "6.0"),
+        dzcb.model.DigitalChannel(
+            "D1", "443.4375", "9", talkgroup=contacts[0], grouplist=grouplists[0]
+        ),
+        dzcb.model.DigitalChannel(
+            "D2", "443.4375", "9", talkgroup=contacts[1], grouplist=grouplists[1]
+        ),
+        dzcb.model.DigitalChannel(
+            "D3", "443.4375", "9", talkgroup=contacts[2], grouplist=grouplists[1]
+        ),
+        dzcb.model.DigitalChannel(
+            "DR1",
+            "443.4375",
+            "9",
+            static_talkgroups=contacts[:],
+            grouplist=grouplists[1],
+        ),
+        dzcb.model.DigitalChannel(
+            "DR2",
+            "444.4375",
+            "9",
+            static_talkgroups=[contacts[0], contacts[1]],
+            grouplist=grouplists[1],
+        ),
+        dzcb.model.DigitalChannel(
+            "DR3",
+            "445.4375",
+            "9",
+            static_talkgroups=[contacts[3], contacts[4]],
+            grouplist=grouplists[2],
+        ),
     )
     scanlists = (
         dzcb.model.ScanList("SL_ALL", channels[:]),
@@ -252,3 +275,42 @@ def test_Channel_exclude_replacements(complex_codeplug):
         "D2",
         "DigitalRepeater1",
     ]
+
+
+def test_Grouplist_replacements(complex_codeplug):
+    old = "GL_ALL"
+    new = "gl_all"
+    gl_replacements = complex_codeplug.filter(
+        include=dzcb.model.Ordering(channels=["D1"]),
+        replacements=dzcb.model.Replacements(grouplists=((old, new),)),
+    )
+    assert gl_replacements.channels[0].grouplist_name(complex_codeplug) == old
+    assert gl_replacements.channels[0].grouplist_name(gl_replacements) == new
+
+
+def test_Contact_replacements(complex_codeplug):
+    ct_replacements = complex_codeplug.filter(
+        replacements=dzcb.model.Replacements(contacts=(("CT1", "ContactOne"),)),
+        include=dzcb.model.Ordering(contacts=["ContactOne", "CT2"]),
+        exclude=dzcb.model.Ordering(channels=["A"]),
+    )
+    assert [ch.name for ch in ct_replacements.channels] == ["D1", "D2", "DR1", "DR2"]
+    assert ct_replacements.channels[0].talkgroup.name == "ContactOne"
+    assert ct_replacements.channels[1].talkgroup.name == "CT2"
+    assert [tg.name for tg in ct_replacements.channels[2].static_talkgroups] == [
+        "ContactOne",
+        "CT2",
+    ]
+    assert [tg.name for tg in ct_replacements.channels[3].static_talkgroups] == [
+        "ContactOne",
+        "CT2",
+    ]
+
+
+def test_lookup_table_regen(complex_codeplug):
+    with pytest.raises(KeyError):
+        complex_codeplug.lookup("foo")
+    assert complex_codeplug._lookup_table is not None
+    new_cp = complex_codeplug.filter()
+    assert new_cp._lookup_table is None
+    assert complex_codeplug._lookup_table is not None

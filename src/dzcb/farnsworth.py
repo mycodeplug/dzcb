@@ -127,12 +127,12 @@ AnalogChannel_name_maps = dict(
 )
 
 
-def AnalogChannel_to_dict(c):
+def AnalogChannel_to_dict(c, codeplug):
     d = DefaultChannel.copy()
     d.update(
         {
             "ChannelMode": "Analog",
-            "ScanList": dzcb.munge.zone_name(c.scanlist, NAME_MAX),
+            "ScanList": dzcb.munge.zone_name(c.scanlist_name(codeplug), NAME_MAX),
         }
     )
     d.update(
@@ -168,15 +168,15 @@ DigitalChannel_name_maps = dict(
 )
 
 
-def DigitalChannel_to_dict(c):
+def DigitalChannel_to_dict(c, codeplug):
     d = DefaultChannel.copy()
     d.update(
         {
             "ChannelMode": "Digital",
             "RepeaterSlot": str(c.talkgroup.timeslot) if c.talkgroup else 1,
             "ContactName": str(c.talkgroup.name) if c.talkgroup else "Parrot 1",
-            "GroupList": str(c.grouplist.name) if c.grouplist else None,
-            "ScanList": dzcb.munge.zone_name(c.scanlist, NAME_MAX),
+            "GroupList": str(c.grouplist_name(codeplug)) if c.grouplist else None,
+            "ScanList": dzcb.munge.zone_name(c.scanlist_name(codeplug), NAME_MAX),
         }
     )
     d.update(
@@ -197,12 +197,12 @@ Channel_value_replacements = {
 }
 
 
-def Channel_to_dict(c):
+def Channel_to_dict(c, codeplug):
     d = None
     if isinstance(c, AnalogChannel):
-        d = AnalogChannel_to_dict(c)
+        d = AnalogChannel_to_dict(c, codeplug)
     elif isinstance(c, DigitalChannel):
-        d = DigitalChannel_to_dict(c)
+        d = DigitalChannel_to_dict(c, codeplug)
     if d is None:
         raise ValueError("Unknown type: {}".format(c))
     return {k: Channel_value_replacements.get(v, str(v)) for k, v in d.items()}
@@ -236,7 +236,7 @@ def Codeplug_to_json(cp, based_on=None):
                 Contact_to_dict(c)
                 for c in uniquify_contacts(cp.contacts, key=lambda ct: ct.name)
             ],
-            Channels=[Channel_to_dict(c) for c in cp.channels],
+            Channels=[Channel_to_dict(c, cp) for c in cp.channels],
             GroupLists=[GroupList_to_dict(c) for c in cp.grouplists],
             ScanLists=[ScanList_to_dict(c) for c in cp.scanlists],
             Zones=[Zone_to_dict(c) for c in cp.zones],

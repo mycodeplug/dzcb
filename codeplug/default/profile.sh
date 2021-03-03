@@ -9,5 +9,5 @@ python -m cProfile -o $OUTPUT/profile -m dzcb \
     --repeaterbook-state washington oregon \
     --repeaterbook-proximity-csv "$DIR/../../src/dzcb/data/repeaterbook_proximity_zones.csv" \
     --scanlists-json $DIR/scanlists.json \
-    --order order.csv -- \
+    --order $DIR/order.csv -- \
 $OUTPUT/default
