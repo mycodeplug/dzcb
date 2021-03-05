@@ -158,7 +158,7 @@ class Power(ConvertibleEnum):
         raise ValueError("No known powers are allowed {!r} from {!r}".format(self, allowed_powers))
 
 
-class Bandwidth(enum.Enum):
+class Bandwidth(ConvertibleEnum):
     _125 = "12.5"
     _20 = "20"
     _25 = "25"
@@ -245,9 +245,9 @@ class AnalogChannel(Channel):
     )
     # configurable bandwidth for analog (technically should be enum)
     bandwidth = attr.ib(
-        default=25,
-        validator=attr.validators.instance_of(float),
-        converter=float,
+        default=Bandwidth._25,
+        validator=attr.validators.instance_of(Bandwidth),
+        converter=Bandwidth.from_any,
     )
     # configurable squelch for analog
     squelch = attr.ib(
@@ -260,7 +260,7 @@ class AnalogChannel(Channel):
 @attr.s(frozen=True)
 class DigitalChannel(Channel):
     # fixed bandwidth for digital
-    bandwidth = 12.5
+    bandwidth = Bandwidth._125
     squelch = 0
     color_code = attr.ib(default=1)
     grouplist = attr.ib(
