@@ -171,16 +171,20 @@ class Bandwidth(ConvertibleEnum):
         raise ValueError("No known bandwidths are allowed {!r} from {!r}".format(self, allowed_bandwidths))
 
 
+def round_frequency(freq, ndigits=5):
+    return round(float(freq), ndigits)
+
+
 @attr.s(frozen=True)
 class Channel:
     """Common channel attributes"""
 
     name = attr.ib(eq=False, validator=attr.validators.instance_of(str))
-    frequency = attr.ib(validator=attr.validators.instance_of(float), converter=float)
+    frequency = attr.ib(validator=attr.validators.instance_of(float), converter=round_frequency)
     offset = attr.ib(
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(float)),
-        converter=attr.converters.optional(float),
+        converter=attr.converters.optional(round_frequency),
     )
     power = attr.ib(
         default=Power.HIGH,
