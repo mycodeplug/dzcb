@@ -5,7 +5,17 @@ https://github.com/OpenRTX/dmrconfig
 """
 
 import enum
-from typing import Iterable, Any, Sequence, Tuple, Optional, Callable, Union, Dict
+from typing import (
+    Iterable,
+    Any,
+    Sequence,
+    Tuple,
+    Optional,
+    Callable,
+    Union,
+    Dict,
+    ClassVar,
+)
 
 import attr
 
@@ -489,10 +499,63 @@ def evolve_from_factory(table_type):
     return attr.Factory(_evolve_from, takes_self=True)
 
 
+class TemplateError(ValueError):
+    pass
+
+
+@attr.s
+class DmrConfigTemplate:
+    header = attr.ib(factory=list)
+    footer = attr.ib(factory=list)
+    radio = attr.ib(
+        default=None,
+        validator=attr.validators.optional(attr.validators.instance_of(Radio)),
+    )
+
+    @classmethod
+    def read_template(cls: ClassVar, template: str) -> ClassVar:
+        """
+        return DmrConfigTemplate
+
+        raise TemplateError if template doesn't contain a valid "Radio: X" line
+        """
+        t = cls()
+        for tline in template.splitlines():
+            if t.radio is None:
+                t.header.append(tline)
+                _, match, radio_type = tline.partition("Radio: ")
+                if match:
+                    t.radio = Radio(radio_type)
+                    continue
+            elif (
+                "last programmed date" in tline.lower()
+                or "cps software version" in tline.lower()
+            ):
+                t.header.append(tline)
+            else:
+                t.footer.append(tline)
+        if t.radio is None:
+            raise TemplateError("template should specify a radio type")
+        t.header.append("")  # add a blank line before the generated content
+        return t
+
+
 @attr.s
 class Dmrconfig_Codeplug:
-    radio = attr.ib(validator=attr.validators.instance_of(Radio))
+    """
+    A template should be a dmrconfig file with the analog, digital,
+    contacts, groupslists, and scanlists removed. These will be
+    filled in from the dzcb.model.Codeplug in the Table.
+
+    radio is an optional field, and may be supplied by the template.
+    """
+
     table = attr.ib(validator=attr.validators.instance_of(Table))
+    template = attr.ib(
+        default=None,
+        converter=attr.converters.optional(DmrConfigTemplate.read_template),
+    )
+    radio = attr.ib(validator=attr.validators.instance_of(Radio))
     digital = attr.ib(default=evolve_from_factory(DigitalChannelTable))
     analog = attr.ib(default=evolve_from_factory(AnalogChannelTable))
     zone = attr.ib(default=evolve_from_factory(ZoneTable))
@@ -500,64 +563,47 @@ class Dmrconfig_Codeplug:
     contact = attr.ib(default=evolve_from_factory(ContactsTable))
     grouplist = attr.ib(default=evolve_from_factory(GrouplistTable))
 
-    def __str__(self):
-        output = ["Written by dzcb.output.dmrconfig v. {}".format(__version__)]
-        analog_table = [
-            self.analog.docs(
-                channel_limit=format_ranges([channel_limit[self.radio]]),
-                name_limit=name_limit[self.radio],
-                power=", ".join(p.value for p in power[self.radio]),
-                bandwidth=", ".join(b.value for b in bandwidth[self.radio]),
-            ),
-            self.analog.header(),
-        ]
-        digital_table = [
-            self.digital.docs(
-                channel_limit=format_ranges([channel_limit[self.radio]]),
-                name_limit=name_limit[self.radio],
-                power=", ".join(p.value for p in power[self.radio]),
-            ),
-            self.digital.header(),
-        ]
-        for ix, ch in enumerate(self.table.codeplug.channels):
-            if isinstance(ch, AnalogChannel):
-                analog_table.append(self.analog.format_row(ix + 1, ch))
-            if isinstance(ch, DigitalChannel) and ch.talkgroup is not None:
-                digital_table.append(self.digital.format_row(ix + 1, ch))
+    @radio.default
+    def _radio_default(self):
+        if self.template:
+            return self.template.radio
 
-        output.extend(analog_table)
-        output.extend(digital_table)
-
-        output.append(
-            self.contact.docs(contact_limit=format_ranges([contact_limit[self.radio]]))
+    def render_template(self):
+        return "\n".join(
+            tuple(self.template.header) + self.render() + tuple(self.template.footer),
         )
-        output.append(self.contact.header())
-        for ix, contact in enumerate(self.table.codeplug.contacts):
-            output.append(self.contact.format_row(ix + 1, contact))
 
-        output.append(
-            self.grouplist.docs(
-                grouplist_limit=format_ranges([grouplist_limit[self.radio]])
+    def render(self):
+        return (
+            (
+                "# Written by dzcb.output.dmrconfig v. {}".format(__version__),
+                self.analog.docs(),
+                self.analog.header(),
             )
-        )
-        output.append(self.grouplist.header())
-        for ix, grouplist in enumerate(self.table.codeplug.grouplists):
-            output.append(self.grouplist.format_row(ix + 1, grouplist))
-
-        output.append(
-            self.scanlist.docs(
-                scanlist_limit=format_ranges([scanlist_limit[self.radio]])
+            + tuple(self.analog)
+            + (
+                self.digital.docs(),
+                self.digital.header(),
             )
+            + tuple(self.digital)
+            + (
+                self.contact.docs(),
+                self.contact.header(),
+            )
+            + tuple(self.contact)
+            + (
+                self.grouplist.docs(),
+                self.grouplist.header(),
+            )
+            + tuple(self.grouplist)
+            + (
+                self.scanlist.docs(),
+                self.scanlist.header(),
+            )
+            + tuple(self.scanlist)
+            + (
+                self.zone.docs(),
+                self.zone.header(),
+            )
+            + tuple(self.zone)
         )
-        output.append(self.scanlist.header())
-        for ix, scanlist in enumerate(self.table.codeplug.scanlists):
-            output.append(self.scanlist.format_row(ix + 1, scanlist))
-
-        output.append(
-            self.zone.docs(zone_limit=format_ranges([zone_limit[self.radio]]))
-        )
-        output.append(self.zone.header())
-        for ix, zone in enumerate(self.table.codeplug.zones):
-            output.append(self.zone.format_row(ix + 1, zone))
-
-        return "\n".join(output)
