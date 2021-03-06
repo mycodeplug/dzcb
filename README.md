@@ -42,6 +42,33 @@ use as the template for settings and radio capabilities.
 `dzcb` includes basic template files for [MD380/390](./codeplug/default-tyt-md380)
 and [MD-UV380/390](./src/dzcb/data/farnsworth).
 
+## [OpenRTX/dmrconfig](https://github.com/OpenRTX/dmrconfig)
+
+For import into [`dmrconfig`]((https://github.com/OpenRTX/dmrconfig) 1.1
+utility with theoretical support for:
+
+* Anytone AT-D868UV
+* Anytone AT-D878UV
+* BTECH DMR-6x2
+* Baofeng DM-1801
+* Radioddity GD-77
+* TYT MD-380
+* TYT MD-390
+* Zastone D900
+* Zastone DP880
+* Radtel RT-27D
+* Baofeng RD-5R
+* TYT MD-UV380
+* TYT MD-UV390
+* TYT MD-2017
+* TYT MD-9600
+* Retevis RT84
+
+Use `--dmrconfig-template` to specify an exported codeplug (with analog, digital,
+contacts, grouplists, scanlists, and zones REMOVED) to use as a template
+for radio type, messages, DMR ID, and startup text. The output directory
+will contain a dmrconfig config per template specified.
+
 ## Anytone CPS
 
 For import into the official Anytone CPS (windows-only).
