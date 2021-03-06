@@ -132,6 +132,7 @@ def AnalogChannel_to_dict(c, codeplug):
     d.update(
         {
             "ChannelMode": "Analog",
+            "Bandwidth": c.bandwidth.value,
             "ScanList": dzcb.munge.zone_name(c.scanlist_name(codeplug), NAME_MAX),
         }
     )
@@ -153,7 +154,6 @@ def AnalogChannel_to_dict(c, codeplug):
             d["CtcssDecode"] += "N"
     else:
         d["CtcssDecode"] = "None"
-    d["Bandwidth"] = str(round(d["Bandwidth"], 1)).replace(".0", "")
     return d
 
 
