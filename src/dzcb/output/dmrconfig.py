@@ -246,6 +246,7 @@ class Table:
     codeplug = attr.ib(validator=attr.validators.instance_of(Codeplug))
     radio = attr.ib(default=Radio.D868UV, validator=attr.validators.instance_of(Radio))
     index = attr.ib(validator=attr.validators.instance_of(CodeplugIndexLookup))
+    include_docs = attr.ib(default=True, validator=attr.validators.instance_of(bool))
 
     object_name = ""
     field_names = tuple()
@@ -260,6 +261,14 @@ class Table:
 
     def header(self):
         return self.fmt.format(**{k: k for k in self.field_names})
+
+    def render(self):
+        output = []
+        if self.include_docs:
+            output.append(self.docs())
+        output.append(self.header())
+        output.extend(self)
+        return tuple(output)
 
     def item_to_dict(self, ix, item):
         raise NotImplementedError
@@ -548,6 +557,11 @@ class DmrConfigTemplate:
         validator=attr.validators.optional(attr.validators.instance_of(Radio)),
     )
 
+    _header_lines = (
+        "last programmed date",
+        "cps software version",
+    )
+
     @classmethod
     def read_template(cls: ClassVar, template: str) -> ClassVar:
         """
@@ -557,16 +571,15 @@ class DmrConfigTemplate:
         """
         t = cls()
         for tline in template.splitlines():
+            if "$DATE" in tline:
+                tline = tline.replace("$DATE", time.strftime("%Y-%m-%d"))
             if t.radio is None:
                 t.header.append(tline)
                 _, match, radio_type = tline.partition("Radio: ")
                 if match:
                     t.radio = Radio.from_name(radio_type)
                     continue
-            elif (
-                "last programmed date" in tline.lower()
-                or "cps software version" in tline.lower()
-            ):
+            elif any(l in tline.lower() for l in cls._header_lines):
                 t.header.append(tline)
             else:
                 t.footer.append(tline)
@@ -611,35 +624,11 @@ class Dmrconfig_Codeplug:
 
     def render(self):
         return (
-            (
-                "# Written by dzcb.output.dmrconfig v. {}".format(__version__),
-                self.analog.docs(),
-                self.analog.header(),
-            )
-            + tuple(self.analog)
-            + (
-                self.digital.docs(),
-                self.digital.header(),
-            )
-            + tuple(self.digital)
-            + (
-                self.contact.docs(),
-                self.contact.header(),
-            )
-            + tuple(self.contact)
-            + (
-                self.grouplist.docs(),
-                self.grouplist.header(),
-            )
-            + tuple(self.grouplist)
-            + (
-                self.scanlist.docs(),
-                self.scanlist.header(),
-            )
-            + tuple(self.scanlist)
-            + (
-                self.zone.docs(),
-                self.zone.header(),
-            )
-            + tuple(self.zone)
+            ("# Written by dzcb.output.dmrconfig v. {}".format(__version__),)
+            + self.analog.render()
+            + self.digital.render()
+            + self.contact.render()
+            + self.grouplist.render()
+            + self.scanlist.render()
+            + self.zone.render()
         )
