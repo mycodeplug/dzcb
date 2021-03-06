@@ -95,32 +95,13 @@ power = {
     Radio.MD_UV380: {Power.HIGH: "High", Power.MED: "Mid", Power.LOW: "Low"},
 }
 
-power = {
-    Radio.D868: {
-        Power.HIGH: "High",
-        Power.MED: "Mid",
-        Power.LOW: "Low",
-        Power.TURBO: "Turbo",
-    },
-    Radio.DMR6X2: {
-        Power.HIGH: "High",
-        Power.MED: "Mid",
-        Power.LOW: "Low",
-        Power.TURBO: "Turbo",
-    },
-    Radio.RD5R: {Power.HIGH: "High", Power.LOW: "Low"},
-    Radio.GD77: {Power.HIGH: "High", Power.LOW: "Low"},
-    Radio.MD_380: {Power.HIGH: "High", Power.LOW: "Low"},
-    Radio.MD_UV380: {Power.HIGH: "High", Power.MED: "Mid", Power.LOW: "Low"},
-}
-
 bandwidth = {
     Radio.D868: {Bandwidth._125: "12.5", Bandwidth._25: "25"},
     Radio.DMR6X2: {Bandwidth._125: "12.5", Bandwidth._25: "25"},
-    Radio.RD5R: {Power.HIGH: "High", Power.LOW: "Low"},
-    Radio.GD77: {Power.HIGH: "High", Power.LOW: "Low"},
-    Radio.MD_380: {Power.HIGH: "High", Power.LOW: "Low"},
-    Radio.MD_UV380: {Power.HIGH: "High", Power.MED: "Mid", Power.LOW: "Low"},
+    Radio.RD5R: {Bandwidth._125: "12.5", Bandwidth._25: "25"},
+    Radio.GD77: {Bandwidth._125: "12.5", Bandwidth._25: "25"},
+    Radio.MD_380: {Bandwidth._125: "12.5", Bandwidth._25: "25"},
+    Radio.MD_UV380: {Bandwidth._125: "12.5", Bandwidth._25: "25"},
 }
 
 plus_minus = {
