@@ -203,6 +203,7 @@ class Table:
     radio = attr.ib(default=Radio.D868, validator=attr.validators.instance_of(Radio))
     index = attr.ib(validator=attr.validators.instance_of(CodeplugIndexLookup))
 
+    object_name = ""
     field_names = tuple()
     fmt = ""
 
@@ -211,7 +212,7 @@ class Table:
         return CodeplugIndexLookup(codeplug=self.codeplug, offset=1)
 
     def docs(self, **replacements):
-        return self.__doc__.format(**replacements).replace("    #", "#")
+        return self.__doc__.rstrip().format(**replacements).replace("    #", "#")
 
     def header(self):
         return self.fmt.format(**{k: k for k in self.field_names})
@@ -226,8 +227,16 @@ class Table:
         return name[: name_limit[self.radio]].replace(" ", "_")
 
     @classmethod
-    def evolve_from(cls, table):
-        return cls(**attr.asdict(table, recurse=False))
+    def evolve_from(cls, table, **kwargs):
+        tdict = attr.asdict(table, recurse=False)
+        tdict.update(kwargs)
+        return cls(**tdict)
+
+    def __iter__(self):
+        if not self.object_name:
+            raise NotImplementedError("No object_name specified for {!r}".format(self))
+        for ix, item in enumerate(getattr(self.codeplug, self.object_name)):
+            yield self.format_row(ix + 1, item)
 
 
 class AnalogChannelTable(Table):
@@ -282,6 +291,20 @@ class AnalogChannelTable(Table):
             Width=ch.bandwidth.flattened(bandwidth[self.radio]).value,
         )
 
+    def docs(self):
+        return super().docs(
+            channel_limit=format_ranges([channel_limit[self.radio]]),
+            name_limit=name_limit[self.radio],
+            power=", ".join(p.value for p in power[self.radio]),
+            bandwidth=", ".join(b.value for b in bandwidth[self.radio]),
+        )
+
+    def __iter__(self):
+        for ix, ch in enumerate(self.codeplug.channels):
+            if not isinstance(ch, AnalogChannel):
+                continue
+            yield self.format_row(ix + 1, ch)
+
 
 class DigitalChannelTable(Table):
     """
@@ -335,6 +358,19 @@ class DigitalChannelTable(Table):
             TxContact=self.index.contact.get(ch.talkgroup, "-"),
         )
 
+    def docs(self):
+        return super().docs(
+            channel_limit=format_ranges([channel_limit[self.radio]]),
+            name_limit=name_limit[self.radio],
+            power=", ".join(p.value for p in power[self.radio]),
+        )
+
+    def __iter__(self):
+        for ix, ch in enumerate(self.codeplug.channels):
+            if not isinstance(ch, DigitalChannel) or ch.talkgroup is None:
+                continue
+            yield self.format_row(ix + 1, ch)
+
 
 class ZoneTable(Table):
     """
@@ -344,6 +380,7 @@ class ZoneTable(Table):
     # 3) List of channels: numbers and ranges (N-M) separated by comma
     """
 
+    object_name = "zones"
     field_names = ("Zone", "Name", "Channels")
     fmt = "{Zone:4} {Name:16} {Channels}"
 
@@ -355,6 +392,9 @@ class ZoneTable(Table):
                 items_to_range_tuples(self.index.channel, zone.unique_channels),
             ),
         )
+
+    def docs(self):
+        return super().docs(zone_limit=format_ranges([zone_limit[self.radio]]))
 
 
 class ScanlistTable(Table):
@@ -368,6 +408,7 @@ class ScanlistTable(Table):
     # 6) List of channels: numbers and ranges (N-M) separated by comma
     """
 
+    object_name = "scanlists"
     field_names = ("Scanlist", "Name", "PCh1", "PCh2", "TxCh", "Channels")
     fmt = "{Scanlist:8} {Name:16} {PCh1:4} {PCh2:4} {TxCh:4} {Channels}"
 
@@ -383,6 +424,9 @@ class ScanlistTable(Table):
             ),
         )
 
+    def docs(self):
+        return super().docs(scanlist_limit=format_ranges([scanlist_limit[self.radio]]))
+
 
 class ContactsTable(Table):
     """
@@ -394,6 +438,7 @@ class ContactsTable(Table):
     # 5) Call receive tone: -, +
     """
 
+    object_name = "contacts"
     field_names = ("Contact", "Name", "Type", "ID", "RxTone")
     fmt = "{Contact:8} {Name:16} {Type:7} {ID:8} {RxTone}"
 
@@ -406,6 +451,9 @@ class ContactsTable(Table):
             RxTone="-",
         )
 
+    def docs(self):
+        return super().docs(contact_limit=format_ranges([contact_limit[self.radio]]))
+
 
 class GrouplistTable(Table):
     """
@@ -415,6 +463,7 @@ class GrouplistTable(Table):
     # 3) List of contacts: numbers and ranges (N-M) separated by comma
     """
 
+    object_name = "grouplists"
     field_names = ("Grouplist", "Name", "Contacts")
     fmt = "{Grouplist:10} {Name:16} {Contacts}"
 
@@ -427,10 +476,15 @@ class GrouplistTable(Table):
             ),
         )
 
+    def docs(self):
+        return super().docs(
+            grouplist_limit=format_ranges([grouplist_limit[self.radio]])
+        )
+
 
 def evolve_from_factory(table_type):
     def _evolve_from(self):
-        return table_type.evolve_from(self.table)
+        return table_type.evolve_from(self.table, radio=self.radio)
 
     return attr.Factory(_evolve_from, takes_self=True)
 
