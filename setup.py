@@ -22,7 +22,7 @@ setuptools.setup(
     author_email='m_github@0x26.net',
     url='https://github.com/masenf/dzcb',
     package_dir={"": 'src'},
-    package_data={'dzcb': ['data/*.json', 'data/*.csv', 'data/k7abd/*.csv', 'data/farnsworth/*.json']},
+    package_data={'dzcb': ['data/*.json', 'data/*.csv', 'data/k7abd/*.csv', 'data/farnsworth/*.json', 'data/dmrconfig/*.conf']},
     packages=setuptools.find_packages('src'),
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
     python_requires='>=3.6,<4',
