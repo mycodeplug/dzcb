@@ -56,6 +56,14 @@ class RadioDetail:
             value_validator=attr.validators.instance_of(str),
         )
     )
+    zone_has_ab = attr.ib(default=False, validator=attr.validators.instance_of(bool))
+    n_zone_channels = attr.ib(default=16, validator=attr.validators.instance_of(int))
+    n_scanlist_channels = attr.ib(
+        default=32, validator=attr.validators.instance_of(int)
+    )
+    n_grouplist_contacts = attr.ib(
+        default=32, validator=attr.validators.instance_of(int)
+    )
 
     @power.default
     def _power_default(self):
@@ -86,6 +94,9 @@ class RadioDetail:
 # https://github.com/OpenRTX/dmrconfig/blob/master/d868uv.c
 _d868uv_c = RadioDetail(
     name="Anytone AT-D868UV",
+    n_zone_channels=250,
+    n_scanlist_channels=50,
+    n_grouplist_contacts=64,
 )
 
 # https://github.com/OpenRTX/dmrconfig/blob/master/dm1801.c
@@ -97,10 +108,15 @@ _dm1801_c = RadioDetail(
     nglists=76,
     nscanl=64,
     power={Power.HIGH: "High", Power.LOW: "Low"},
+    n_zone_channels=32,
 )
 
 # https://github.com/OpenRTX/dmrconfig/blob/master/gd77.c
-_gd77_c = attr.evolve(_dm1801_c, name="Radioddity GD-77", nzones=250)
+_gd77_c = attr.evolve(
+    _dm1801_c,
+    name="Radioddity GD-77",
+    nzones=250,
+)
 
 # https://github.com/OpenRTX/dmrconfig/blob/master/md380.c
 _md380_c = RadioDetail(
@@ -109,6 +125,7 @@ _md380_c = RadioDetail(
     ncontacts=1000,
     power={Power.HIGH: "High", Power.LOW: "Low"},
     bandwidth={Bandwidth._125: "12.5", Bandwidth._20: "20", Bandwidth._25: "25"},
+    n_scanlist_channels=31,
 )
 
 # https://github.com/OpenRTX/dmrconfig/blob/master/rd5r.c
@@ -118,6 +135,7 @@ _rd5r_c = RadioDetail(
     ncontacts=256,
     nglists=64,
     power={Power.HIGH: "High", Power.LOW: "Low"},
+    n_grouplist_contacts=16,
 )
 
 # https://github.com/OpenRTX/dmrconfig/blob/master/ub380.c
@@ -127,6 +145,9 @@ _uv380_c = RadioDetail(
     ncontacts=10000,
     power={Power.HIGH: "High", Power.MED: "Mid", Power.LOW: "Low"},
     bandwidth={Bandwidth._125: "12.5", Bandwidth._20: "20", Bandwidth._25: "25"},
+    zone_has_ab=True,
+    n_zone_channels=64,
+    n_scanlist_channels=31,
 )
 
 
@@ -192,18 +213,23 @@ def items_to_range_tuples(
     items_by_index: Dict[Any, int],
     selected_items: Iterable[Any],
     key: Optional[Callable] = None,
-    max: Optional[int] = None,
+    max_index: Optional[int] = None,
+    max_count: Optional[int] = None,
 ) -> Sequence[Range]:
     """
     Return an sequence of indexes and range tuples - (start, enc) of selected_items within all_items
     """
+    count = 0
     selected_ranges = []
     for selected_index in tuple(
         items_by_index[key(item) if key else item] for item in selected_items
     ):
-        if max is not None and selected_index > max:
+        if max_index is not None and selected_index > max_index:
             # index out of range for radio type
             continue
+        count += 1
+        if count > max_count:
+            break
         if not selected_ranges:
             selected_ranges.append(selected_index)
             continue
@@ -216,7 +242,14 @@ def items_to_range_tuples(
         else:
             # skipped some
             selected_ranges.append(selected_index)
-    return tuple(selected_ranges)
+    # split apart tuples of consecutive numbers
+    exploded_ranges = []
+    for rng in selected_ranges:
+        if isinstance(rng, tuple) and (rng[1] - rng[0]) == 1:
+            exploded_ranges.extend(rng)
+        else:
+            exploded_ranges.append(rng)
+    return tuple(exploded_ranges)
 
 
 def offset_ranges(ranges: Sequence[Range], offset: int) -> Sequence[Range]:
@@ -239,7 +272,7 @@ def ranges_to_total_items(ranges: Sequence[Range]) -> int:
     total = 0
     for r in ranges:
         if isinstance(r, tuple):
-            total += r[1] - r[0]
+            total += r[1] - r[0] + 1
         else:
             total += 1
     return total
@@ -310,7 +343,7 @@ class Table:
     def format_row(self, ix, item):
         item_dict = self.item_to_dict(ix, item)
         if item_dict:
-            return self.fmt.format(**self.item_to_dict(ix, item))
+            return self.fmt.format(**item_dict)
 
     def name_munge(self, name):
         return name[: self.radio.value.name_limit].replace(" ", "_")
@@ -524,35 +557,52 @@ class ZoneTable(Table):
     field_names = ("Zone", "Name", "Channels")
     fmt = "{Zone:4} {Name:16} {Channels}"
 
-    def channels(self, zone):
-        chlimit = self.radio.value.nchan
+    def channels(self, zone, channel_list):
+        ch_index_limit = self.radio.value.nchan
+        ch_max = self.radio.value.n_zone_channels
         channel_ranges = items_to_range_tuples(
-            self.index.channel, zone.unique_channels, max=chlimit
+            self.index.channel,
+            channel_list,
+            max_index=ch_index_limit,
+            max_count=ch_max,
         )
         channels = format_ranges(channel_ranges)
         if not channels:
             return
         len_channels_in_range = ranges_to_total_items(channel_ranges)
-        if len(zone.unique_channels) < len_channels_in_range:
+        if len_channels_in_range < len(channel_list):
             logger.debug(
                 "Pruned {} channels beyond limit ({}) from zone {}".format(
-                    len(zone.unique_channels) - len_channels_in_range,
-                    chlimit,
+                    len(channel_list) - len_channels_in_range,
+                    ch_max,
                     zone.name,
                 )
             )
         return channels
 
-    def item_to_dict(self, index, zone):
-        channels = self.channels(zone)
+    def item_to_dict(self, index, zone, attribute="unique_channels"):
+        channels = self.channels(zone, channel_list=getattr(zone, attribute))
         if not channels:
-            logger.debug("Ignoring zone {} with no channels".format(zone.name))
+            logger.debug("Ignoring empty zone {}".format(zone.name))
             return
         return dict(
             Zone=index,
             Name=self.name_munge(zone.name),
             Channels=channels,
         )
+
+    def format_row(self, ix, item):
+        zone_dicts = []
+        if self.radio.value.zone_has_ab:
+            for ab in ("a", "b"):
+                zchs = self.item_to_dict(f"{ix}{ab}", item, f"channels_{ab}")
+                if zchs:
+                    zone_dicts.append(zchs)
+        else:
+            zchs = self.item_to_dict(ix, item)
+            if zchs:
+                zone_dicts.append(zchs)
+        return "\n".join(self.fmt.format(**zone) for zone in zone_dicts)
 
     def docs(self):
         return super().docs(zone_limit=f"1-{self.radio.value.nzones}")
@@ -574,19 +624,23 @@ class ScanlistTable(Table):
     fmt = "{Scanlist:8} {Name:16} {PCh1:4} {PCh2:4} {TxCh:4} {Channels}"
 
     def channels(self, scanlist):
-        chlimit = self.radio.value.nchan
+        ch_index_limit = self.radio.value.nchan
+        ch_max = self.radio.value.n_scanlist_channels
         channel_ranges = items_to_range_tuples(
-            self.index.channel, scanlist.channels, max=chlimit
+            self.index.channel,
+            scanlist.channels,
+            max_index=ch_index_limit,
+            max_count=ch_max,
         )
         channels = format_ranges(channel_ranges)
         if not channels:
             return
         len_channels_in_range = ranges_to_total_items(channel_ranges)
-        if len(scanlist.channels) < len_channels_in_range:
+        if len_channels_in_range < len(scanlist.channels):
             logger.debug(
                 "Pruned {} channels beyond limit ({}) from scanlist {}".format(
                     len(scanlist.channels) - len_channels_in_range,
-                    chlimit,
+                    ch_max,
                     scanlist.name,
                 )
             )
@@ -595,7 +649,7 @@ class ScanlistTable(Table):
     def item_to_dict(self, index, scanlist):
         channels = self.channels(scanlist)
         if not channels:
-            logger.debug("Ignoring scanlist {} with no channels".format(scanlist.name))
+            logger.debug("Ignoring empty scanlist {}".format(scanlist.name))
             return
         return dict(
             Scanlist=index,
@@ -650,19 +704,23 @@ class GrouplistTable(Table):
     fmt = "{Grouplist:10} {Name:16} {Contacts}"
 
     def contacts(self, grouplist):
-        ctlimit = self.radio.value.ncontacts
+        ct_index_limit = self.radio.value.ncontacts
+        ct_max = self.radio.value.n_grouplist_contacts
         contact_ranges = items_to_range_tuples(
-            self.index.contact, grouplist.contacts, max=ctlimit
+            self.index.contact,
+            grouplist.contacts,
+            max_index=ct_index_limit,
+            max_count=ct_max,
         )
         contacts = format_ranges(contact_ranges)
         if not contacts:
             return
         len_contacts_in_range = ranges_to_total_items(contact_ranges)
-        if len(grouplist.contacts) < len_contacts_in_range:
+        if len_contacts_in_range < len(grouplist.contacts):
             logger.debug(
-                "Pruned {} contacts beyond limit ({}) from grouplist {}".format(
+                "Pruned {} contacts beyond limits ({}) from grouplist {}".format(
                     len(grouplist.contacts) - len_contacts_in_range,
-                    ctlimit,
+                    ct_max,
                     grouplist.name,
                 )
             )
@@ -671,9 +729,7 @@ class GrouplistTable(Table):
     def item_to_dict(self, index, grouplist):
         contacts = self.contacts(grouplist)
         if not contacts:
-            logger.debug(
-                "Ignoring grouplist {} with no channels".format(grouplist.name)
-            )
+            logger.debug("Ignoring empty grouplist {}".format(grouplist.name))
             return
         return dict(
             Grouplist=index,
