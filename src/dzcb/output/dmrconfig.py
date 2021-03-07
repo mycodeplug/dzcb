@@ -325,14 +325,14 @@ class AnalogChannelTable(Table):
         "TxTone",
         "Width",
     )
-    fmt = "{Analog:6} {Name:16} {Receive:8} {Transmit:8} {Power:5} {Scan:4} {TOT:3} {RO:2} {Admit:5} {Squelch:7} {RxTone:6} {TxTone:6} {Width}"
+    fmt = "{Analog:6} {Name:16} {Receive:8} {Transmit:8} {Power:6} {Scan:4} {TOT:3} {RO:2} {Admit:5} {Squelch:7} {RxTone:6} {TxTone:6} {Width}"
 
     def item_to_dict(self, index, ch):
         return dict(
             Analog=index,
             Name=self.name_munge(ch.short_name),
             Receive=ch.frequency,
-            Transmit=ch.frequency + ch.offset,
+            Transmit=ch.transmit_frequency,
             Power=ch.power.flattened(self.radio.value.power).value,
             Scan=self.index.scanlist_id.get(ch.scanlist, "-"),
             TOT=90,  # TODO: how to expose this parameter
@@ -393,14 +393,20 @@ class DigitalChannelTable(Table):
         "RxGL",
         "TxContact",
     )
-    fmt = "{Digital:7} {Name:16} {Receive:8} {Transmit:8} {Power:5} {Scan:4} {TOT:3} {RO:2} {Admit:5} {Color:5} {Slot:4} {RxGL:4} {TxContact}"
+    fmt = "{Digital:7} {Name:16} {Receive:8} {Transmit:8} {Power:6} {Scan:4} {TOT:3} {RO:2} {Admit:5} {Color:5} {Slot:4} {RxGL:4} {TxContact:5}"
 
     def item_to_dict(self, index, ch):
+        tx_contact = "-"
+        if ch.talkgroup:
+            tx_contact = "{index:5}   # {name}".format(
+                index=self.index.contact[ch.talkgroup],
+                name=ch.talkgroup.name,
+            )
         return dict(
             Digital=index,
             Name=self.name_munge(ch.short_name),
             Receive=ch.frequency,
-            Transmit=ch.frequency + ch.offset,
+            Transmit=ch.transmit_frequency,
             Power=ch.power.flattened(self.radio.value.power).value,
             Scan=self.index.scanlist_id.get(ch.scanlist, "-"),
             TOT=90,  # TODO: how to expose this parameter
@@ -409,7 +415,7 @@ class DigitalChannelTable(Table):
             Color=ch.color_code,
             Slot=ch.talkgroup.timeslot.value,
             RxGL=self.index.grouplist_id.get(ch.grouplist, "-"),
-            TxContact=self.index.contact.get(ch.talkgroup, "-"),
+            TxContact=tx_contact,
         )
 
     def docs(self):
