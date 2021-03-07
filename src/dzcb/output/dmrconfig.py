@@ -876,10 +876,17 @@ class DmrConfigTemplate:
         def save_line(line):
             consuming_table["lines"].append(line)
 
+        def remove_preceding_blank():
+            # if a preceding blank line was saved, remove it
+            if not t.footer[-1]:
+                del t.footer[-1]
+
         def keep_or_drop_table():
             if consuming_table["name"] is not None:
                 if consuming_table["name"] not in cls._remove_tables:
                     t.footer.extend(consuming_table["lines"])
+                else:
+                    remove_preceding_blank()
                 consuming_table["name"] = None
                 consuming_table["lines"] = []
 
@@ -912,7 +919,6 @@ class DmrConfigTemplate:
                 t.footer.append(tline)
         if t.radio is None:
             raise TemplateError("template should specify a radio type")
-        t.header.append("")  # add a blank line before the generated content
         return t
 
 
@@ -970,7 +976,7 @@ class Dmrconfig_Codeplug:
 
     def render(self):
         preamble = (
-            ("# Written by dzcb.output.dmrconfig dzcb-{}".format(__version__),)
+            ("", self.template.version_comment_line)
             if self.template.include_version
             else tuple()
         )
