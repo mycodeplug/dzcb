@@ -7,6 +7,7 @@ https://github.com/OpenRTX/dmrconfig
 import datetime
 import enum
 import logging
+import re
 import time
 from typing import (
     Iterable,
@@ -788,6 +789,10 @@ class DmrConfigTemplate:
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(bool)),
     )
+    include_version = attr.ib(
+        default=None,
+        validator=attr.validators.optional(attr.validators.instance_of(bool)),
+    )
 
     _header_lines = (
         "last programmed date",
@@ -801,6 +806,12 @@ class DmrConfigTemplate:
         "$SECTIME": lambda: time.strftime("%H:%M:%S"),
     }
 
+    _remove_tables = ("Analog", "Digital", "Zone", "Scanlist", "Contact", "Grouplist")
+    _known_tables = _remove_tables + ("Message",)
+    _comment_rex = re.compile(r"^\s*#")
+    _table_of_comment_rex = re.compile(r"^\s*# Table of", flags=re.IGNORECASE)
+    _table_row_rex = re.compile(r"^\s+[0-9]+")
+
     @classmethod
     def _replace_variables(cls, line):
         for var, repl in cls._template_variables.items():
@@ -813,23 +824,42 @@ class DmrConfigTemplate:
 
     @staticmethod
     def _parse_ranges(line):
-        _, match, ranges = line.partition("!dzcb.ranges: ")
+        _, match, ranges = line.partition("!dzcb.ranges:")
         if match:
             return tuple(
                 rng.split("-", maxsplit=1) for rng in ranges.strip().split(",")
             )
 
     @staticmethod
-    def _parse_radio(line):
-        _, match, radio_type = line.partition("Radio: ")
-        if match:
-            return Radio.from_name(radio_type)
-
-    @staticmethod
     def _parse_include_docs(line):
         _, match, include_docs = line.partition("!dzcb.include_docs:")
         if match:
             return plus_minus[include_docs.strip()]
+
+    @staticmethod
+    def _parse_include_version(line):
+        _, match, include_version = line.partition("!dzcb.include_version:")
+        if match:
+            return plus_minus[include_version.strip()]
+
+    _directives = [
+        "ranges",
+        "include_docs",
+        "include_version",
+    ]
+
+    def _parse_directives(self, line):
+        for var in self._directives:
+            if getattr(self, var) is not None:
+                continue
+            parse = getattr(self, f"_parse_{var}")
+            setattr(self, var, parse(line))
+
+    @staticmethod
+    def _parse_radio(line):
+        _, match, radio_type = line.partition("Radio: ")
+        if match:
+            return Radio.from_name(radio_type)
 
     @classmethod
     def read_template(cls: ClassVar, template: str) -> ClassVar:
@@ -838,19 +868,47 @@ class DmrConfigTemplate:
 
         raise TemplateError if template doesn't contain a valid "Radio: X" line
         """
+        consuming_table = dict(
+            name=None,
+            lines=[],
+        )
+
+        def save_line(line):
+            consuming_table["lines"].append(line)
+
+        def keep_or_drop_table():
+            if consuming_table["name"] is not None:
+                if consuming_table["name"] not in cls._remove_tables:
+                    t.footer.extend(consuming_table["lines"])
+                consuming_table["name"] = None
+                consuming_table["lines"] = []
+
         t = cls()
         for tline in template.splitlines():
             tline = cls._replace_variables(tline)
-            if t.ranges is None:
-                t.ranges = cls._parse_ranges(tline)
-            if t.include_docs is None:
-                t.include_docs = cls._parse_include_docs(tline)
+            t._parse_directives(tline)
             if t.radio is None:
                 t.header.append(tline)
                 t.radio = cls._parse_radio(tline)
             elif any(l in tline.lower() for l in cls._header_lines):
                 t.header.append(tline)
+            # parse (and remove) tables
+            elif cls._table_of_comment_rex.match(tline):
+                # table of X comment seen; if we're already consuming a table, dump it
+                keep_or_drop_table()
+                save_line(tline)
+            elif (
+                cls._comment_rex.match(tline) and consuming_table["lines"]
+            ) or cls._table_row_rex.match(tline):
+                # comment in the middle of a table or table row
+                save_line(tline)
+            elif any(tline.startswith(table_name) for table_name in cls._known_tables):
+                # new table header is seen
+                keep_or_drop_table()
+                consuming_table["name"] = tline.strip().partition(" ")[0]
+                save_line(tline)
             else:
+                keep_or_drop_table()
                 t.footer.append(tline)
         if t.radio is None:
             raise TemplateError("template should specify a radio type")
@@ -911,8 +969,13 @@ class Dmrconfig_Codeplug:
         )
 
     def render(self):
-        return (
+        preamble = (
             ("# Written by dzcb.output.dmrconfig dzcb-{}".format(__version__),)
+            if self.template.include_version
+            else tuple()
+        )
+        return (
+            preamble
             + self.analog.render()
             + self.digital.render()
             + self.contact.render()
