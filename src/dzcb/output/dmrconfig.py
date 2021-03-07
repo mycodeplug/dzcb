@@ -799,6 +799,10 @@ class DmrConfigTemplate:
         "cps software version",
     )
 
+    _version_comment_prefix = "# Written by dzcb.output.dmrconfig"
+    _version_comment_rex = re.compile("^" + _version_comment_prefix)
+    version_comment_line = f"{_version_comment_prefix} dzcb-{__version__}"
+
     _template_variables = {
         "$DATE": lambda: time.strftime("%Y-%m-%d"),
         "$ISODATE": lambda: datetime.datetime.now().isoformat(),
@@ -894,6 +898,9 @@ class DmrConfigTemplate:
         for tline in template.splitlines():
             tline = cls._replace_variables(tline)
             t._parse_directives(tline)
+            if cls._version_comment_rex.match(tline):
+                remove_preceding_blank()
+                continue  # strip the version line, if present
             if t.radio is None:
                 t.header.append(tline)
                 t.radio = cls._parse_radio(tline)
@@ -977,7 +984,7 @@ class Dmrconfig_Codeplug:
     def render(self):
         preamble = (
             ("", self.template.version_comment_line)
-            if self.template.include_version
+            if self.template.include_version is not False
             else tuple()
         )
         return (
