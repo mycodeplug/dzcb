@@ -547,13 +547,6 @@ class GrouplistTable(Table):
         )
 
 
-def evolve_from_factory(table_type):
-    def _evolve_from(self):
-        return table_type.evolve_from(self.table, radio=self.radio)
-
-    return attr.Factory(_evolve_from, takes_self=True)
-
-
 class TemplateError(ValueError):
     pass
 
@@ -643,6 +636,32 @@ class DmrConfigTemplate:
             raise TemplateError("template should specify a radio type")
         t.header.append("")  # add a blank line before the generated content
         return t
+
+
+def evolve_from_factory(table_type):
+    """
+    Responsible for applying template values to the passed in Table
+    when creating subtables in Dmrconfig_Codeplug
+    """
+    def _evolve_from(self):
+        template_fields = {}
+        if self.template:
+            if self.template.ranges:
+                # ranges are expensive and require rewriting the codeplug and index
+                # we only want to apply range filtering once per template
+                self.table = attr.evolve(
+                    self.table,
+                    codeplug=self.table.codeplug.filter(ranges=self.template.ranges),
+                    index=attr.NOTHING,  # rebuild index
+                )
+                self.template.ranges = None  # only apply once
+            if self.template.radio:
+                template_fields["radio"] = self.template.radio
+            if self.template.include_docs is not None:
+                template_fields["include_docs"] = self.template.include_docs
+        return table_type.evolve_from(self.table, **template_fields)
+
+    return attr.Factory(_evolve_from, takes_self=True)
 
 
 @attr.s
