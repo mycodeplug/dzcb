@@ -449,6 +449,13 @@ class AnalogChannelTable(ChannelTable):
     fmt = "{Analog:6} {Name:16} {Receive:8} {Transmit:8} {Power:6} {Scan:4} {TOT:3} {RO:2} {Admit:5} {Squelch:7} {RxTone:6} {TxTone:6} {Width}"
 
     def item_to_dict(self, index, ch):
+        def normal_dcs(tone):
+            if not tone:
+                return "-"
+            if tone.startswith("D"):
+                return tone + "N"
+            return tone
+
         return dict(
             Analog=index,
             Name=self.name_munge(ch.short_name),
@@ -460,8 +467,8 @@ class AnalogChannelTable(ChannelTable):
             RO=plus_minus[ch.rx_only],
             Admit="Free",
             Squelch="Normal",
-            RxTone=ch.tone_decode or "-",
-            TxTone=ch.tone_encode or "-",
+            RxTone=normal_dcs(ch.tone_decode),
+            TxTone=normal_dcs(ch.tone_encode),
             Width=ch.bandwidth.flattened(self.radio.value.bandwidth).value,
         )
 
