@@ -64,9 +64,8 @@ utility with theoretical support for:
 * TYT MD-9600
 * Retevis RT84
 
-Use `--dmrconfig-template` to specify an exported codeplug (with analog, digital,
-contacts, grouplists, scanlists, and zones REMOVED) to use as a template
-for radio type, messages, DMR ID, and startup text. The output directory
+Use `--dmrconfig-template` to specify an exported codeplug config to use as a
+template for radio type, messages, DMR ID,  and startup text. The output directory
 will contain a dmrconfig config per template specified.
 
 ## Anytone CPS
