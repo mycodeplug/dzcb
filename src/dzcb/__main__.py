@@ -303,7 +303,7 @@ if __name__ == "__main__":
                 continue
             dmrconfig_templates.append(f)
     else:
-        dmrconfig_templates = [Path(dt) for dt in args.dmrconfig_template]
+        dmrconfig_templates = [Path(dt) for dt in args.dmrconfig_template if dt.lower() != "-"]
 
     dm_outdir = append_dir_and_create(outdir, "dmrconfig")
     table = dzcb.output.dmrconfig.Table(
