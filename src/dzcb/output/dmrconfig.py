@@ -343,7 +343,7 @@ class Table:
         return self.__doc__.rstrip().format(**replacements).replace("    #", "#")
 
     def header(self):
-        return self.fmt.format(**{k: k for k in self.field_names})
+        return self.fmt.format(**{k: k for k in self.field_names}).lstrip()
 
     def render(self):
         output = []
@@ -462,7 +462,7 @@ class AnalogChannelTable(ChannelTable):
         "TxTone",
         "Width",
     )
-    fmt = "{Analog:6} {Name:16} {Receive:8} {Transmit:8} {Power:6} {Scan:4} {TOT:3} {RO:2} {Admit:5} {Squelch:7} {RxTone:6} {TxTone:6} {Width}"
+    fmt = "{Analog:^6} {Name:16} {Receive:8} {Transmit:8} {Power:6} {Scan:4} {TOT:3} {RO:2} {Admit:5} {Squelch:7} {RxTone:6} {TxTone:6} {Width}"
 
     def item_to_dict(self, index, ch):
         def normal_dcs(tone):
@@ -523,7 +523,7 @@ class DigitalChannelTable(ChannelTable):
         "RxGL",
         "TxContact",
     )
-    fmt = "{Digital:7} {Name:16} {Receive:8} {Transmit:8} {Power:6} {Scan:4} {TOT:3} {RO:2} {Admit:5} {Color:5} {Slot:4} {RxGL:4} {TxContact:5}"
+    fmt = "{Digital:^7} {Name:16} {Receive:8} {Transmit:8} {Power:6} {Scan:4} {TOT:3} {RO:2} {Admit:5} {Color:5} {Slot:4} {RxGL:4} {TxContact:5}"
 
     def grouplist_ix(self, ch):
         grouplist_ix = self.index.grouplist_id.get(ch.grouplist, None)
@@ -578,7 +578,7 @@ class ZoneTable(Table):
 
     object_name = "zones"
     field_names = ("Zone", "Name", "Channels")
-    fmt = "{Zone:4} {Name:16} {Channels}"
+    fmt = "{Zone:^6} {Name:16} {Channels}"
 
     def channels(self, zone, channel_list):
         ch_index_limit = self.radio.value.nchan
@@ -644,7 +644,7 @@ class ScanlistTable(Table):
 
     object_name = "scanlists"
     field_names = ("Scanlist", "Name", "PCh1", "PCh2", "TxCh", "Channels")
-    fmt = "{Scanlist:8} {Name:16} {PCh1:4} {PCh2:4} {TxCh:4} {Channels}"
+    fmt = "{Scanlist:^8} {Name:16} {PCh1:4} {PCh2:4} {TxCh:4} {Channels}"
 
     def channels(self, scanlist):
         ch_index_limit = self.radio.value.nchan
@@ -699,7 +699,7 @@ class ContactsTable(Table):
 
     object_name = "contacts"
     field_names = ("Contact", "Name", "Type", "ID", "RxTone")
-    fmt = "{Contact:8} {Name:16} {Type:7} {ID:8} {RxTone}"
+    fmt = "{Contact:^8} {Name:16} {Type:7} {ID:8} {RxTone}"
 
     def item_to_dict(self, index, contact):
         return dict(
@@ -724,7 +724,7 @@ class GrouplistTable(Table):
 
     object_name = "grouplists"
     field_names = ("Grouplist", "Name", "Contacts")
-    fmt = "{Grouplist:10} {Name:16} {Contacts}"
+    fmt = "{Grouplist:^10} {Name:16} {Contacts}"
 
     def contacts(self, grouplist):
         ct_index_limit = self.radio.value.ncontacts
