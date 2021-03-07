@@ -32,8 +32,8 @@ with theoretical support for:
 * TYT
   * MD-380, MD-390
   * MD-UV380 (tested), MD-UV390
-  * MD-2017, 
-* Alinco DJ-MD40, 
+  * MD-2017 
+* Alinco DJ-MD40 
 * Retevis RT3, RT3-G, RT3S, and RT82 radios
 
 Use `--farnsworth-template-json` to specify an exported codeplug to
@@ -44,7 +44,7 @@ and [MD-UV380/390](./src/dzcb/data/farnsworth).
 
 ## [OpenRTX/dmrconfig](https://github.com/OpenRTX/dmrconfig)
 
-For import into [`dmrconfig`]((https://github.com/OpenRTX/dmrconfig) 1.1
+For import into [`dmrconfig`](https://github.com/OpenRTX/dmrconfig) 1.1
 utility with theoretical support for:
 
 * Anytone AT-D868UV
