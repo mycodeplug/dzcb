@@ -636,8 +636,8 @@ class ScanlistTable(Table):
     # Table of scan lists.
     # 1) Scan list number: {scanlist_limit}
     # 2) Name: up to 16 characters, use '_' instead of space
-    # 3) Priority channel 1: -, Curr or index
-    # 4) Priority channel 2: -, Curr or index
+    # 3) Priority channel 1: -, Sel or index
+    # 4) Priority channel 2: -, Sel or index
     # 5) Designated transmit channel: Sel or Last
     # 6) List of channels: numbers and ranges (N-M) separated by comma
     """
@@ -677,7 +677,7 @@ class ScanlistTable(Table):
         return dict(
             Scanlist=index,
             Name=self.name_munge(scanlist.name),
-            PCh1="Curr",
+            PCh1="Sel",
             PCh2="-",
             TxCh="Last",
             Channels=channels,
