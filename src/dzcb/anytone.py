@@ -14,7 +14,7 @@ import logging
 from pathlib import Path
 
 from dzcb import AMATEUR_220, COMMERCIAL_UHF, COMMERCIAL_VHF
-from dzcb.model import AnalogChannel, DigitalChannel, uniquify_contacts
+from dzcb.model import AnalogChannel, Bandwidth, DigitalChannel, uniquify_contacts
 
 logger = logging.getLogger(__name__)
 
@@ -412,7 +412,7 @@ def Channel_to_dict(index, channel, codeplug):
         "Transmit Frequency": format_frequency(channel.frequency + channel.offset),
         "Channel Type": format_channel_type(type(channel)),
         "Transmit Power": str(channel.power),
-        "Band Width": "25K" if channel.bandwidth > 19 else "12.5K",
+        "Band Width": channel.bandwidth.flattened([Bandwidth._25, Bandwidth._125]).value + "K",
         "PTT Prohibit": value_replacements[channel.rx_only],
         "Scan List": channel.scanlist_name(codeplug),
     }

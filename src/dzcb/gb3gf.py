@@ -6,7 +6,7 @@ Ex: OpenGD77
 import csv
 import logging
 
-from dzcb.model import AnalogChannel
+from dzcb.model import AnalogChannel, Bandwidth
 
 logger = logging.getLogger(__name__)
 
@@ -98,7 +98,7 @@ def Codeplug_to_gb3gf_opengd77_csv(cp, output_dir):
                     "Tx Frequency": round(channel.frequency + channel.offset, 5),
                     "Timeslot": 1,
                     "Power": str(channel.power),
-                    "Bandwidth": "25KHz" if channel.bandwidth > 19 else "12.5KHz",
+                    "Bandwidth": channel.bandwidth.flattened([Bandwidth._25, Bandwidth._125]).value + "KHz",
                     "Squelch": str(channel.squelch) if channel.squelch else "Disabled",
                     "Rx Only": value_replacements[channel.rx_only],
                     "Zone Skip": "No",

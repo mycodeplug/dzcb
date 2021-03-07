@@ -142,6 +142,37 @@ class Power(ConvertibleEnum):
     LOW = "Low"
     MED = "Medium"
     HIGH = "High"
+    TURBO = "Turbo"
+
+    def flattened(self, allowed_powers):
+        if self in allowed_powers:
+            return self
+        if self is self.MED:
+            return self.LOW
+        if self is self.TURBO:
+            return self.HIGH
+        if self is self.LOW:
+            return self.HIGH
+        if self is self.HIGH:
+            return self.LOW
+        raise ValueError("No known powers are allowed {!r} from {!r}".format(self, allowed_powers))
+
+
+class Bandwidth(ConvertibleEnum):
+    _125 = "12.5"
+    _20 = "20"
+    _25 = "25"
+
+    def flattened(self, allowed_bandwidths):
+        if self in allowed_bandwidths:
+            return self
+        if self is self._20:
+            return self._25
+        raise ValueError("No known bandwidths are allowed {!r} from {!r}".format(self, allowed_bandwidths))
+
+
+def round_frequency(freq, ndigits=5):
+    return round(float(freq), ndigits)
 
 
 @attr.s(frozen=True)
@@ -149,11 +180,11 @@ class Channel:
     """Common channel attributes"""
 
     name = attr.ib(eq=False, validator=attr.validators.instance_of(str))
-    frequency = attr.ib(validator=attr.validators.instance_of(float), converter=float)
+    frequency = attr.ib(validator=attr.validators.instance_of(float), converter=round_frequency)
     offset = attr.ib(
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(float)),
-        converter=attr.converters.optional(float),
+        converter=attr.converters.optional(round_frequency),
     )
     power = attr.ib(
         default=Power.HIGH,
@@ -187,6 +218,10 @@ class Channel:
         suffix = str(self._dedup_key or "")
         return dzcb.munge.channel_name(self.name, NAME_MAX - len(suffix)) + suffix
 
+    @property
+    def transmit_frequency(self):
+        return round_frequency(self.frequency + self.offset)
+
 
 def _tone_validator(instance, attribute, value):
     if value is not None and value not in dzcb.tone.VALID_TONES:
@@ -218,9 +253,9 @@ class AnalogChannel(Channel):
     )
     # configurable bandwidth for analog (technically should be enum)
     bandwidth = attr.ib(
-        default=25,
-        validator=attr.validators.instance_of(float),
-        converter=float,
+        default=Bandwidth._25,
+        validator=attr.validators.instance_of(Bandwidth),
+        converter=Bandwidth.from_any,
     )
     # configurable squelch for analog
     squelch = attr.ib(
@@ -233,7 +268,7 @@ class AnalogChannel(Channel):
 @attr.s(frozen=True)
 class DigitalChannel(Channel):
     # fixed bandwidth for digital
-    bandwidth = 12.5
+    bandwidth = Bandwidth._125
     squelch = 0
     color_code = attr.ib(default=1)
     grouplist = attr.ib(

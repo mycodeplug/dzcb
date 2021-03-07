@@ -60,11 +60,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Longview 444.900",
       "RxFrequency": "444.9",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -112,11 +112,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Longview 442.125",
       "RxFrequency": "442.125",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -164,11 +164,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Longview 147.260",
       "RxFrequency": "147.26",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -216,11 +216,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Longview 147.100",
       "RxFrequency": "147.1",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -268,11 +268,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Longview 440.375",
       "RxFrequency": "440.375",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -320,11 +320,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Rainier 441.7000",
       "RxFrequency": "441.7",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -372,11 +372,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Kalama 442.82500",
       "RxFrequency": "442.825",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -424,11 +424,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Deer Island 146.",
       "RxFrequency": "146.88",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -476,11 +476,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Chehalis 444.450",
       "RxFrequency": "444.45",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -528,11 +528,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Woodland 147.300",
       "RxFrequency": "147.3",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -580,11 +580,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Woodland 442.175",
       "RxFrequency": "442.175",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -632,11 +632,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Woodland 440.575",
       "RxFrequency": "440.575",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -684,11 +684,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Woodland 444.475",
       "RxFrequency": "444.475",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -736,11 +736,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Warren 444.62500",
       "RxFrequency": "444.625",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -788,11 +788,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Warren 146.68000",
       "RxFrequency": "146.68",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -840,11 +840,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Astoria 146.7600",
       "RxFrequency": "146.76",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -892,11 +892,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Astoria 444.5000",
       "RxFrequency": "444.5",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -944,11 +944,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Scappoose 441.86",
       "RxFrequency": "441.8625",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -996,11 +996,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Chehalis 147.060",
       "RxFrequency": "147.06",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1048,11 +1048,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "La Center 444.92",
       "RxFrequency": "444.925",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1100,11 +1100,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Timber 441.82500",
       "RxFrequency": "441.825",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1152,11 +1152,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Chehalis 443.450",
       "RxFrequency": "443.45",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1204,11 +1204,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Chehalis 146.740",
       "RxFrequency": "146.74",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1256,11 +1256,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Yacolt 441.20000",
       "RxFrequency": "441.2",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1308,11 +1308,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Cathlamet 147.02",
       "RxFrequency": "147.02",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1360,11 +1360,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Astoria 146.6600",
       "RxFrequency": "146.66",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1412,11 +1412,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Astoria 146.7200",
       "RxFrequency": "146.72",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1464,11 +1464,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Yacolt 443.12500",
       "RxFrequency": "443.125",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1516,11 +1516,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Yacolt 440.32500",
       "RxFrequency": "440.325",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1568,11 +1568,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Timber 145.27000",
       "RxFrequency": "145.27",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1620,11 +1620,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Hazel Dell 443.8",
       "RxFrequency": "443.8",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1672,11 +1672,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Hockinson 444.72",
       "RxFrequency": "444.725",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1724,11 +1724,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Seaside 147.0000",
       "RxFrequency": "147.0",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1776,11 +1776,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Vancouver 440.15",
       "RxFrequency": "440.15",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1828,11 +1828,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 443.225",
       "RxFrequency": "443.225",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1880,11 +1880,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 440.825",
       "RxFrequency": "440.825",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1932,11 +1932,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 440.512",
       "RxFrequency": "440.5125",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -1984,11 +1984,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 442.700",
       "RxFrequency": "442.7",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2036,11 +2036,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 440.350",
       "RxFrequency": "440.35",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2088,11 +2088,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 443.050",
       "RxFrequency": "443.05",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2140,11 +2140,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 443.275",
       "RxFrequency": "443.275",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2192,11 +2192,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 442.650",
       "RxFrequency": "442.65",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2244,11 +2244,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 440.400",
       "RxFrequency": "440.4",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2296,11 +2296,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 442.225",
       "RxFrequency": "442.225",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2348,11 +2348,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 443.300",
       "RxFrequency": "443.3",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2400,11 +2400,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 444.837",
       "RxFrequency": "444.8375",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2452,11 +2452,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 441.350",
       "RxFrequency": "441.35",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2504,11 +2504,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 443.625",
       "RxFrequency": "443.625",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2556,11 +2556,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 440.200",
       "RxFrequency": "440.2",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2608,11 +2608,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 440.500",
       "RxFrequency": "440.5",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2660,11 +2660,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 440.450",
       "RxFrequency": "440.45",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2712,11 +2712,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 442.250",
       "RxFrequency": "442.25",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2764,11 +2764,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Beaverton 444.85",
       "RxFrequency": "444.85",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2816,11 +2816,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 443.550",
       "RxFrequency": "443.55",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2868,11 +2868,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Cedar Mill 444.8",
       "RxFrequency": "444.8",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2920,11 +2920,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Beaverton 444.75",
       "RxFrequency": "444.75",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -2972,11 +2972,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Lake Oswego 444.",
       "RxFrequency": "444.3",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3024,11 +3024,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Clackamas 441.32",
       "RxFrequency": "441.325",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3076,11 +3076,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Clackamas 440.30",
       "RxFrequency": "440.3",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3128,11 +3128,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Clackamas 443.47",
       "RxFrequency": "443.475",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3180,11 +3180,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Clackamas 443.15",
       "RxFrequency": "443.15",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3232,11 +3232,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Vancouver 443.82",
       "RxFrequency": "443.825",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3284,11 +3284,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Aloha 443.35000",
       "RxFrequency": "443.35",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3336,11 +3336,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 443.200",
       "RxFrequency": "443.2",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3388,11 +3388,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Tigard 440.17500",
       "RxFrequency": "440.175",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3440,11 +3440,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Vancouver 442.10",
       "RxFrequency": "442.1",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3492,11 +3492,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Aloha 442.52500",
       "RxFrequency": "442.525",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3544,11 +3544,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Hillsboro 440.55",
       "RxFrequency": "440.55",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3596,11 +3596,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Tualatin 444.525",
       "RxFrequency": "444.525",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3648,11 +3648,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "West Linn 441.65",
       "RxFrequency": "441.65",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3700,11 +3700,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Gresham 446.2750",
       "RxFrequency": "446.275",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3752,11 +3752,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "OR City 442.0750",
       "RxFrequency": "442.075",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3804,11 +3804,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Camas 444.52500",
       "RxFrequency": "444.525",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3856,11 +3856,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Gresham 443.0750",
       "RxFrequency": "443.075",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3908,11 +3908,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Hillsboro 444.97",
       "RxFrequency": "444.975",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -3960,11 +3960,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Sherwood 442.275",
       "RxFrequency": "442.275",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4012,11 +4012,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Sherwood 444.312",
       "RxFrequency": "444.3125",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4064,11 +4064,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Sherwood 443.425",
       "RxFrequency": "443.425",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4116,11 +4116,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Sherwood 442.575",
       "RxFrequency": "442.575",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4168,11 +4168,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Boring 441.95000",
       "RxFrequency": "441.95",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4220,11 +4220,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Canby 442.90000",
       "RxFrequency": "442.9",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4272,11 +4272,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Canby 444.45000",
       "RxFrequency": "444.45",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4324,11 +4324,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Newberg 442.6750",
       "RxFrequency": "442.675",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4376,11 +4376,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Vancouver 442.37",
       "RxFrequency": "442.375",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4428,11 +4428,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Camas 443.92500",
       "RxFrequency": "443.925",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4480,11 +4480,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Newberg 443.7500",
       "RxFrequency": "443.75",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4532,11 +4532,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Corbett 443.1000",
       "RxFrequency": "443.1",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4584,11 +4584,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Laurelwood 443.6",
       "RxFrequency": "443.65",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4636,11 +4636,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Newberg 444.4875",
       "RxFrequency": "444.4875",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4688,11 +4688,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Sandy 442.42500",
       "RxFrequency": "442.425",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4740,11 +4740,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Newberg 442.5500",
       "RxFrequency": "442.55",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4792,11 +4792,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Sandy 442.87500",
       "RxFrequency": "442.875",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4844,11 +4844,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Vancouver 443.67",
       "RxFrequency": "443.675",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4896,11 +4896,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Vancouver 443.90",
       "RxFrequency": "443.9",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -4948,11 +4948,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Vancouver 440.01",
       "RxFrequency": "440.0125",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5000,11 +5000,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Vancouver 442.96",
       "RxFrequency": "442.9625",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5052,11 +5052,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Beavercreek 444.",
       "RxFrequency": "444.6",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5104,11 +5104,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Molalla 440.7000",
       "RxFrequency": "440.7",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5156,11 +5156,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Colton 442.92500",
       "RxFrequency": "442.925",
       "TxFrequencyOffset": "5.0",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5208,11 +5208,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 145.230",
       "RxFrequency": "145.23",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5260,11 +5260,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 146.700",
       "RxFrequency": "146.7",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5312,11 +5312,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 147.040",
       "RxFrequency": "147.04",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5364,11 +5364,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 145.310",
       "RxFrequency": "145.31",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5416,11 +5416,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 146.980",
       "RxFrequency": "146.98",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5468,11 +5468,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 147.140",
       "RxFrequency": "147.14",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5520,11 +5520,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Portland 145.390",
       "RxFrequency": "145.39",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5572,11 +5572,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Cedar Mill 147.3",
       "RxFrequency": "147.38",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5624,11 +5624,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Clackamas 146.94",
       "RxFrequency": "146.94",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5676,11 +5676,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Clackamas 147.28",
       "RxFrequency": "147.28",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5728,11 +5728,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Clackamas 147.18",
       "RxFrequency": "147.18",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5780,11 +5780,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Vancouver 146.76",
       "RxFrequency": "146.76",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5832,11 +5832,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Clackamas 146.80",
       "RxFrequency": "146.8",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5884,11 +5884,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Aloha 147.36000",
       "RxFrequency": "147.36",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5936,11 +5936,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Sherwood 146.620",
       "RxFrequency": "146.62",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -5988,11 +5988,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Sherwood 145.470",
       "RxFrequency": "145.47",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6040,11 +6040,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "North Plains 145",
       "RxFrequency": "145.45",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6092,11 +6092,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Vancouver 145.37",
       "RxFrequency": "145.37",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6144,11 +6144,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Camas 147.24000",
       "RxFrequency": "147.24",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6196,11 +6196,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Hockinson 147.08",
       "RxFrequency": "147.08",
       "TxFrequencyOffset": "0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6248,11 +6248,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Newberg 146.9000",
       "RxFrequency": "146.9",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6300,11 +6300,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Newberg 145.1100",
       "RxFrequency": "145.11",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6352,11 +6352,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Beavercreek 146.",
       "RxFrequency": "146.92",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6404,11 +6404,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Vancouver 146.84",
       "RxFrequency": "146.84",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6456,11 +6456,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Corbett 145.4100",
       "RxFrequency": "145.41",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6508,11 +6508,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "Colton 145.43000",
       "RxFrequency": "145.43",
       "TxFrequencyOffset": "-0.6",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6560,11 +6560,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "APRS Raw 144.39",
       "RxFrequency": "144.39",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6612,11 +6612,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "APRS VA 100",
       "RxFrequency": "144.39",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6664,11 +6664,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 146.52",
       "RxFrequency": "146.52",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6716,11 +6716,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 146.53",
       "RxFrequency": "146.53",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6768,11 +6768,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 146.54",
       "RxFrequency": "146.54",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6820,11 +6820,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 146.55",
       "RxFrequency": "146.55",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6872,11 +6872,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 146.56",
       "RxFrequency": "146.56",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6924,11 +6924,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 146.57",
       "RxFrequency": "146.57",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -6976,11 +6976,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 146.58",
       "RxFrequency": "146.58",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7028,11 +7028,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 147.52",
       "RxFrequency": "147.52",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7080,11 +7080,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 147.53",
       "RxFrequency": "147.53",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7132,11 +7132,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 147.54",
       "RxFrequency": "147.54",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7184,11 +7184,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 147.55",
       "RxFrequency": "147.55",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7236,11 +7236,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 147.56",
       "RxFrequency": "147.56",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7288,11 +7288,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 147.57",
       "RxFrequency": "147.57",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7340,11 +7340,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 147.58",
       "RxFrequency": "147.58",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7392,11 +7392,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 147.59",
       "RxFrequency": "147.59",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7444,11 +7444,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 147.60",
       "RxFrequency": "147.6",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7496,11 +7496,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 446.000",
       "RxFrequency": "446.0",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7548,11 +7548,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 446.025",
       "RxFrequency": "446.025",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7600,11 +7600,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 445.8",
       "RxFrequency": "445.8",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7652,11 +7652,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 445.825",
       "RxFrequency": "445.825",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7704,11 +7704,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 445.85",
       "RxFrequency": "445.85",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7756,11 +7756,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 445.875",
       "RxFrequency": "445.875",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7808,11 +7808,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 445.9",
       "RxFrequency": "445.9",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7860,11 +7860,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "25",
       "Name": "FM 445.975",
       "RxFrequency": "445.975",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "25"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7912,11 +7912,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 1",
       "RxFrequency": "462.5625",
       "TxFrequencyOffset": "Off",
-      "Power": "Medium",
-      "Bandwidth": "12.5"
+      "Power": "Medium"
     },
     {
       "AdmitCriteria": "Color code",
@@ -7964,11 +7964,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 2",
       "RxFrequency": "462.5875",
       "TxFrequencyOffset": "Off",
-      "Power": "Medium",
-      "Bandwidth": "12.5"
+      "Power": "Medium"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8016,11 +8016,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 3",
       "RxFrequency": "462.6125",
       "TxFrequencyOffset": "Off",
-      "Power": "Medium",
-      "Bandwidth": "12.5"
+      "Power": "Medium"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8068,11 +8068,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 4",
       "RxFrequency": "462.6375",
       "TxFrequencyOffset": "Off",
-      "Power": "Medium",
-      "Bandwidth": "12.5"
+      "Power": "Medium"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8120,11 +8120,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 5",
       "RxFrequency": "462.6675",
       "TxFrequencyOffset": "Off",
-      "Power": "Medium",
-      "Bandwidth": "12.5"
+      "Power": "Medium"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8172,11 +8172,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 6",
       "RxFrequency": "462.6875",
       "TxFrequencyOffset": "Off",
-      "Power": "Medium",
-      "Bandwidth": "12.5"
+      "Power": "Medium"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8224,11 +8224,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 7",
       "RxFrequency": "462.7125",
       "TxFrequencyOffset": "Off",
-      "Power": "Medium",
-      "Bandwidth": "12.5"
+      "Power": "Medium"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8276,11 +8276,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 8 (IS)",
       "RxFrequency": "467.5625",
       "TxFrequencyOffset": "Off",
-      "Power": "Low",
-      "Bandwidth": "12.5"
+      "Power": "Low"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8328,11 +8328,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 9 (IS)",
       "RxFrequency": "467.5875",
       "TxFrequencyOffset": "Off",
-      "Power": "Low",
-      "Bandwidth": "12.5"
+      "Power": "Low"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8380,11 +8380,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 10 (IS)",
       "RxFrequency": "467.6125",
       "TxFrequencyOffset": "Off",
-      "Power": "Low",
-      "Bandwidth": "12.5"
+      "Power": "Low"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8432,11 +8432,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 11 (IS)",
       "RxFrequency": "467.6375",
       "TxFrequencyOffset": "Off",
-      "Power": "Low",
-      "Bandwidth": "12.5"
+      "Power": "Low"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8484,11 +8484,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 12 (IS)",
       "RxFrequency": "467.6625",
       "TxFrequencyOffset": "Off",
-      "Power": "Low",
-      "Bandwidth": "12.5"
+      "Power": "Low"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8536,11 +8536,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 13 (IS)",
       "RxFrequency": "467.6875",
       "TxFrequencyOffset": "Off",
-      "Power": "Low",
-      "Bandwidth": "12.5"
+      "Power": "Low"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8588,11 +8588,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "FRS 14 (IS)",
       "RxFrequency": "467.7125",
       "TxFrequencyOffset": "Off",
-      "Power": "Low",
-      "Bandwidth": "12.5"
+      "Power": "Low"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8640,11 +8640,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "20",
       "Name": "GMRS 1 (15)",
       "RxFrequency": "462.55",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "20"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8692,11 +8692,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "20",
       "Name": "GMRS 2 (16)",
       "RxFrequency": "462.575",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "20"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8744,11 +8744,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "20",
       "Name": "GMRS 3 (17)",
       "RxFrequency": "462.6",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "20"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8796,11 +8796,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "20",
       "Name": "GMRS 4 (18)",
       "RxFrequency": "462.625",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "20"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8848,11 +8848,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "20",
       "Name": "GMRS 5 (19)",
       "RxFrequency": "462.65",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "20"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8900,11 +8900,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "20",
       "Name": "GMRS 6 (20)",
       "RxFrequency": "462.675",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "20"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -8952,11 +8952,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "20",
       "Name": "GMRS 7 (21)",
       "RxFrequency": "462.7",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "20"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -9004,11 +9004,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "20",
       "Name": "GMRS 8 (22)",
       "RxFrequency": "462.725",
       "TxFrequencyOffset": "Off",
-      "Power": "High",
-      "Bandwidth": "20"
+      "Power": "High"
     },
     {
       "AdmitCriteria": "Color code",
@@ -9056,11 +9056,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "MURS 1",
       "RxFrequency": "151.82",
       "TxFrequencyOffset": "Off",
-      "Power": "Medium",
-      "Bandwidth": "12.5"
+      "Power": "Medium"
     },
     {
       "AdmitCriteria": "Color code",
@@ -9108,11 +9108,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "MURS 2",
       "RxFrequency": "151.88",
       "TxFrequencyOffset": "Off",
-      "Power": "Medium",
-      "Bandwidth": "12.5"
+      "Power": "Medium"
     },
     {
       "AdmitCriteria": "Color code",
@@ -9160,11 +9160,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "12.5",
       "Name": "MURS 3",
       "RxFrequency": "151.94",
       "TxFrequencyOffset": "Off",
-      "Power": "Medium",
-      "Bandwidth": "12.5"
+      "Power": "Medium"
     },
     {
       "AdmitCriteria": "Color code",
@@ -9212,11 +9212,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "20",
       "Name": "MURS 4 (Blue)",
       "RxFrequency": "154.57",
       "TxFrequencyOffset": "Off",
-      "Power": "Medium",
-      "Bandwidth": "20"
+      "Power": "Medium"
     },
     {
       "AdmitCriteria": "Color code",
@@ -9264,11 +9264,11 @@
       "TxSignallingSystem": "Off",
       "Vox": "Off",
       "ChannelMode": "Analog",
+      "Bandwidth": "20",
       "Name": "MURS 5 (Green)",
       "RxFrequency": "154.6",
       "TxFrequencyOffset": "Off",
-      "Power": "Medium",
-      "Bandwidth": "20"
+      "Power": "Medium"
     },
     {
       "AdmitCriteria": "Color code",

@@ -18,6 +18,7 @@ import dzcb.gb3gf
 import dzcb.k7abd
 import dzcb.log
 import dzcb.model
+import dzcb.output.dmrconfig
 import dzcb.pnwdigital
 import dzcb.repeaterbook
 import dzcb.seattledmr
@@ -128,6 +129,12 @@ if __name__ == "__main__":
         nargs="*",
         help="JSON file to take Farnsworth settings from. If no json file, defaults will "
         "be used for each supported radio type.",
+    )
+    parser.add_argument(
+        "--dmrconfig-template",
+        nargs="*",
+        help="dmrconfig template files with codeplug objects removed. If no template is"
+        "specified, the default 868 template will be used.",
     )
     parser.add_argument(
         "--scanlists-json",
@@ -286,3 +293,28 @@ if __name__ == "__main__":
             )
         )
         logger.info("Wrote '%s' based JSON to '%s'", ftj, outfile)
+
+    # dmrconfig textual output
+    dmrconfig_templates = []
+    if args.dmrconfig_template is None:
+        # Iterate through all dmrconfig templates, generating codeplug for each
+        for f in (files(dzcb.data) / "dmrconfig").iterdir():
+            if f.suffix != ".conf":
+                continue
+            dmrconfig_templates.append(f)
+    else:
+        dmrconfig_templates = [Path(dt) for dt in args.dmrconfig_template if dt.lower() != "-"]
+
+    dm_outdir = append_dir_and_create(outdir, "dmrconfig")
+    table = dzcb.output.dmrconfig.Table(
+        codeplug=fw_cp,
+    )
+    for dt in dmrconfig_templates:
+        outfile = dm_outdir / dt.name
+        outfile.write_text(
+            dzcb.output.dmrconfig.Dmrconfig_Codeplug(
+                table,
+                template=dt.read_text(),
+            ).render_template()
+        )
+        logger.info("Wrote dmrconfig template '%s' to '%s'", dt.name, outfile)
