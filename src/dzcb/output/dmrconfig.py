@@ -477,7 +477,7 @@ class AnalogChannelTable(ChannelTable):
             Name=self.name_munge(ch.short_name),
             Receive=ch.frequency,
             Transmit=ch.transmit_frequency,
-            Power=ch.power.flattened(self.radio.value.power).value,
+            Power=self.radio.value.power[ch.power.flattened(self.radio.value.power)],
             Scan=self.scanlist_ix(ch) or "-",
             TOT=90,  # TODO: how to expose this parameter
             RO=plus_minus[ch.rx_only],
@@ -556,7 +556,7 @@ class DigitalChannelTable(ChannelTable):
             Name=self.name_munge(ch.short_name),
             Receive=ch.frequency,
             Transmit=ch.transmit_frequency,
-            Power=ch.power.flattened(self.radio.value.power).value,
+            Power=self.radio.value.power[ch.power.flattened(self.radio.value.power)],
             Scan=self.scanlist_ix(ch) or "-",
             TOT=90,  # TODO: how to expose this parameter
             RO=plus_minus[ch.rx_only],
