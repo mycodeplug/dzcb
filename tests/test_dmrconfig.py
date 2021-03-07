@@ -15,5 +15,4 @@ default_dmrconfig_path = files(dzcb.data) / "dmrconfig"
 )
 def test_dmrconfig_templates(complex_codeplug, template):
     table = dzcb.output.dmrconfig.Table(complex_codeplug)
-    cp = dzcb.output.dmrconfig.Dmrconfig_Codeplug(table, template)
-    print(cp.render_template())
+    assert dzcb.output.dmrconfig.Dmrconfig_Codeplug(table, template).render_template()
