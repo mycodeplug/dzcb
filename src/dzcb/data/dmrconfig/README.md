@@ -6,17 +6,20 @@ specified.
 
 ## Format
 
-dmrconfig template config files should NOT contain the analog, digital,
-contacts, grouplists, scanlists, or zone table. Only the `Radio: `,
-messages, ID, name, and intro screen fields (and any comments) are
-allowed in the template.
+The template file should be the `.conf` returned from reading your
+radio with `dmrconfig -r`.
+
+dzcb will remove any existing rows from the analog, digital, contacts,
+grouplists, scanlists, and zone tables.
+
+Remaining lines and comments will be left in place.
 
 ## Directives
 
 `dzcb` interprets lines containing `!dzcb.` in a special way.
 
 This is not part of the dmrconfig format, these directives exist to give
-some control over the output format.
+some more control over the output format.
 
 ### `!dzcb.ranges: M-N,O-P`
 
@@ -41,9 +44,17 @@ channel data to your radio.
 
 ### `!dzcb.include_docs: -`
 
-If the value is `+`, then a comment is included describing the fields.
+If the value is `+` (default), then a comment is included before
+each table describing the fields.
 
-If the value is `-`, only the codeplug data is output
+If the value is `-`, only the codeplug data is output.
+
+### `!dzcb.include_version: -`
+
+If the value is `+` (default), then a comment is included referencing
+the `dzcb` version used to generate the file.
+
+If the value is `-`, no version comment is output.
 
 ## Variables
 
