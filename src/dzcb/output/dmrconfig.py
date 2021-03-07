@@ -23,7 +23,14 @@ from typing import (
 import attr
 
 from dzcb import __version__
-from dzcb.model import Bandwidth, Codeplug, Power, AnalogChannel, DigitalChannel
+from dzcb.model import (
+    Bandwidth,
+    Codeplug,
+    Power,
+    AnalogChannel,
+    DigitalChannel,
+    uniquify_contacts,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -308,9 +315,18 @@ class CodeplugIndexLookup:
         return items_by_index(self.codeplug.channels, offset=self.offset)
 
 
+def uniquify_contacts_by_name(codeplug):
+    return attr.evolve(
+        codeplug, contacts=uniquify_contacts(codeplug.contacts, key=lambda ct: ct.name)
+    )
+
+
 @attr.s
 class Table:
-    codeplug = attr.ib(validator=attr.validators.instance_of(Codeplug))
+    codeplug = attr.ib(
+        validator=attr.validators.instance_of(Codeplug),
+        converter=uniquify_contacts_by_name,
+    )
     radio = attr.ib(default=Radio.D868UV, validator=attr.validators.instance_of(Radio))
     index = attr.ib(validator=attr.validators.instance_of(CodeplugIndexLookup))
     include_docs = attr.ib(default=True, validator=attr.validators.instance_of(bool))
