@@ -4,7 +4,9 @@ dmrconfig output filter
 https://github.com/OpenRTX/dmrconfig
 """
 
+import datetime
 import enum
+import time
 from typing import (
     Iterable,
     Any,
@@ -151,6 +153,8 @@ class Radio(enum.Enum):
 plus_minus = {
     True: "+",
     False: "-",
+    "+": True,
+    "-": False,
 }
 
 
@@ -562,11 +566,57 @@ class DmrConfigTemplate:
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(Radio)),
     )
+    ranges = attr.ib(
+        default=None,
+        validator=attr.validators.optional(attr.validators.deep_iterable(tuple, tuple))
+    )
+    include_docs = attr.ib(
+        default=None,
+        validator=attr.validators.optional(attr.validators.instance_of(bool))
+    )
 
     _header_lines = (
         "last programmed date",
         "cps software version",
     )
+
+    _template_variables = {
+        "$DATE": lambda: time.strftime("%Y-%m-%d"),
+        "$ISODATE": lambda: datetime.datetime.now().isoformat(),
+        "$TIME": lambda: time.strftime("%H:%M"),
+        "$SECTIME": lambda: time.strftime("%H:%M:%S"),
+    }
+
+    @classmethod
+    def _replace_variables(cls, line):
+        for var, repl in cls._template_variables.items():
+            if var in line:
+                if callable(repl):
+                    line = line.replace(var, repl())
+                else:
+                    line = line.replace(var, repl)
+        return line
+
+    @staticmethod
+    def _parse_ranges(line):
+        _, match, ranges = line.partition("!dzcb.ranges: ")
+        if match:
+            return tuple(
+                rng.split("-", maxsplit=1)
+                for rng in ranges.strip().split(",")
+            )
+
+    @staticmethod
+    def _parse_radio(line):
+        _, match, radio_type = line.partition("Radio: ")
+        if match:
+            return Radio.from_name(radio_type)
+
+    @staticmethod
+    def _parse_include_docs(line):
+        _, match, include_docs = line.partition("!dzcb.include_docs:")
+        if match:
+            return plus_minus[include_docs.strip()]
 
     @classmethod
     def read_template(cls: ClassVar, template: str) -> ClassVar:
@@ -577,14 +627,14 @@ class DmrConfigTemplate:
         """
         t = cls()
         for tline in template.splitlines():
-            if "$DATE" in tline:
-                tline = tline.replace("$DATE", time.strftime("%Y-%m-%d"))
+            tline = cls._replace_variables(tline)
+            if t.ranges is None:
+                t.ranges = cls._parse_ranges(tline)
+            if t.include_docs is None:
+                t.include_docs = cls._parse_include_docs(tline)
             if t.radio is None:
                 t.header.append(tline)
-                _, match, radio_type = tline.partition("Radio: ")
-                if match:
-                    t.radio = Radio.from_name(radio_type)
-                    continue
+                t.radio = cls._parse_radio(tline)
             elif any(l in tline.lower() for l in cls._header_lines):
                 t.header.append(tline)
             else:
