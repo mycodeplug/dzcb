@@ -218,6 +218,10 @@ class Channel:
         suffix = str(self._dedup_key or "")
         return dzcb.munge.channel_name(self.name, NAME_MAX - len(suffix)) + suffix
 
+    @property
+    def transmit_frequency(self):
+        return round_frequency(self.frequency + self.offset)
+
 
 def _tone_validator(instance, attribute, value):
     if value is not None and value not in dzcb.tone.VALID_TONES:
