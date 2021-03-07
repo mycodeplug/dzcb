@@ -123,6 +123,8 @@ _gd77_c = attr.evolve(
     _dm1801_c,
     name="Radioddity GD-77",
     nzones=250,
+    n_zone_channels=16,
+    n_scanlist_channels=31,
 )
 
 # https://github.com/OpenRTX/dmrconfig/blob/master/md380.c
