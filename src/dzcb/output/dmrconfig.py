@@ -691,7 +691,7 @@ class Dmrconfig_Codeplug:
 
     def render(self):
         return (
-            ("# Written by dzcb.output.dmrconfig v. {}".format(__version__),)
+            ("# Written by dzcb.output.dmrconfig dzcb-{}".format(__version__),)
             + self.analog.render()
             + self.digital.render()
             + self.contact.render()
