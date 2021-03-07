@@ -651,8 +651,6 @@ class Dmrconfig_Codeplug:
     A template should be a dmrconfig file with the analog, digital,
     contacts, groupslists, and scanlists removed. These will be
     filled in from the dzcb.model.Codeplug in the Table.
-
-    radio is an optional field, and may be supplied by the template.
     """
 
     table = attr.ib(validator=attr.validators.instance_of(Table))
@@ -660,18 +658,12 @@ class Dmrconfig_Codeplug:
         default=None,
         converter=attr.converters.optional(DmrConfigTemplate.read_template),
     )
-    radio = attr.ib(validator=attr.validators.instance_of(Radio))
     digital = attr.ib(default=evolve_from_factory(DigitalChannelTable))
     analog = attr.ib(default=evolve_from_factory(AnalogChannelTable))
     zone = attr.ib(default=evolve_from_factory(ZoneTable))
     scanlist = attr.ib(default=evolve_from_factory(ScanlistTable))
     contact = attr.ib(default=evolve_from_factory(ContactsTable))
     grouplist = attr.ib(default=evolve_from_factory(GrouplistTable))
-
-    @radio.default
-    def _radio_default(self):
-        if self.template:
-            return self.template.radio
 
     def render_template(self):
         return "\n".join(
