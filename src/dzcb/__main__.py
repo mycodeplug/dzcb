@@ -297,7 +297,7 @@ if __name__ == "__main__":
     # dmrconfig textual output
     dmrconfig_templates = []
     if args.dmrconfig_template is None:
-        # Iterate through all farnsworth templates, generating codeplug for each
+        # Iterate through all dmrconfig templates, generating codeplug for each
         for f in (files(dzcb.data) / "dmrconfig").iterdir():
             if f.suffix != ".conf":
                 continue
@@ -317,4 +317,4 @@ if __name__ == "__main__":
                 template=dt.read_text(),
             ).render_template()
         )
-        logger.info("Wrote '%s' based dmrconfig to '%s'", dt.name, outfile)
+        logger.info("Wrote dmrconfig template '%s' to '%s'", dt.name, outfile)
