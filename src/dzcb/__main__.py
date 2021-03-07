@@ -297,8 +297,11 @@ if __name__ == "__main__":
     # dmrconfig textual output
     dmrconfig_templates = []
     if args.dmrconfig_template is None:
-        # use the default 868 template
-        dmrconfig_templates.append(files(dzcb.data) / "dmrconfig" / "d868uv-empty.conf")
+        # Iterate through all farnsworth templates, generating codeplug for each
+        for f in (files(dzcb.data) / "dmrconfig").iterdir():
+            if f.suffix != ".conf":
+                continue
+            dmrconfig_templates.append(f)
     else:
         dmrconfig_templates = [Path(dt) for dt in args.dmrconfig_template]
 
