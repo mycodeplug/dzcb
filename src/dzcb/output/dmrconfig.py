@@ -701,11 +701,11 @@ class DmrConfigTemplate:
     )
     ranges = attr.ib(
         default=None,
-        validator=attr.validators.optional(attr.validators.deep_iterable(tuple, tuple))
+        validator=attr.validators.optional(attr.validators.deep_iterable(tuple, tuple)),
     )
     include_docs = attr.ib(
         default=None,
-        validator=attr.validators.optional(attr.validators.instance_of(bool))
+        validator=attr.validators.optional(attr.validators.instance_of(bool)),
     )
 
     _header_lines = (
@@ -735,8 +735,7 @@ class DmrConfigTemplate:
         _, match, ranges = line.partition("!dzcb.ranges: ")
         if match:
             return tuple(
-                rng.split("-", maxsplit=1)
-                for rng in ranges.strip().split(",")
+                rng.split("-", maxsplit=1) for rng in ranges.strip().split(",")
             )
 
     @staticmethod
@@ -783,6 +782,7 @@ def evolve_from_factory(table_type):
     Responsible for applying template values to the passed in Table
     when creating subtables in Dmrconfig_Codeplug
     """
+
     def _evolve_from(self):
         template_fields = {}
         if self.template:
