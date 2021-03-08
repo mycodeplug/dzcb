@@ -170,7 +170,12 @@ def cache_user_or_default_text(object_name, user_path, default_path, cache_dir):
         logger.info("Cache default %s: '%s'", object_name, path.absolute())
     else:
         path = Path(user_path)
-        logger.info("Cache user-specified %s: '%s'", object_name, path.absolute())
+        logger.info(
+            "Cache %s%s: '%s'",
+            "user-specified " if default_path else "",
+            object_name,
+            path.absolute(),
+        )
     dest = cache_dir / path.name
     shutil.copy(path, dest)
     return dest.read_text()
