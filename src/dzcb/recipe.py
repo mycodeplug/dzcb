@@ -577,13 +577,20 @@ class CodeplugRecipe:
         # GB3GF CSV - Radioddity GD77/OpenGD77, TYT MD-380, MD-9600, Baofeng DM1801, RD-5R
         # XXX: Only support OpenGD77 at the moment
         if not self.output_gb3gf:
-            return
-        gb3gf_outdir = append_dir_and_create(self.output_dir, "gb3gf")
-        gd77_outdir = append_dir_and_create(gb3gf_outdir, "opengd77")
-        dzcb.gb3gf.Codeplug_to_gb3gf_opengd77_csv(
-            cp=self._codeplug,
-            output_dir=gd77_outdir,
-        )
+            return  # False or None, skip output
+        if self.output_gb3gf is True:
+            # default is "latest supported models"
+            radios = dzcb.gb3gf.DEFAULT_SUPPORTED_RADIOS
+        else:
+            radios = self.output_gb3gf
+        for radio in radios:
+            gb3gf_outdir = append_dir_and_create(self.output_dir, "gb3gf")
+            if radio == "opengd77":
+                opengd77_outdir = append_dir_and_create(gb3gf_outdir, "opengd77")
+                dzcb.gb3gf.Codeplug_to_gb3gf_opengd77_csv(
+                    cp=self._codeplug,
+                    output_dir=opengd77_outdir,
+                )
 
     def output(self):
         self.anytone()
