@@ -45,10 +45,14 @@ def maybe_path(obj: Any) -> Union[Any, Path]:
     """
     try:
         p = Path(obj)
-        if p.exists():
-            return p
     except Exception:
         pass
+    else:
+        if p.exists():
+            return p
+        else:
+            # attempt to open the file to raise error
+            p.open("r")
     return obj
 
 
