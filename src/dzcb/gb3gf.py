@@ -10,6 +10,9 @@ from dzcb.model import AnalogChannel, Bandwidth
 
 logger = logging.getLogger(__name__)
 
+SUPPORTED_RADIOS = ("opengd77", )
+DEFAULT_SUPPORTED_RADIOS = ("opengd77", )
+
 # These talkgroups are removed until the TG list is 32 channels or less
 TALKGROUP_LIST_OVERFLOW = [
     "Michigan 1",
