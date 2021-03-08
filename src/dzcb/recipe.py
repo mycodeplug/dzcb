@@ -434,7 +434,10 @@ class CodeplugRecipe:
             return
         for src in self.source_repeaterbook_proximity:
             zone_csv = cache_user_or_default_text(
-                "repeaterbook proximity csv", src, cache_dir=self.input_dir
+                "repeaterbook proximity csv",
+                src,
+                default_path=None,
+                cache_dir=self.input_dir,
             )
             dzcb.repeaterbook.zones_to_k7abd(
                 input_csv=zone_csv.splitlines(),
