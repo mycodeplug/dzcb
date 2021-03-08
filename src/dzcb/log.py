@@ -4,6 +4,8 @@ import time
 
 logger = logging.getLogger(__name__)
 LOG_FORMAT = "%(asctime)s [%(name)s] [%(levelname)s]  %(message)s"
+initialized = False
+file_handler = False
 
 
 def change_log_level(to):
@@ -32,16 +34,24 @@ def keep_to_delimiter(d):
 
 
 def init_logging(log_path=None):
-    formatter = logging.Formatter(LOG_FORMAT)
-    root = logging.getLogger()
-    root.setLevel(logging.NOTSET)
+    global initialized, file_handler
 
-    stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(formatter)
-    stream_handler.setLevel(logging.INFO)
-    root.addHandler(stream_handler)
+    root = logging.getLogger()
+
+    if not initialized:
+        formatter = logging.Formatter(LOG_FORMAT)
+        root.setLevel(logging.NOTSET)
+
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(formatter)
+        stream_handler.setLevel(logging.INFO)
+        root.addHandler(stream_handler)
+        initialized = True
 
     if log_path is not None:
+        if file_handler is not None:
+            root.removeHandler(file_handler)
+            file_handler = None
         filename = time.strftime("dzcb.%Y_%m_%d_%H%M%S.log")
         path = Path(log_path) / filename
         logger.info("Logging to '%s' at DEBUG level", path)
