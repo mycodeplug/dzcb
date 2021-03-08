@@ -29,6 +29,7 @@ logger = logging.getLogger("dzcb.recipe")
 required_bool = attr.validators.instance_of(bool)
 optional_bool = attr.validators.optional(required_bool)
 str_or_Path = attr.validators.instance_of((str, Path))
+optional_str_or_Path = attr.validators.optional(str_or_Path)
 sequence_of_Path = attr.validators.optional(
     attr.validators.deep_iterable(member_validator=attr.validators.instance_of(Path))
 )
@@ -136,7 +137,7 @@ def bool_or_sequence_of_maybe_path(obj):
 
 
 def bool_or_sequence_of_Path(instance, attribute, value):
-    if value in (True, False):
+    if value in (None, True, False):
         return
     attr.validators.deep_iterable(member_validator=attr.validators.instance_of(Path))(
         instance, attribute, value
