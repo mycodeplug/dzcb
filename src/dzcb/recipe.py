@@ -275,7 +275,9 @@ class CodeplugRecipe:
     )
 
     # manipulation
-    scanlists_json = attr.ib(default=None, validator=str_or_Path, converter=maybe_path)
+    scanlists_json = attr.ib(
+        default=None, validator=optional_str_or_Path, converter=maybe_path
+    )
     ordering_field = dict(
         validator=sequence_of_Ordering_or_Path,
         converter=to_sequence_of_Ordering_or_Path,
