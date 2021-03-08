@@ -789,6 +789,8 @@ class Codeplug:
 
         :param scanlist_dicts: dict of scanlist_name -> [channel_name1, channel_name2, ...]
         """
+        if not scanlist_dicts:
+            return self
         scanlists = {sl.name: sl for sl in self.scanlists}
         for sl_name, channels in scanlist_dicts.items():
             scanlists[sl_name] = ScanList.from_names(
