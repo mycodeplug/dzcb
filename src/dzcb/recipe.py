@@ -304,7 +304,7 @@ class CodeplugRecipe:
         validator=bool_or_sequence_of_Path,
         converter=bool_or_sequence_of_maybe_path,
     )
-    output_gb3gf = attr.ib(default=None, validator=optional_bool)
+    output_gb3gf = attr.ib(default=None)
 
     # additional options
     repeaterbook_states = attr.ib(default=dzcb.repeaterbook.REPEATERBOOK_DEFAULT_STATES)
@@ -326,12 +326,25 @@ class CodeplugRecipe:
     def _output_anytone_validator(self, attribute, value):
         if value in (None, True, False):
             return
-        if value not in dzcb.anytone.SUPPORTED_RADIOS:
-            raise ValueError(
-                "{!r} is not a supported Radio/CPS version: {!r}".format(
-                    value, dzcb.anytone.SUPPORTED_RADIOS
+        for rcps in value:
+            if rcps not in dzcb.anytone.SUPPORTED_RADIOS:
+                raise ValueError(
+                    "{!r} is not a supported Radio/CPS version ({})".format(
+                        rcps, ", ".join(dzcb.anytone.SUPPORTED_RADIOS.keys())
+                    )
                 )
-            )
+
+    @output_gb3gf.validator
+    def _output_gb3gf_validator(self, attribute, value):
+        if value in (None, True, False):
+            return
+        for radio in value:
+            if radio not in dzcb.gb3gf.SUPPORTED_RADIOS:
+                raise ValueError(
+                    "{!r} is not a supported Radio ({})".format(
+                        radio, ", ".join(dzcb.gb3gf.SUPPORTED_RADIOS)
+                    )
+                )
 
     def initialize(self, output_dir):
         self._output_dir = append_dir_and_create(output_dir).resolve()
