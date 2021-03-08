@@ -23,6 +23,16 @@ if __name__ == "__main__":
         help="Fetch the latest seattledmr K7ABD input files",
     )
     parser.add_argument(
+        "--default-k7abd",
+        action="store_true",
+        help="Include bundled K7ABD input files (simplex + unlicensed)",
+    )
+    parser.add_argument(
+        "--k7abd",
+        nargs="*",
+        help="Specify one or more local directories containing K7ABD CSV files",
+    )
+    parser.add_argument(
         "--repeaterbook-proximity-csv",
         type=argparse.FileType("r"),
         default=None,
@@ -43,28 +53,6 @@ if __name__ == "__main__":
                 dzcb.repeaterbook.REPEATERBOOK_DEFAULT_NAME_FORMAT,
             )
         ),
-    )
-    parser.add_argument(
-        "--default-k7abd",
-        action="store_true",
-        help="Include bundled K7ABD input files (simplex + unlicensed)",
-    )
-    parser.add_argument(
-        "--k7abd",
-        nargs="*",
-        help="Specify one or more local directories containing K7ABD CSV files",
-    )
-    parser.add_argument(
-        "--farnsworth-template-json",
-        nargs="*",
-        help="JSON file to take Farnsworth settings from. If no json file, defaults will "
-        "be used for each supported radio type.",
-    )
-    parser.add_argument(
-        "--dmrconfig-template",
-        nargs="*",
-        help="dmrconfig template files with codeplug objects removed. If no template is"
-        "specified, the default 868 template will be used.",
     )
     parser.add_argument(
         "--scanlists-json",
