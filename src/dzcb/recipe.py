@@ -15,6 +15,7 @@ import dzcb.anytone
 import dzcb.data
 import dzcb.farnsworth
 import dzcb.gb3gf
+import dzcb.log
 import dzcb.model
 import dzcb.output.dmrconfig
 import dzcb.repeaterbook
@@ -348,7 +349,8 @@ class CodeplugRecipe:
 
     def initialize(self, output_dir):
         self._output_dir = append_dir_and_create(output_dir).resolve()
-        logger.info("dzcb %s output_dir='%s'", __version__, self._output_dir)
+        dzcb.log.init_logging(log_path=self.output_dir)
+        logger.info("dzcb %s output_dir='%s'", __version__, self.output_dir)
         self.init_ordering()
         self.init_replacements()
         self.init_scanlists()
