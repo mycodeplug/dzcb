@@ -355,6 +355,8 @@ SUPPORTED_RADIOS = {
     ),
 }
 
+DEFAULT_SUPPORTED_RADIOS = ("578_1_11", "868_1_39", "878_1_21")
+
 
 def Talkgroup_to_dict(index, talkgroup):
     return {
@@ -463,7 +465,7 @@ def ScanList_to_dict(index, scanlist, expand_members):
 
 def Codeplug_to_anytone_csv(cp, output_dir, models=None):
     if models is None:
-        models = tuple(SUPPORTED_RADIOS.keys())
+        models = tuple(DEFAULT_SUPPORTED_RADIOS)
     for model_id in models:
         radio_dir = Path(output_dir) / model_id
         radio_dir.mkdir(parents=True, exist_ok=True)
