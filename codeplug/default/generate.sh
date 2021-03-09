@@ -4,7 +4,7 @@
 # by running dzcb as a command line program
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-OUTPUT=${OUTPUT:-$DIR/../../OUTPUT/$(dirname "$DIR")}
+OUTPUT=${OUTPUT:-$DIR/../../OUTPUT}
 python -m dzcb \
     --pnwdigital \
     --seattledmr \
@@ -19,4 +19,4 @@ python -m dzcb \
     --dmrconfig-template \
     --farnsworth-template-json \
     --gb3gf \
--- $OUTPUT
+-- $OUTPUT/$(dirname "$DIR")

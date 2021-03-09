@@ -11,7 +11,7 @@ import dzcb.data
 from dzcb.recipe import CodeplugRecipe
 
 cp_dir = Path(__file__).parent
-output = os.environ.get("OUTPUT") or (cp_dir / ".." / ".." / "OUTPUT" / cp_dir.name)
+output = Path(os.environ.get("OUTPUT") or (cp_dir / ".." / ".." / "OUTPUT"))
 
 CodeplugRecipe(
     source_pnwdigital=True,
@@ -27,4 +27,4 @@ CodeplugRecipe(
     output_dmrconfig=True,
     output_farnsworth=True,
     output_gb3gf=True
-).generate(output)
+).generate(output / cp_dir.name)

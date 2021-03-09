@@ -4,7 +4,7 @@
 # by running dzcb as a command line program
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-OUTPUT=${OUTPUT:-$DIR/../../OUTPUT/$(dirname $DIR)}
+OUTPUT=${OUTPUT:-$DIR/../../OUTPUT}
 python -m dzcb \
     --pnwdigital \
     --seattledmr \
@@ -14,5 +14,5 @@ python -m dzcb \
                                $DIR/md390-uhf.json \
                                $DIR/md390-vhf.json \
     --scanlists-json $DIR/scanlists.json \
-    --exclude $DIR/exclude.csv -- \
-$OUTPUT
+    --exclude $DIR/exclude.csv \
+-- $OUTPUT/$(dirname "$DIR")
