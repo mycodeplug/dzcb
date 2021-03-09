@@ -977,19 +977,18 @@ class Dmrconfig_Codeplug:
     grouplist = attr.ib(default=evolve_from_factory(GrouplistTable))
 
     def render_template(self):
+        if not self.template:
+            raise RuntimeError("no template is defined")
         return "\n".join(
-            tuple(self.template.header) + self.render() + tuple(self.template.footer),
+            tuple(self.template.header)
+            + (("", self.template.version_comment_line) if self.template.include_version is not False else tuple())
+            + self.render()
+            + tuple(self.template.footer)
         )
 
     def render(self):
-        preamble = (
-            ("", self.template.version_comment_line)
-            if self.template.include_version is not False
-            else tuple()
-        )
         return (
-            preamble
-            + self.analog.render()
+            self.analog.render()
             + self.digital.render()
             + self.contact.render()
             + self.grouplist.render()
