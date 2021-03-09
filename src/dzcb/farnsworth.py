@@ -219,7 +219,10 @@ def Zone_to_dict(z):
 def Codeplug_to_json(cp, based_on=None):
     cp_dict = {}
     if based_on is not None:
-        cp_dict = json.load(based_on)
+        if hasattr(based_on, "read"):
+            cp_dict = json.load(based_on)
+        else:
+            cp_dict = json.loads(based_on)
     # determine supported frequency range from BasicInformation
     ranges = []
     basic_info = cp_dict.get("BasicInformation", {})

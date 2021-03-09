@@ -1,0 +1,398 @@
+{
+	"BasicInformation": {
+		"CpsVersion": "0103",
+		"FrequencyRangeA": "136-174",
+		"FrequencyRangeB": "400-480",
+		"HighFrequencyA": "174.00000",
+		"HighFrequencyB": "480.00000",
+		"LastProgrammedTime": "31-Dec-2020 14:43:42",
+		"LowFrequencyA": "136.00000",
+		"LowFrequencyB": "400.00000",
+		"Model": "MD-UV380"
+	},
+	"ButtonDefinitions": {
+		"LongPressDuration": "1000"
+	},
+	"Channels": [
+		{
+			"AdmitCriteria": "Always",
+			"AllowTalkaround": "Off",
+			"Autoscan": "Off",
+			"Bandwidth": "12.5",
+			"ChannelMode": "Digital",
+			"ColorCode": "1",
+			"ContactName": "None",
+			"CtcssDecode": "None",
+			"CtcssEncode": "None",
+			"DCDMSwitch": "Off",
+			"DataCallConfirmed": "Off",
+			"Decode1": "Off",
+			"Decode2": "Off",
+			"Decode3": "Off",
+			"Decode4": "Off",
+			"Decode5": "Off",
+			"Decode6": "Off",
+			"Decode7": "Off",
+			"Decode8": "Off",
+			"DisplayPTTID": "Off",
+			"EmergencyAlarmAck": "Off",
+			"EmergencySystem": "None",
+			"GPSSystem": "None",
+			"GroupList": "None",
+			"InCallCriteria": "Always",
+			"LeaderMS": "Off",
+			"LoneWorker": "Off",
+			"Name": "Channel1",
+			"Power": "High",
+			"Privacy": "None",
+			"PrivacyNumber": "1",
+			"PrivateCallConfirmed": "Off",
+			"QtReverse": "180",
+			"ReceiveGPSInfo": "Off",
+			"RepeaterSlot": "1",
+			"ReverseBurst": "On",
+			"RxFrequency": "136.00000",
+			"RxOnly": "Off",
+			"RxRefFrequency": "Low",
+			"RxSignallingSystem": "Off",
+			"ScanList": "None",
+			"SendGPSInfo": "Off",
+			"Squelch": "1",
+			"Talkaround": "Off",
+			"Tot": "60",
+			"TotRekeyDelay": "0",
+			"TxFrequencyOffset": "+0.00000",
+			"TxRefFrequency": "Low",
+			"TxSignallingSystem": "Off",
+			"Vox": "Off"
+		}
+	],
+	"Contacts": [
+		{
+			"CallID": "1",
+			"CallReceiveTone": "No",
+			"CallType": "Group",
+			"Name": "Contact1"
+		}
+	],
+	"GPSSystems": [
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		},
+		{
+			"DestinationID": "None",
+			"GPSDefaultReportInterval": "Off",
+			"GPSRevertChannel": "Current Channel"
+		}
+	],
+	"GeneralSettings": {
+		"BacklightTime": "15",
+		"CHVoiceAnnouncement": "Off",
+		"CallAlertToneDuration": "Continue",
+		"ChFreeIndicationTone": "Off",
+		"ChannelsHangTime": "3000",
+		"DisableAllLeds": "Off",
+		"DisableAllTones": "Off",
+		"EditRadioID": "On",
+		"EnableContactsCSV": "Off",
+		"FreqChannelMode": "Channel",
+		"GroupCallHangTime": "3000",
+		"GroupCallMatch": "On",
+		"IntroScreen": "Character String",
+		"IntroScreenLine1": "GEN 2021-02-26",
+		"IntroScreenLine2": "PNWDigital",
+		"KeypadTones": "Off",
+		"LoneWorkerReminderTime": "10",
+		"LoneWorkerResponseTime": "1",
+		"MicLevel": "3",
+		"ModeSelectA": "Memory",
+		"ModeSelectB": "Memory",
+		"MonitorType": "Open Squelch",
+		"PcProgPassword": "",
+		"PowerOnPassword": "00000000",
+		"PrivateCallHangTime": "4000",
+		"PrivateCallMatch": "On",
+		"PublicZone": "On",
+		"PwAndLockEnable": "Off",
+		"RadioID": "1234",
+		"RadioID1": "1",
+		"RadioID2": "2",
+		"RadioID3": "3",
+		"RadioName": "",
+		"RadioProgPassword": "",
+		"RxLowBatteryInterval": "120",
+		"SaveModeReceive": "On",
+		"SavePreamble": "On",
+		"ScanAnalogHangTime": "5000",
+		"ScanDigitalHangTime": "5000",
+		"SetKeypadLockTime": "Manual",
+		"TalkPermitTone": "None",
+		"TimeZone": "UTC-8:00",
+		"TxMode": "Designated CH + Hand CH",
+		"TxPreambleDuration": "300",
+		"VoxSensitivity": "3"
+	},
+	"GroupLists": [
+		{
+			"Contact": [
+				"Contact1"
+			],
+			"Name": "GroupList1"
+		}
+	],
+	"MenuItems": {
+		"Answered": "On",
+		"Backlight": "On",
+		"CallAlert": "On",
+		"DisplayMode": "On",
+		"Edit": "On",
+		"EditList": "On",
+		"Gps": "Off",
+		"HangTime": "30",
+		"IntroScreen": "On",
+		"KeyboardLock": "On",
+		"LedIndicator": "On",
+		"ManualDial": "On",
+		"Missed": "On",
+		"OutgoingRadio": "On",
+		"PasswordAndLock": "On",
+		"Power": "On",
+		"ProgramKey": "On",
+		"ProgramRadio": "On",
+		"RadioCheck": "Off",
+		"RadioDisable": "Off",
+		"RadioEnable": "Off",
+		"RemoteMonitor": "Off",
+		"Scan": "On",
+		"Squelch": "On",
+		"Talkaround": "Off",
+		"TextMessage": "On",
+		"ToneOrAlert": "On",
+		"Vox": "On"
+	},
+	"NumberKey": [
+		{
+			"Contact": "None"
+		},
+		{
+			"Contact": "None"
+		},
+		{
+			"Contact": "None"
+		},
+		{
+			"Contact": "None"
+		},
+		{
+			"Contact": "None"
+		},
+		{
+			"Contact": "None"
+		},
+		{
+			"Contact": "None"
+		},
+		{
+			"Contact": "None"
+		},
+		{
+			"Contact": "None"
+		},
+		{
+			"Contact": "None"
+		}
+	],
+	"OneTouch": [
+		{
+			"Call": "Contact1",
+			"CallType": "Text Message",
+			"DTMF": "DTMF-2",
+			"Encode": "=INVALID=",
+			"Mode": "None",
+			"TextMessage": "Hello"
+		},
+		{
+			"Call": "Contact1",
+			"CallType": "Text Message",
+			"DTMF": "DTMF-2",
+			"Encode": "=INVALID=",
+			"Mode": "None",
+			"TextMessage": "Hello"
+		},
+		{
+			"Call": "Contact1",
+			"CallType": "Text Message",
+			"DTMF": "DTMF-2",
+			"Encode": "=INVALID=",
+			"Mode": "None",
+			"TextMessage": "Hello"
+		},
+		{
+			"Call": "Contact1",
+			"CallType": "Text Message",
+			"DTMF": "DTMF-2",
+			"Encode": "=INVALID=",
+			"Mode": "None",
+			"TextMessage": "Hello"
+		},
+		{
+			"Call": "Contact1",
+			"CallType": "Text Message",
+			"DTMF": "DTMF-2",
+			"Encode": "=INVALID=",
+			"Mode": "None",
+			"TextMessage": "Hello"
+		},
+		{
+			"Call": "Contact1",
+			"CallType": "Text Message",
+			"DTMF": "DTMF-2",
+			"Encode": "=INVALID=",
+			"Mode": "None",
+			"TextMessage": "Hello"
+		}
+	],
+	"PrivacySettings": {
+		"BasicKey": [
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF",
+			"FFFF"
+		],
+		"EnhancedKey": [
+			"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+			"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+			"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+			"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+			"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+			"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+			"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+			"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+		]
+	},
+	"RadioButtons": [
+		{
+			"Button": "Unassigned (default)"
+		},
+		{
+			"Button": "Unassigned (default)"
+		},
+		{
+			"Button": "Unassigned (default)"
+		},
+		{
+			"Button": "Unassigned (default)"
+		}
+	],
+	"ScanLists": [
+		{
+			"Channel": [
+				"Channel1"
+			],
+			"Name": "ScanList1",
+			"PriorityChannel1": "None",
+			"PriorityChannel2": "None",
+			"PrioritySampleTime": "2000",
+			"SignallingHoldTime": "500",
+			"TxDesignatedChannel": "Last Active Channel"
+		}
+	],
+	"TextMessages": [
+		{
+			"TextMessage": "Hello"
+		}
+	],
+	"Zones": [
+		{
+			"ChannelA": [
+				"Channel1"
+			],
+			"ChannelB": [],
+			"Name": "Zone1"
+		}
+	]
+}

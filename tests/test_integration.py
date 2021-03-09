@@ -9,6 +9,8 @@ import subprocess
 import shutil
 import sys
 
+import dzcb.recipe
+
 
 def get_diff_files(dcmp, top_level=False):
     msg = []
@@ -42,32 +44,73 @@ def test_default_codeplug(tmp_path):
     output_dir.mkdir()
     cache_dir = output_dir / "cache"
     input_dir = (
+        Path(os.path.dirname(__file__)) / "default-codeplug-expect-output" / "input"
+    )
+    input_cache_dir = (
         Path(os.path.dirname(__file__)) / "default-codeplug-expect-output" / "cache"
     )
-    shutil.copytree(input_dir, cache_dir)
+    shutil.copytree(input_cache_dir, cache_dir)
     proc = subprocess.run(
         [
             sys.executable,
             "-m",
             "dzcb",
-            "--farnsworth-template-json",
-            str(input_dir / ".." / "editcp" / "md-uv380.json"),
-            str(input_dir / ".." / "editcp" / "md-uv390.json"),
-            "--dmrconfig-template",
-            str(input_dir / ".." / "dmrconfig" / "d878uv-int.conf"),
-            str(input_dir / ".." / "dmrconfig" / "md380-int.conf"),
-            str(input_dir / ".." / "dmrconfig" / "md-uv380-int.conf"),
             "--scanlists-json",
             str(input_dir / "scanlists.json"),
             "--replacements",
             str(input_dir / "replacements.csv"),
             "--order",
             str(input_dir / "order.csv"),
+            "--anytone",
+            "--farnsworth-template-json",
+            str(input_dir / "md-uv380.json"),
+            str(input_dir / "md-uv390.json"),
+            "--dmrconfig-template",
+            str(input_dir / "d878uv-int.conf"),
+            str(input_dir / "md380-int.conf"),
+            str(input_dir / "md-uv380-int.conf"),
+            "--gb3gf",
             "--",
             str(output_dir),
         ],
         check=True,
     )
+    for f in output_dir.glob("*.log"):
+        f.rename(tmp_path / f.name)
+    dcmp = dircmp(input_dir.parent, output_dir, ignore=[".DS_Store"])
+    diff_files = get_diff_files(dcmp, top_level=True)
+    assert not diff_files
+
+
+def test_default_recipe(tmp_path):
+    output_dir = tmp_path / "default"
+    output_dir.mkdir()
+    cache_dir = output_dir / "cache"
+    input_dir = (
+        Path(os.path.dirname(__file__)) / "default-codeplug-expect-output" / "input"
+    )
+    input_cache_dir = (
+        Path(os.path.dirname(__file__)) / "default-codeplug-expect-output" / "cache"
+    )
+    shutil.copytree(input_cache_dir, cache_dir)
+    recipe = dzcb.recipe.CodeplugRecipe(
+        scanlists_json=input_dir / "scanlists.json",
+        order=input_dir / "order.csv",
+        replacements=input_dir / "replacements.csv",
+        output_anytone=True,
+        output_dmrconfig=[
+            input_dir / "d878uv-int.conf",
+            input_dir / "md380-int.conf",
+            input_dir / "md-uv380-int.conf",
+        ],
+        output_farnsworth=[
+            input_dir / "md-uv380.json",
+            input_dir / "md-uv390.json",
+        ],
+        output_gb3gf=True,
+    )
+    recipe.generate(output_dir)
+
     for f in output_dir.glob("*.log"):
         f.rename(tmp_path / f.name)
     dcmp = dircmp(input_dir.parent, output_dir, ignore=[".DS_Store"])
