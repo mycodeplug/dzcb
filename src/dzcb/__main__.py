@@ -38,16 +38,19 @@ if __name__ == "__main__":
     parser.add_argument(
         "--k7abd",
         nargs="*",
+        metavar="DIR",
         help="Specify one or more local directories containing K7ABD CSV files",
     )
     parser.add_argument(
         "--repeaterbook-proximity-csv",
         nargs="*",
+        metavar="CSV",
         help="Fetch repeaters within X distance of POIs defined in a CSV file",
     )
     parser.add_argument(
         "--repeaterbook-state",
         nargs="*",
+        metavar="STATE",
         help="Download repeaters from the given state(s). Default: '{}'".format(
             "' '".join(dzcb.repeaterbook.REPEATERBOOK_DEFAULT_STATES),
         ),
@@ -64,72 +67,76 @@ if __name__ == "__main__":
     parser.add_argument(
         "--scanlists-json",
         default=None,
+        metavar="JSON",
         help="JSON dict mapping scanlist name to list of channel names.",
     )
     parser.add_argument(
         "--include",
         nargs="*",
+        metavar="CSV",
         help="Specify one or more CSV files with object names to include",
     )
     parser.add_argument(
         "--exclude",
         nargs="*",
+        metavar="CSV",
         help="Specify one or more CSV files with object names to exclude",
     )
     parser.add_argument(
         "--order",
         nargs="*",
+        metavar="CSV",
         help="Specify one or more CSV files with object order by name",
     )
     parser.add_argument(
         "--reverse-order",
         nargs="*",
+        metavar="CSV",
         help="Specify one or more CSV files with object order by name (reverse)",
     )
     parser.add_argument(
         "--replacements",
         nargs="*",
+        metavar="CSV",
         help="Specify one or more CSV files with object name replacements",
     )
     parser.add_argument(
         "--anytone",
         nargs="*",
-        help="Anytone radio+CPS versions to use when creating anytone CSV. "
-        "One codeplug per radio+CPS version specified will be generated in the 'anytone' "
-        "subdir of the output directory. If no radio+CPS versions are given use "
-        "default versions: ({})".format(
-            ", ".join(dzcb.anytone.DEFAULT_SUPPORTED_RADIOS)
+        metavar="RADIO",
+        help="Generate Anytone CPS CSV files in the 'anytone' subdir "
+        "for the given radio and CPS versions. If no RADIO+CPS versions "
+        "are provided, use default set: ({})".format(
+            " ".join(dzcb.anytone.DEFAULT_SUPPORTED_RADIOS)
         ),
     )
     parser.add_argument(
         "--dmrconfig-template",
         "--dmrconfig",
         nargs="*",
-        help="dmrconfig conf file(s) to use when creating dmrconfig codeplugs. "
-        "One codeplug per file specified will be generated in the 'dmrconfig' "
-        "subdir of the output directory. If no files are given, use "
-        "default template files",
+        metavar="CONF",
+        help="Generate dmrconfig conf files in the 'dmrconfig' subdir "
+             "based on the given template conf files. If no "
+             "templates are provided, default templates will be used."
     )
     parser.add_argument(
         "--farnsworth-template-json",
-        "--farnsworth-template",
-        "--farnsworth",
         "--editcp",
         nargs="*",
-        help="JSON file(s) to use when creating farnsworth editcp codeplugs. "
-        "One codeplug per file specified will be generated in the 'editcp' "
-        "subfolder of the output directory. If no files are given, use the"
-        "default template files",
+        metavar="JSON",
+        help="Generate Farnsworth editcp JSON format codeplugs in the 'editcp' "
+             "subdir based on the given template json files. If no templates are "
+             "provided, default templates will be used."
     )
     parser.add_argument(
         "--gb3gf",
         nargs="*",
-        help="Radio types to use when creating gb3gf CSV files. "
-        "One codeplug per radio type specified will be generated in the 'gb3gf' "
-        "subdir of the output directory. If no radio types are given use "
-        "default: ({})".format(", ".join(dzcb.gb3gf.DEFAULT_SUPPORTED_RADIOS)),
+        metavar="RADIO",
+        help="Generate GB3GF CSV files in the 'gb3gf' subdir "
+             "for the given radio types. If no radios are provided, "
+             "use default: ({})".format(" ".join(dzcb.gb3gf.DEFAULT_SUPPORTED_RADIOS)),
     )
-    parser.add_argument("outdir", help="Write code plug files to this directory")
+    parser.add_argument("outdir", help="Write codeplug files to this directory")
     args = parser.parse_args()
 
     dzcb.recipe.CodeplugRecipe(
