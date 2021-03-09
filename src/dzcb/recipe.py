@@ -598,8 +598,12 @@ class CodeplugRecipe:
         self.farnsworth()
         self.gb3gf()
 
+    def deinitialize(self):
+        dzcb.log.deinit_logging()
+
     def generate(self, output_dir):
         self.initialize(output_dir=output_dir)
         self.source()
         self.codeplug()
         self.output()
+        self.deinitialize()
