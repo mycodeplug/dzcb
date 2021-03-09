@@ -299,7 +299,8 @@ class CodeplugIndexLookup:
 
     @contact.default
     def _contact(self):
-        return items_by_index(self.codeplug.contacts, offset=self.offset)
+        # contact index keys on contact name
+        return items_by_index(self.codeplug.contacts, key=lambda ct: ct.name, offset=self.offset)
 
     @grouplist_id.default
     def _grouplist_id(self):
@@ -540,10 +541,10 @@ class DigitalChannelTable(ChannelTable):
 
     def tx_contact(self, ch):
         if ch.talkgroup:
-            ct_index = self.index.contact[ch.talkgroup]
+            ct_index = self.index.contact[ch.talkgroup.name]
             if ct_index <= self.radio.value.ncontacts:
                 return "{index:5}   # {name}".format(
-                    index=self.index.contact[ch.talkgroup],
+                    index=ct_index,
                     name=ch.talkgroup.name,
                 )
             logger.debug(
@@ -735,6 +736,7 @@ class GrouplistTable(Table):
         contact_ranges = items_to_range_tuples(
             self.index.contact,
             grouplist.contacts,
+            key=lambda ct: ct.name,
             max_index=ct_index_limit,
             max_count=ct_max,
         )
