@@ -220,7 +220,8 @@ class Channel:
 
     @property
     def transmit_frequency(self):
-        return round_frequency(self.frequency + self.offset)
+        offset = self.offset if self.offset else 0
+        return round_frequency(self.frequency + offset)
 
 
 def _tone_validator(instance, attribute, value):
