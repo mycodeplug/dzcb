@@ -329,7 +329,6 @@ def uniquify_contacts_by_name(codeplug):
 class Table:
     codeplug = attr.ib(
         validator=attr.validators.instance_of(Codeplug),
-        converter=uniquify_contacts_by_name,
     )
     radio = attr.ib(default=Radio.D868UV, validator=attr.validators.instance_of(Radio))
     index = attr.ib(validator=attr.validators.instance_of(CodeplugIndexLookup))
