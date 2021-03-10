@@ -54,7 +54,20 @@ def same_contact_both_timeslots_codeplug():
     )
 
 
-def test_dmrconfig_contact_integrity(same_contact_both_timeslots_codeplug):
+@pytest.fixture(
+    params=(
+        pytest.param(True, id="filter"),
+        pytest.param(False, id="raw"),
+    )
+)
+def template_filter(request):
+    if request.param:
+        return dzcb.output.dmrconfig.DmrConfigTemplate(
+            ranges=((0.0, 6000.0),),
+        )
+
+
+def test_dmrconfig_contact_integrity(same_contact_both_timeslots_codeplug, template_filter):
     cp = same_contact_both_timeslots_codeplug
     assert len(cp.channels) == 1
 
@@ -63,7 +76,8 @@ def test_dmrconfig_contact_integrity(same_contact_both_timeslots_codeplug):
     assert tuple(ch.name for ch in exp_cp.channels) == exp_channel_names
 
     dmrconfig_cp = dzcb.output.dmrconfig.Dmrconfig_Codeplug(
-        table=dzcb.output.dmrconfig.Table(codeplug=exp_cp),
+        table=dzcb.output.dmrconfig.Table(codeplug=exp_cp, include_docs=False),
+        template=template_filter,
     )
 
     digital_channels = "\n".join(dmrconfig_cp.digital.render())
