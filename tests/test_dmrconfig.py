@@ -66,6 +66,6 @@ def test_dmrconfig_contact_integrity(same_contact_both_timeslots_codeplug):
         table=dzcb.output.dmrconfig.Table(codeplug=exp_cp),
     )
 
-    dmrconfig_conf = "\n".join(dmrconfig_cp.render())
+    digital_channels = "\n".join(dmrconfig_cp.digital.render())
     for ch_name in exp_channel_names:
-        assert ch_name.replace(" ", "_") in dmrconfig_conf
+        assert ch_name.replace(" ", "_") in digital_channels
