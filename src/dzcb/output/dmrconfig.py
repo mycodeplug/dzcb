@@ -719,6 +719,12 @@ class ContactsTable(Table):
     def docs(self):
         return super().docs(contact_limit=f"1-{self.radio.value.ncontacts}")
 
+    def __iter__(self):
+        return self.iter_objects(
+            uniquify_contacts(self.codeplug.contacts, key=lambda ct: ct.name),
+            object_limit=self.radio.value.limit(self.object_name),
+        )
+
 
 class GrouplistTable(Table):
     """
