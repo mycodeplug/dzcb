@@ -300,7 +300,9 @@ class CodeplugIndexLookup:
     @contact.default
     def _contact(self):
         # contact index keys on contact name
-        return items_by_index(self.codeplug.contacts, key=lambda ct: ct.name, offset=self.offset)
+        return items_by_index(
+            self.codeplug.contacts, key=lambda ct: ct.name, offset=self.offset
+        )
 
     @grouplist_id.default
     def _grouplist_id(self):
@@ -793,7 +795,11 @@ class DmrConfigTemplate:
     )
     ranges = attr.ib(
         default=None,
-        validator=attr.validators.optional(attr.validators.deep_iterable(attr.validators.instance_of(tuple), attr.validators.instance_of(tuple))),
+        validator=attr.validators.optional(
+            attr.validators.deep_iterable(
+                attr.validators.instance_of(tuple), attr.validators.instance_of(tuple)
+            )
+        ),
     )
     include_docs = attr.ib(
         default=None,
@@ -996,7 +1002,11 @@ class Dmrconfig_Codeplug:
             raise RuntimeError("no template is defined")
         return "\n".join(
             tuple(self.template.header)
-            + (("", self.template.version_comment_line) if self.template.include_version is not False else tuple())
+            + (
+                ("", self.template.version_comment_line)
+                if self.template.include_version is not False
+                else tuple()
+            )
             + self.render()
             + tuple(self.template.footer)
         )
