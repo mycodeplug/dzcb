@@ -874,6 +874,9 @@ class DmrConfigTemplate:
 
         raise TemplateError if template doesn't contain a valid "Radio: X" line
         """
+        if isinstance(template, cls):
+            return template  # already a template, done
+
         consuming_table = dict(
             name=None,
             lines=[],
