@@ -373,22 +373,25 @@ class Table:
         tdict.update(kwargs)
         return cls(**tdict)
 
-    def __iter__(self):
-        if not self.object_name:
-            raise NotImplementedError("No object_name specified for {!r}".format(self))
-        object_list = getattr(self.codeplug, self.object_name)
-        object_limit = self.radio.value.limit(self.object_name)
+    def iter_objects(self, object_list, object_limit=None):
         for ix, item in enumerate(object_list):
-            if ix + 1 > object_limit:
+            if object_limit is not None and ix + 1 > object_limit:
                 logger.debug(
                     "{0} table is full, ignoring {1} {0}".format(
-                        self.object_name, len(object_list) - ix
+                        type(item).__name__, len(object_list) - ix
                     )
                 )
                 break
             row = self.format_row(ix + 1, item)
             if row:
                 yield row
+
+    def __iter__(self):
+        if not self.object_name:
+            raise NotImplementedError("No object_name specified for {!r}".format(self))
+        object_list = getattr(self.codeplug, self.object_name)
+        object_limit = self.radio.value.limit(self.object_name)
+        return self.iter_objects(object_list, object_limit=object_limit)
 
 
 class ChannelTable(Table):
