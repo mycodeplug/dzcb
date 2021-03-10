@@ -938,6 +938,8 @@ def evolve_from_factory(table_type):
     """
     Responsible for applying template values to the passed in Table
     when creating subtables in Dmrconfig_Codeplug
+
+    TODO: need coverage for this function
     """
 
     def _evolve_from(self):
