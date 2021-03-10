@@ -785,7 +785,7 @@ class DmrConfigTemplate:
     )
     ranges = attr.ib(
         default=None,
-        validator=attr.validators.optional(attr.validators.deep_iterable(tuple, tuple)),
+        validator=attr.validators.optional(attr.validators.deep_iterable(attr.validators.instance_of(tuple), attr.validators.instance_of(tuple))),
     )
     include_docs = attr.ib(
         default=None,
