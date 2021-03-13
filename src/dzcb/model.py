@@ -155,7 +155,9 @@ class Power(ConvertibleEnum):
             return self.HIGH
         if self is self.HIGH:
             return self.LOW
-        raise ValueError("No known powers are allowed {!r} from {!r}".format(self, allowed_powers))
+        raise ValueError(
+            "No known powers are allowed {!r} from {!r}".format(self, allowed_powers)
+        )
 
 
 class Bandwidth(ConvertibleEnum):
@@ -168,7 +170,11 @@ class Bandwidth(ConvertibleEnum):
             return self
         if self is self._20:
             return self._25
-        raise ValueError("No known bandwidths are allowed {!r} from {!r}".format(self, allowed_bandwidths))
+        raise ValueError(
+            "No known bandwidths are allowed {!r} from {!r}".format(
+                self, allowed_bandwidths
+            )
+        )
 
 
 def round_frequency(freq, ndigits=5):
@@ -180,7 +186,9 @@ class Channel:
     """Common channel attributes"""
 
     name = attr.ib(eq=False, validator=attr.validators.instance_of(str))
-    frequency = attr.ib(validator=attr.validators.instance_of(float), converter=round_frequency)
+    frequency = attr.ib(
+        validator=attr.validators.instance_of(float), converter=round_frequency
+    )
     offset = attr.ib(
         default=None,
         validator=attr.validators.optional(attr.validators.instance_of(float)),
@@ -700,24 +708,32 @@ class Codeplug:
 
         # order static_talkgroups based on contact order
         def order_static_talkgroups(ch):
-            if isinstance(ch, DigitalChannel):
-                if ch.static_talkgroups:
+            return attr.evolve(
+                ch,
+                static_talkgroups=[
+                    tg for tg in cp["contacts"] if tg in ch.static_talkgroups
+                ],
+            )
+
+        def update_talkgroup(ch):
+            try:
+                updated_talkgroup = cp["contacts"][cp["contacts"].index(ch.talkgroup)]
+                if ch.talkgroup.name != updated_talkgroup.name:
                     return attr.evolve(
                         ch,
-                        static_talkgroups=[
-                            tg for tg in cp["contacts"] if tg in ch.static_talkgroups
-                        ],
+                        talkgroup=updated_talkgroup,
                     )
-                # update talkgroup reference to get the latest name
+            except ValueError:
+                pass
+            return ch
+
+        def update_talkgroup_refs(ch):
+            if isinstance(ch, DigitalChannel):
+                if ch.static_talkgroups:
+                    return order_static_talkgroups(ch)
                 elif ch.talkgroup:
-                    updated_talkgroup = cp["contacts"][
-                        cp["contacts"].index(ch.talkgroup)
-                    ]
-                    if ch.talkgroup.name != updated_talkgroup.name:
-                        return attr.evolve(
-                            ch,
-                            talkgroup=updated_talkgroup,
-                        )
+                    # update talkgroup reference to get the latest name
+                    return update_talkgroup(ch)
             return ch
 
         def talkgroup_exists(ch, contact_set):
@@ -761,7 +777,7 @@ class Codeplug:
         # Reorder static talkgroups and remove channels with missing talkgroups
         contact_set = set(tg for tg in cp["contacts"])
         cp["channels"] = [
-            order_static_talkgroups(ch)
+            update_talkgroup_refs(ch)
             for ch in cp["channels"]
             if talkgroup_exists(ch, contact_set)
         ]

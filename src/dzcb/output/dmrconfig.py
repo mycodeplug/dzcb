@@ -30,7 +30,6 @@ from dzcb.model import (
     Power,
     AnalogChannel,
     DigitalChannel,
-    uniquify_contacts,
 )
 
 
@@ -213,10 +212,16 @@ def items_by_index(
 ) -> Dict[Any, int]:
     """
     Build a mapping of items to indexes in the all_items sequence.
+
+    Sort of removing duplicates, i guess
     """
-    return {
-        key(item) if key else item: ix + offset for ix, item in enumerate(all_items)
-    }
+    ibb = {}
+    ix = 0
+    for item in all_items:
+        k = key(item) if key else item
+        ibb.setdefault(k, ix + offset)
+        ix += 1
+    return ibb
 
 
 def items_to_range_tuples(
@@ -292,15 +297,25 @@ def ranges_to_total_items(ranges: Sequence[Range]) -> int:
 class CodeplugIndexLookup:
     codeplug = attr.ib(validator=attr.validators.instance_of(Codeplug))
     offset = attr.ib(default=0)
-    contact = attr.ib()
+    contact = attr.ib(default=None)  # set by _contacts_filtered
     grouplist_id = attr.ib()
     scanlist_id = attr.ib()
     channel = attr.ib()
+    _contacts_filtered = attr.ib(init=False)
 
-    @contact.default
-    def _contact(self):
+    @_contacts_filtered.default
+    def _contacts_filtered_init(self):
+        contacts_filtered = []
+        contact_names = set()
+        for contact in self.codeplug.contacts:
+            if contact.name not in contact_names:
+                contact_names.add(contact.name)
+                contacts_filtered.append(contact)
         # contact index keys on contact name
-        return items_by_index(self.codeplug.contacts, key=lambda ct: ct.name, offset=self.offset)
+        self.contact = items_by_index(
+            contacts_filtered, key=lambda ct: ct.name, offset=self.offset
+        )
+        return contacts_filtered
 
     @grouplist_id.default
     def _grouplist_id(self):
@@ -319,17 +334,10 @@ class CodeplugIndexLookup:
         return items_by_index(self.codeplug.channels, offset=self.offset)
 
 
-def uniquify_contacts_by_name(codeplug):
-    return attr.evolve(
-        codeplug, contacts=uniquify_contacts(codeplug.contacts, key=lambda ct: ct.name)
-    )
-
-
 @attr.s
 class Table:
     codeplug = attr.ib(
         validator=attr.validators.instance_of(Codeplug),
-        converter=uniquify_contacts_by_name,
     )
     radio = attr.ib(default=Radio.D868UV, validator=attr.validators.instance_of(Radio))
     index = attr.ib(validator=attr.validators.instance_of(CodeplugIndexLookup))
@@ -374,22 +382,25 @@ class Table:
         tdict.update(kwargs)
         return cls(**tdict)
 
-    def __iter__(self):
-        if not self.object_name:
-            raise NotImplementedError("No object_name specified for {!r}".format(self))
-        object_list = getattr(self.codeplug, self.object_name)
-        object_limit = self.radio.value.limit(self.object_name)
+    def iter_objects(self, object_list, object_limit=None):
         for ix, item in enumerate(object_list):
-            if ix + 1 > object_limit:
+            if object_limit is not None and ix + 1 > object_limit:
                 logger.debug(
                     "{0} table is full, ignoring {1} {0}".format(
-                        self.object_name, len(object_list) - ix
+                        type(item).__name__, len(object_list) - ix
                     )
                 )
                 break
             row = self.format_row(ix + 1, item)
             if row:
                 yield row
+
+    def __iter__(self):
+        if not self.object_name:
+            raise NotImplementedError("No object_name specified for {!r}".format(self))
+        object_list = getattr(self.codeplug, self.object_name)
+        object_limit = self.radio.value.limit(self.object_name)
+        return self.iter_objects(object_list, object_limit=object_limit)
 
 
 class ChannelTable(Table):
@@ -717,6 +728,12 @@ class ContactsTable(Table):
     def docs(self):
         return super().docs(contact_limit=f"1-{self.radio.value.ncontacts}")
 
+    def __iter__(self):
+        return self.iter_objects(
+            self.index._contacts_filtered,  # unique by name
+            object_limit=self.radio.value.limit(self.object_name),
+        )
+
 
 class GrouplistTable(Table):
     """
@@ -785,7 +802,11 @@ class DmrConfigTemplate:
     )
     ranges = attr.ib(
         default=None,
-        validator=attr.validators.optional(attr.validators.deep_iterable(tuple, tuple)),
+        validator=attr.validators.optional(
+            attr.validators.deep_iterable(
+                attr.validators.instance_of(tuple), attr.validators.instance_of(tuple)
+            )
+        ),
     )
     include_docs = attr.ib(
         default=None,
@@ -874,6 +895,9 @@ class DmrConfigTemplate:
 
         raise TemplateError if template doesn't contain a valid "Radio: X" line
         """
+        if isinstance(template, cls):
+            return template  # already a template, done
+
         consuming_table = dict(
             name=None,
             lines=[],
@@ -935,6 +959,8 @@ def evolve_from_factory(table_type):
     """
     Responsible for applying template values to the passed in Table
     when creating subtables in Dmrconfig_Codeplug
+
+    TODO: need coverage for this function
     """
 
     def _evolve_from(self):
@@ -983,7 +1009,11 @@ class Dmrconfig_Codeplug:
             raise RuntimeError("no template is defined")
         return "\n".join(
             tuple(self.template.header)
-            + (("", self.template.version_comment_line) if self.template.include_version is not False else tuple())
+            + (
+                ("", self.template.version_comment_line)
+                if self.template.include_version is not False
+                else tuple()
+            )
             + self.render()
             + tuple(self.template.footer)
         )
