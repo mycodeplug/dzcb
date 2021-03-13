@@ -212,10 +212,16 @@ def items_by_index(
 ) -> Dict[Any, int]:
     """
     Build a mapping of items to indexes in the all_items sequence.
+
+    Sort of removing duplicates, i guess
     """
-    return {
-        key(item) if key else item: ix + offset for ix, item in enumerate(all_items)
-    }
+    ibb = {}
+    ix = 0
+    for item in all_items:
+        k = key(item) if key else item
+        ibb.setdefault(k, ix + offset)
+        ix += 1
+    return ibb
 
 
 def items_to_range_tuples(
