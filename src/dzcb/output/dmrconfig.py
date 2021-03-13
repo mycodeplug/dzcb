@@ -30,7 +30,6 @@ from dzcb.model import (
     Power,
     AnalogChannel,
     DigitalChannel,
-    uniquify_contacts,
 )
 
 
@@ -319,12 +318,6 @@ class CodeplugIndexLookup:
     @channel.default
     def _channel(self):
         return items_by_index(self.codeplug.channels, offset=self.offset)
-
-
-def uniquify_contacts_by_name(codeplug):
-    return attr.evolve(
-        codeplug, contacts=uniquify_contacts(codeplug.contacts, key=lambda ct: ct.name)
-    )
 
 
 @attr.s
