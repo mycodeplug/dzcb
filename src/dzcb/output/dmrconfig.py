@@ -297,17 +297,25 @@ def ranges_to_total_items(ranges: Sequence[Range]) -> int:
 class CodeplugIndexLookup:
     codeplug = attr.ib(validator=attr.validators.instance_of(Codeplug))
     offset = attr.ib(default=0)
-    contact = attr.ib()
+    contact = attr.ib(default=None)  # set by _contacts_filtered
     grouplist_id = attr.ib()
     scanlist_id = attr.ib()
     channel = attr.ib()
+    _contacts_filtered = attr.ib(init=False)
 
-    @contact.default
-    def _contact(self):
+    @_contacts_filtered.default
+    def _contacts_filtered_init(self):
+        contacts_filtered = []
+        contact_names = set()
+        for contact in self.codeplug.contacts:
+            if contact.name not in contact_names:
+                contact_names.add(contact.name)
+                contacts_filtered.append(contact)
         # contact index keys on contact name
-        return items_by_index(
-            self.codeplug.contacts, key=lambda ct: ct.name, offset=self.offset
+        self.contact = items_by_index(
+            contacts_filtered, key=lambda ct: ct.name, offset=self.offset
         )
+        return contacts_filtered
 
     @grouplist_id.default
     def _grouplist_id(self):
@@ -722,7 +730,7 @@ class ContactsTable(Table):
 
     def __iter__(self):
         return self.iter_objects(
-            uniquify_contacts(self.codeplug.contacts, key=lambda ct: ct.name),
+            self.index._contacts_filtered,  # unique by name
             object_limit=self.radio.value.limit(self.object_name),
         )
 
