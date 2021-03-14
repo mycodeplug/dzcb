@@ -15,7 +15,7 @@ def channel_name(ch_name, max_length):
             n_trunc = len(ch_name) - max_length
             ch_name = ch_name[: -n_trunc - n_tail] + ch_name[-n_tail:]
 
-    return ch_name[:max_length]
+    return ch_name[:max_length].strip()
 
 
 def contact_name(contact_name):
