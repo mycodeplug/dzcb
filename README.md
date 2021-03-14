@@ -20,7 +20,7 @@ installing any software, see **[WALKTHROUGH](./doc/WALKTHROUGH.md)**.
 
 The walkthrough uses
 [mycodeplug/example-codeplug](https://github.com/mycodeplug/example-codeplug)
-[[input files](https://github.com/mycodeplug/example-codeplug/tree/main/input/kf7hvm)]
+[[input files](https://github.com/mycodeplug/example-codeplug/tree/main/input/default)]
 
 # Output Formats
 
@@ -41,6 +41,8 @@ use as the template for settings and radio capabilities.
 
 `dzcb` includes basic template files for [MD380/390](./codeplug/default-tyt-md380)
 and [MD-UV380/390](./src/dzcb/data/farnsworth).
+
+Generated JSON files will be written to the `editcp` subdir of the output directory.
 
 ## [OpenRTX/dmrconfig](https://github.com/OpenRTX/dmrconfig)
 
@@ -65,14 +67,15 @@ utility with theoretical support for:
 * Retevis RT84
 
 Use `--dmrconfig-template` to specify an exported codeplug config to use as a
-template for radio type, messages, DMR ID,  and startup text. The output directory
-will contain a dmrconfig config per template specified.
+template for radio type, messages, DMR ID,  and startup text. The `dmrconfig` subdir
+of the output directory will contain a dmrconfig config per template specified.
 
 ## Anytone CPS
 
 For import into the official Anytone CPS (windows-only).
 
-`dzcb` generates Channels.CSV, Talkgroups.CSV, ScanList.CSV, and Zone.CSV
+`dzcb` generates Channels.CSV, Talkgroups.CSV, ScanList.CSV, and Zone.CSV in the `anytone` subdir
+of the output directory.
 
 ### Versions Supported
 
@@ -91,8 +94,8 @@ For import into [GB3GF CSV tool](http://www.gb3gf.co.uk/downloads.html).
 Currently only supporting OpenGD77 target. Tool is "windows-only" but
 runs decently under wine.
 
-A subdirectory `gb3gf_opengd77` is created under the output directory
-containing the 4 CSV files used by the program:
+If `--gb3gf` is specified, the `gb3gf/opengd77` subdir of the output directory will
+contain the 4 CSV files used by the program:
 
   * `Channels.csv`
   * `Contacts.csv`
@@ -226,7 +229,8 @@ See example: [`codeplug/default-tyt-md380/exclude.csv`](/codeplug/default-tyt-md
 
 ## `--order`
 
-The remaining objects are sorted alphabetically after processing removals.
+Alphabetic sorting by filename is used when initially building the zones and channels
+from K7ABD input files. No implicit sorting by object name occurs.
 
 Any remaining objects are sorted according to the order specified in the file
 passed to `--order`. Similarly, a file may be specified as `--reverse-order` which
@@ -264,6 +268,102 @@ Download the usersDB.bin with Farnsworth editcp.
     python -m dzcb.contact_trim \
         < "~/.cache/codeplug/Codeplug Editor/usersDB.bin" \
         > "~/.cache/codeplug/Codeplug Editor/usersDB-trimmed.bin"
+
+
+# Basic Usage
+
+## Installation
+
+```
+pip install dzcb
+```
+
+## Example
+
+Download live pnwdigital and seattledmr networks and generate a dmrconfig style
+codeplug in `/tmp/my-codeplug` with local simplex zones included.
+
+```
+python -m dzcb \
+    --pnwdigital \
+    --seattledmr \
+    --default-k7abd /tmp/my-codeplug
+    --dmrconfig
+```
+
+# Complex Usage
+
+See **[WALKTHROUGH](./doc/WALKTHROUGH.md)** for a step-by-step guide
+to getting started with your own customized codeplug build. (The walkthrough
+uses [mycodeplug/example-codeplug](https://github.com/mycodeplug/example-codeplug))
+
+## CLI
+
+```
+$ python -m dzcb --help
+usage: python -m dzcb [-h] [--pnwdigital] [--seattledmr] [--default-k7abd] [--k7abd [DIR [DIR ...]]]
+                   [--repeaterbook-proximity-csv [CSV [CSV ...]]] [--repeaterbook-state [STATE [STATE ...]]]
+                   [--repeaterbook-name-format REPEATERBOOK_NAME_FORMAT] [--scanlists-json JSON] [--include [CSV [CSV ...]]]
+                   [--exclude [CSV [CSV ...]]] [--order [CSV [CSV ...]]] [--reverse-order [CSV [CSV ...]]]
+                   [--replacements [CSV [CSV ...]]] [--anytone [RADIO [RADIO ...]]] [--dmrconfig-template [CONF [CONF ...]]]
+                   [--farnsworth-template-json [JSON [JSON ...]]] [--gb3gf [RADIO [RADIO ...]]]
+                   outdir
+
+dzcb: DMR Zone Channel Builder
+
+positional arguments:
+  outdir                Write codeplug files to this directory
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --pnwdigital          Fetch the latest pnwdigital K7ABD input files
+  --seattledmr          Fetch the latest seattledmr K7ABD input files
+  --default-k7abd       Include bundled K7ABD input files (simplex + unlicensed)
+  --k7abd [DIR [DIR ...]]
+                        Specify one or more local directories containing K7ABD CSV files
+  --repeaterbook-proximity-csv [CSV [CSV ...]]
+                        Fetch repeaters within X distance of POIs defined in a CSV file
+  --repeaterbook-state [STATE [STATE ...]]
+                        Download repeaters from the given state(s). Default: 'Washington' 'Oregon'
+  --repeaterbook-name-format REPEATERBOOK_NAME_FORMAT
+                        Python format string used to generate channel names from repeaterbook. See Repeaterbook API response
+                        for usable field names. Default: '{Callsign} {Nearest City} {Landmark}'
+  --scanlists-json JSON
+                        JSON dict mapping scanlist name to list of channel names.
+  --include [CSV [CSV ...]]
+                        Specify one or more CSV files with object names to include
+  --exclude [CSV [CSV ...]]
+                        Specify one or more CSV files with object names to exclude
+  --order [CSV [CSV ...]]
+                        Specify one or more CSV files with object order by name
+  --reverse-order [CSV [CSV ...]]
+                        Specify one or more CSV files with object order by name (reverse)
+  --replacements [CSV [CSV ...]]
+                        Specify one or more CSV files with object name replacements
+  --anytone [RADIO [RADIO ...]]
+                        Generate Anytone CPS CSV files in the 'anytone' subdir for the given radio and CPS versions. If no
+                        RADIO+CPS versions are provided, use default set: (578_1_11 868_1_39 878_1_21)
+  --dmrconfig-template [CONF [CONF ...]], --dmrconfig [CONF [CONF ...]]
+                        Generate dmrconfig conf files in the 'dmrconfig' subdir based on the given template conf files. If no
+                        templates are provided, default templates will be used.
+  --farnsworth-template-json [JSON [JSON ...]], --editcp [JSON [JSON ...]]
+                        Generate Farnsworth editcp JSON format codeplugs in the 'editcp' subdir based on the given template
+                        json files. If no templates are provided, default templates will be used.
+  --gb3gf [RADIO [RADIO ...]]
+                        Generate GB3GF CSV files in the 'gb3gf' subdir for the given radio types. If no radios are provided,
+                        use default: (opengd77)
+```
+
+## Python API
+
+`dzcb` exposes a python API that is identical to the command line interface
+which can be extended to further customize the generation process without
+having to directly patch dzcb.
+
+The documentation should improve as the project matures, but for now, see 
+[`generate.py`](https://github.com/mycodeplug/example-codeplug/blob/main/input/default/generate.py)
+for a real example and [`dzcb.recipe.CodeplugRecipe`](/src/dzcb/recipe.py#L207-L259)
+for the implementation details.
         
 # Development Usage
 
@@ -271,16 +371,6 @@ Download the usersDB.bin with Farnsworth editcp.
 
 pip install -e ./dzcb
 
-## Basic Usage
+## Bugs?
 
-Download live pnwdigital and seattledmr networks and generate a codeplug
-in `/tmp/my-codeplug` with local simplex zones included.
-
-```
-python -m dzcb \
-    --pnwdigital \
-    --seattledmr \
-    --default-k7abd /tmp/my-codeplug
-```
-
-See above and `--help` for more usage details.
+Please submit the entire output directory including log files when submitting [issues](/issue/new).
