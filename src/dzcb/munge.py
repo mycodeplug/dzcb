@@ -4,20 +4,6 @@ dzcb.munge - replacements, filters, and modifications of the data
 import re
 import warnings
 
-# These are used when generating channel names
-Talkgroup_Channel_name_replacements = {
-    "Audio Test": "A.Test",
-    "California": "CA",
-    "English": "Eng",
-    "Hawaii": "HI",
-    "Idaho": "ID",
-    "Montana": "MT",
-    "Oregon": "OR",
-    "Utah": "UT",
-    "Washington": "WA",
-    "Worldwide": "WW",
-}
-
 
 def channel_name(ch_name, max_length):
     # Truncate the channel name (try to preserve the tail  characters
