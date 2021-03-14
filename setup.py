@@ -20,7 +20,7 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     author='Masen Furer',
     author_email='m_github@0x26.net',
-    url='https://github.com/masenf/dzcb',
+    url='https://github.com/mycodeplug/dzcb',
     package_dir={"": 'src'},
     package_data={'dzcb': ['data/*.json', 'data/*.csv', 'data/k7abd/*.csv', 'data/farnsworth/*.json', 'data/dmrconfig/*.conf']},
     packages=setuptools.find_packages('src'),
