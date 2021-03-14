@@ -237,7 +237,7 @@ def Codeplug_to_json(cp, based_on=None):
         dict(
             Contacts=[
                 Contact_to_dict(c)
-                for c in uniquify_contacts(cp.contacts, key=lambda ct: ct.name)
+                for c in uniquify_contacts(cp.contacts, ignore_timeslot=True)
             ],
             Channels=[Channel_to_dict(c, cp) for c in cp.channels],
             GroupLists=[GroupList_to_dict(c) for c in cp.grouplists],

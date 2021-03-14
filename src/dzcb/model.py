@@ -517,7 +517,7 @@ class DuplicateDmrID(Warning):
     """2 contacts with different names have the same ID."""
 
 
-def uniquify_contacts(contacts, key=None):
+def uniquify_contacts(contacts, ignore_timeslot=False):
     """
     Return a sequence of contacts with all duplicates removed.
 
@@ -529,10 +529,10 @@ def uniquify_contacts(contacts, key=None):
     """
     ctd = {}
     for ct in contacts:
-        if key is None:
-            ct_key = (ct.name, ct.timeslot) if isinstance(ct, Talkgroup) else ct.name
+        if ignore_timeslot:
+            ct_key = ct.name
         else:
-            ct_key = key(ct)
+            ct_key = (ct.name, ct.timeslot) if isinstance(ct, Talkgroup) else ct.name
         stored_ct = ctd.setdefault(ct_key, ct)
         if stored_ct.dmrid != ct.dmrid:
             raise RuntimeError(
@@ -542,11 +542,14 @@ def uniquify_contacts(contacts, key=None):
     # check for duplicate DMR numbers, drop and warn
     contacts_by_id = {}
     for ct in ctd.values():
-        ct_key = (
-            (ct.dmrid, ct.kind, ct.timeslot)
-            if isinstance(ct, Talkgroup)
-            else (ct.dmrid, ct.kind)
-        )
+        if ignore_timeslot:
+            ct_key = (ct.dmrid, ct.kind)
+        else:
+            ct_key = (
+                (ct.dmrid, ct.kind, ct.timeslot)
+                if isinstance(ct, Talkgroup)
+                else (ct.dmrid, ct.kind)
+            )
         stored_ct = contacts_by_id.setdefault(ct_key, ct)
         if stored_ct.name != ct.name:
             warnings.warn(
