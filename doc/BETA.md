@@ -53,7 +53,7 @@ For example, to install dzcb and build existing ACB CSV files into dmrconfig cod
 files (requires python 3.6+):
 
 ```
-pip install dzcb~=0.3.0
+pip install dzcb~=0.3.1
 python -m dzcb --k7abd /path/to/existing/acb_csv --dmrconfig -- /tmp/new-codeplug
 ```
 
