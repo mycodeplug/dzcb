@@ -24,6 +24,7 @@ from typing import (
 import attr
 
 from dzcb import __version__
+import dzcb.munge
 from dzcb.model import (
     Bandwidth,
     Codeplug,
@@ -296,12 +297,14 @@ def ranges_to_total_items(ranges: Sequence[Range]) -> int:
 @attr.s
 class CodeplugIndexLookup:
     codeplug = attr.ib(validator=attr.validators.instance_of(Codeplug))
+    radio = attr.ib(validator=attr.validators.instance_of(Radio))
     offset = attr.ib(default=0)
-    contact = attr.ib(default=None)  # set by _contacts_filtered
-    grouplist_id = attr.ib()
-    scanlist_id = attr.ib()
-    channel = attr.ib()
+    contact = attr.ib(default=None, init=False)  # set by _contacts_filtered
+    grouplist_id = attr.ib(init=False)
+    scanlist_id = attr.ib(init=False)
+    channel = attr.ib(default=None, init=False)  # set by _channels_filtered
     _contacts_filtered = attr.ib(init=False)
+    _channels_filtered = attr.ib(init=False)
 
     @_contacts_filtered.default
     def _contacts_filtered_init(self):
@@ -317,6 +320,19 @@ class CodeplugIndexLookup:
         )
         return contacts_filtered
 
+    @_channels_filtered.default
+    def _channels_filtered_init(self):
+        """
+        Reorder the channel list, preferring the zone order (if truncation would occur)
+        """
+        channels_filtered = self.codeplug.channels
+        if len(channels_filtered) > self.radio.value.nchan:
+            channels_filtered = dzcb.munge.ordered(
+                channels_filtered, self._zone_channel_order()
+            )
+        self.channel = items_by_index(channels_filtered, offset=self.offset)
+        return channels_filtered
+
     @grouplist_id.default
     def _grouplist_id(self):
         return items_by_index(
@@ -329,9 +345,18 @@ class CodeplugIndexLookup:
             self.codeplug.scanlists, key=lambda sl: sl._id, offset=self.offset
         )
 
-    @channel.default
-    def _channel(self):
-        return items_by_index(self.codeplug.channels, offset=self.offset)
+    def _zone_channel_order(self):
+        seen_channels = set()
+        zone_channels = []
+        for zone in self.codeplug.zones:
+            for ch in zone.unique_channels:
+                if ch in seen_channels:
+                    continue  # only need to see each channel once
+                if len(seen_channels) >= self.radio.value.nchan:
+                    return zone_channels
+                seen_channels.add(ch)
+                zone_channels.append(ch)
+        return zone_channels
 
 
 @attr.s
@@ -349,7 +374,7 @@ class Table:
 
     @index.default
     def _index_default(self):
-        return CodeplugIndexLookup(codeplug=self.codeplug, offset=1)
+        return CodeplugIndexLookup(codeplug=self.codeplug, radio=self.radio, offset=1)
 
     def docs(self, **replacements):
         return self.__doc__.rstrip().format(**replacements).replace("    #", "#")
@@ -420,13 +445,13 @@ class ChannelTable(Table):
         )
 
     def __iter__(self):
-        for ix, ch in enumerate(self.codeplug.channels):
+        for ix, ch in enumerate(self.index._channels_filtered):
             if not isinstance(ch, self.model_object_class):
                 continue
             if ix + 1 > self.radio.value.nchan:
                 logger.debug(
                     "Channel table is full, ignoring {} channels".format(
-                        len(self.codeplug.channels) - ix
+                        len(self.index._channels_filtered) - ix
                     )
                 )
                 break
@@ -957,29 +982,11 @@ class DmrConfigTemplate:
 
 def evolve_from_factory(table_type):
     """
-    Responsible for applying template values to the passed in Table
-    when creating subtables in Dmrconfig_Codeplug
-
-    TODO: need coverage for this function
+    Responsible for evolving the Table when creating subtables in Dmrconfig_Codeplug
     """
 
     def _evolve_from(self):
-        template_fields = {}
-        if self.template:
-            if self.template.ranges:
-                # ranges are expensive and require rewriting the codeplug and index
-                # we only want to apply range filtering once per template
-                self.table = attr.evolve(
-                    self.table,
-                    codeplug=self.table.codeplug.filter(ranges=self.template.ranges),
-                    index=attr.NOTHING,  # rebuild index
-                )
-                self.template.ranges = None  # only apply once
-            if self.template.radio:
-                template_fields["radio"] = self.template.radio
-            if self.template.include_docs is not None:
-                template_fields["include_docs"] = self.template.include_docs
-        return table_type.evolve_from(self.table, **template_fields)
+        return table_type.evolve_from(self.table)
 
     return attr.Factory(_evolve_from, takes_self=True)
 
@@ -994,8 +1001,9 @@ class Dmrconfig_Codeplug:
 
     table = attr.ib(validator=attr.validators.instance_of(Table))
     template = attr.ib(
-        default=None,
-        converter=attr.converters.optional(DmrConfigTemplate.read_template),
+        validator=attr.validators.optional(
+            attr.validators.instance_of(DmrConfigTemplate)
+        )
     )
     digital = attr.ib(default=evolve_from_factory(DigitalChannelTable))
     analog = attr.ib(default=evolve_from_factory(AnalogChannelTable))
@@ -1003,6 +1011,25 @@ class Dmrconfig_Codeplug:
     scanlist = attr.ib(default=evolve_from_factory(ScanlistTable))
     contact = attr.ib(default=evolve_from_factory(ContactsTable))
     grouplist = attr.ib(default=evolve_from_factory(GrouplistTable))
+
+    @classmethod
+    def from_codeplug(cls, codeplug, template=None):
+        table_params = {}
+        if template is not None:
+            template = DmrConfigTemplate.read_template(template)
+            if template.ranges:
+                codeplug = codeplug.filter(ranges=template.ranges)
+            if template.radio:
+                table_params["radio"] = template.radio
+            if template.include_docs:
+                table_params["include_docs"] = template.include_docs
+        return cls(
+            table=Table(
+                codeplug=codeplug,
+                **table_params,
+            ),
+            template=template,
+        )
 
     def render_template(self):
         if not self.template:

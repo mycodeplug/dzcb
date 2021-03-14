@@ -532,14 +532,11 @@ class CodeplugRecipe:
         )
 
         dm_outdir = append_dir_and_create(self.output_dir, "dmrconfig")
-        table = dzcb.output.dmrconfig.Table(
-            codeplug=self._codeplug_expanded,
-        )
         for dt in dmrconfig_templates:
             outfile = dm_outdir / dt.name
             outfile.write_text(
-                dzcb.output.dmrconfig.Dmrconfig_Codeplug(
-                    table,
+                dzcb.output.dmrconfig.Dmrconfig_Codeplug.from_codeplug(
+                    self._codeplug_expanded,
                     template=cache_user_or_default_text(
                         "dmrconfig template",
                         dt,

@@ -18,8 +18,7 @@ default_dmrconfig_path = files(dzcb.data) / "dmrconfig"
     ),
 )
 def test_dmrconfig_templates(complex_codeplug, template):
-    table = dzcb.output.dmrconfig.Table(complex_codeplug)
-    assert dzcb.output.dmrconfig.Dmrconfig_Codeplug(table, template).render_template()
+    assert dzcb.output.dmrconfig.Dmrconfig_Codeplug.from_codeplug(complex_codeplug, template=template).render_template()
 
 
 @pytest.fixture
@@ -75,8 +74,8 @@ def test_dmrconfig_contact_integrity(same_contact_both_timeslots_codeplug, templ
     exp_channel_names = ("CT 1 RP", "CT 2 RP")
     assert tuple(ch.name for ch in exp_cp.channels) == exp_channel_names
 
-    dmrconfig_cp = dzcb.output.dmrconfig.Dmrconfig_Codeplug(
-        table=dzcb.output.dmrconfig.Table(codeplug=exp_cp, include_docs=False),
+    dmrconfig_cp = dzcb.output.dmrconfig.Dmrconfig_Codeplug.from_codeplug(
+        codeplug=exp_cp,
         template=template_filter,
     )
 
