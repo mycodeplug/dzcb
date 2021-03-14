@@ -149,20 +149,20 @@ def Analog_from_csv(analog_repeaters_csv):
     zones = {}
     csvr = csv.DictReader(analog_repeaters_csv)
     for r in csvr:
-        zname = r[ZONE]
-        zname, found, code = zname.partition(";")
-        name = r[CHANNEL_NAME]
-        frequency = float(r[RX_FREQ])
-        offset = round(float(r[TX_FREQ]) - frequency, 1)
-        power = r[POWER]
-        bandwidth = r[BANDWIDTH].rstrip("K")
-        tone_encode = (
-            r[CTCSS_ENCODE] if r[CTCSS_ENCODE].lower() not in ("off", "") else None
-        )
-        tone_decode = (
-            r[CTCSS_DECODE] if r[CTCSS_DECODE].lower() not in ("off", "") else None
-        )
         try:
+            zname = r[ZONE]
+            zname, found, code = zname.partition(";")
+            name = r[CHANNEL_NAME]
+            frequency = float(r[RX_FREQ])
+            offset = round(float(r[TX_FREQ]) - frequency, 1)
+            power = r[POWER]
+            bandwidth = r[BANDWIDTH].rstrip("K")
+            tone_encode = (
+                r[CTCSS_ENCODE] if r[CTCSS_ENCODE].lower() not in ("off", "") else None
+            )
+            tone_decode = (
+                r[CTCSS_DECODE] if r[CTCSS_DECODE].lower() not in ("off", "") else None
+            )
             zones.setdefault(zname, []).append(
                 AnalogChannel(
                     name=name,
