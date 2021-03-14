@@ -3,6 +3,9 @@
 Thank you for your interest in beta testing [`dzcb`](https://github.com/mycodeplug/dzcb).
 Please remember that this project is developed by a single person in spare time only.
 
+See [HISTORY](./HISTORY.md) for motivation, criticisms, and feature development
+backstory.
+
 ## Scope of Current Testing
 
 I have personally tested dzcb with the following radios:
