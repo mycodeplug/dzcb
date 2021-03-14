@@ -287,8 +287,8 @@ codeplug in `/tmp/my-codeplug` with local simplex zones included.
 python -m dzcb \
     --pnwdigital \
     --seattledmr \
-    --default-k7abd /tmp/my-codeplug
-    --dmrconfig
+    --default-k7abd \
+    --dmrconfig -- /tmp/my-codeplug
 ```
 
 # Complex Usage
