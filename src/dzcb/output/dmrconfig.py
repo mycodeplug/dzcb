@@ -957,29 +957,11 @@ class DmrConfigTemplate:
 
 def evolve_from_factory(table_type):
     """
-    Responsible for applying template values to the passed in Table
-    when creating subtables in Dmrconfig_Codeplug
-
-    TODO: need coverage for this function
+    Responsible for evolving the Table when creating subtables in Dmrconfig_Codeplug
     """
 
     def _evolve_from(self):
-        template_fields = {}
-        if self.template:
-            if self.template.ranges:
-                # ranges are expensive and require rewriting the codeplug and index
-                # we only want to apply range filtering once per template
-                self.table = attr.evolve(
-                    self.table,
-                    codeplug=self.table.codeplug.filter(ranges=self.template.ranges),
-                    index=attr.NOTHING,  # rebuild index
-                )
-                self.template.ranges = None  # only apply once
-            if self.template.radio:
-                template_fields["radio"] = self.template.radio
-            if self.template.include_docs is not None:
-                template_fields["include_docs"] = self.template.include_docs
-        return table_type.evolve_from(self.table, **template_fields)
+        return table_type.evolve_from(self.table)
 
     return attr.Factory(_evolve_from, takes_self=True)
 
@@ -994,8 +976,9 @@ class Dmrconfig_Codeplug:
 
     table = attr.ib(validator=attr.validators.instance_of(Table))
     template = attr.ib(
-        default=None,
-        converter=attr.converters.optional(DmrConfigTemplate.read_template),
+        validator=attr.validators.optional(
+            attr.validators.instance_of(DmrConfigTemplate)
+        )
     )
     digital = attr.ib(default=evolve_from_factory(DigitalChannelTable))
     analog = attr.ib(default=evolve_from_factory(AnalogChannelTable))
@@ -1003,6 +986,25 @@ class Dmrconfig_Codeplug:
     scanlist = attr.ib(default=evolve_from_factory(ScanlistTable))
     contact = attr.ib(default=evolve_from_factory(ContactsTable))
     grouplist = attr.ib(default=evolve_from_factory(GrouplistTable))
+
+    @classmethod
+    def from_codeplug(cls, codeplug, template=None):
+        table_params = {}
+        if template is not None:
+            template = DmrConfigTemplate.read_template(template)
+            if template.ranges:
+                codeplug = codeplug.filter(ranges=template.ranges)
+            if template.radio:
+                table_params["radio"] = template.radio
+            if template.include_docs:
+                table_params["include_docs"] = template.include_docs
+        return cls(
+            table=Table(
+                codeplug=codeplug,
+                **table_params,
+            ),
+            template=template,
+        )
 
     def render_template(self):
         if not self.template:
