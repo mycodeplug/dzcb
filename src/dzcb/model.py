@@ -359,8 +359,9 @@ class ScanList:
     def from_names(cls, name, channel_names, channels):
         sl_channels = []
         channels_by_name = {ch.name: ch for ch in channels}
+        channels_by_short_name = {ch.short_name: ch for ch in channels}
         for cn in channel_names:
-            channel = channels_by_name.get(cn)
+            channel = channels_by_name.get(cn, channels_by_short_name.get(cn))
             if channel is None:
                 logger.debug(
                     "ScanList {!r} references unknown channel {!r}, ignoring".format(
