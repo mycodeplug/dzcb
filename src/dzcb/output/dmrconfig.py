@@ -24,6 +24,7 @@ from typing import (
 import attr
 
 from dzcb import __version__
+import dzcb.munge
 from dzcb.model import (
     Bandwidth,
     Codeplug,
@@ -296,12 +297,14 @@ def ranges_to_total_items(ranges: Sequence[Range]) -> int:
 @attr.s
 class CodeplugIndexLookup:
     codeplug = attr.ib(validator=attr.validators.instance_of(Codeplug))
+    radio = attr.ib(validator=attr.validators.instance_of(Radio))
     offset = attr.ib(default=0)
-    contact = attr.ib(default=None)  # set by _contacts_filtered
-    grouplist_id = attr.ib()
-    scanlist_id = attr.ib()
-    channel = attr.ib()
+    contact = attr.ib(default=None, init=False)  # set by _contacts_filtered
+    grouplist_id = attr.ib(init=False)
+    scanlist_id = attr.ib(init=False)
+    channel = attr.ib(default=None, init=False)  # set by _channels_filtered
     _contacts_filtered = attr.ib(init=False)
+    _channels_filtered = attr.ib(init=False)
 
     @_contacts_filtered.default
     def _contacts_filtered_init(self):
@@ -317,6 +320,19 @@ class CodeplugIndexLookup:
         )
         return contacts_filtered
 
+    @_channels_filtered.default
+    def _channels_filtered_init(self):
+        """
+        Reorder the channel list, preferring the zone order (if truncation would occur)
+        """
+        channels_filtered = self.codeplug.channels
+        if len(channels_filtered) > self.radio.value.nchan:
+            channels_filtered = dzcb.munge.ordered(
+                channels_filtered, self._zone_channel_order()
+            )
+        self.channel = items_by_index(channels_filtered, offset=self.offset)
+        return channels_filtered
+
     @grouplist_id.default
     def _grouplist_id(self):
         return items_by_index(
@@ -329,9 +345,18 @@ class CodeplugIndexLookup:
             self.codeplug.scanlists, key=lambda sl: sl._id, offset=self.offset
         )
 
-    @channel.default
-    def _channel(self):
-        return items_by_index(self.codeplug.channels, offset=self.offset)
+    def _zone_channel_order(self):
+        seen_channels = set()
+        zone_channels = []
+        for zone in self.codeplug.zones:
+            for ch in zone.unique_channels:
+                if ch in seen_channels:
+                    continue  # only need to see each channel once
+                if len(seen_channels) >= self.radio.value.nchan:
+                    return zone_channels
+                seen_channels.add(ch)
+                zone_channels.append(ch)
+        return zone_channels
 
 
 @attr.s
@@ -349,7 +374,7 @@ class Table:
 
     @index.default
     def _index_default(self):
-        return CodeplugIndexLookup(codeplug=self.codeplug, offset=1)
+        return CodeplugIndexLookup(codeplug=self.codeplug, radio=self.radio, offset=1)
 
     def docs(self, **replacements):
         return self.__doc__.rstrip().format(**replacements).replace("    #", "#")
@@ -420,13 +445,13 @@ class ChannelTable(Table):
         )
 
     def __iter__(self):
-        for ix, ch in enumerate(self.codeplug.channels):
+        for ix, ch in enumerate(self.index._channels_filtered):
             if not isinstance(ch, self.model_object_class):
                 continue
             if ix + 1 > self.radio.value.nchan:
                 logger.debug(
                     "Channel table is full, ignoring {} channels".format(
-                        len(self.codeplug.channels) - ix
+                        len(self.index._channels_filtered) - ix
                     )
                 )
                 break
