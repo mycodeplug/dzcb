@@ -263,12 +263,12 @@ The default name format is: `"{Callsign} {Nearest City} {Landmark}"`
 
 # Bonus: Trim the Contact List
 
-Download the usersDB.bin with Farnsworth editcp.
+For MD-UV380 only.
 
     python -m dzcb.contact_trim \
-        < "~/.cache/codeplug/Codeplug Editor/usersDB.bin" \
-        > "~/.cache/codeplug/Codeplug Editor/usersDB-trimmed.bin"
+        "~/.cache/codeplug/Codeplug Editor/usersDB.bin"
 
+Write the database with editcp (do NOT check Download New)
 
 # Basic Usage
 
