@@ -85,15 +85,23 @@ def test_digital_channels_missing_talkgroup():
     assert ch0tg.timeslot == Timeslot.ONE
 
 
-def test_analog_weird_values():
+@pytest.fixture(params=[True, False])
+def require_valid_tone(request, monkeypatch):
+    import dzcb.tone
+
+    monkeypatch.setattr(dzcb.tone, "REQUIRE_VALID_TONE", request.param)
+    return request.param
+
+
+def test_analog_weird_values(require_valid_tone):
     """
     test validation of fields in the csv file
     """
 
     cp = codeplug_from_relative_dir("analog-weird-values").filter()
 
-    assert len(cp.zones) == 6
-    assert len(cp.channels) == 6
+    assert len(cp.zones) == 6 if require_valid_tone else 9
+    assert len(cp.channels) == 6 if require_valid_tone else 9
 
     for ch in cp.channels:
         if ch.name in ("off", "blank"):
@@ -111,6 +119,20 @@ def test_analog_weird_values():
         elif ch.name == "split-tone":
             assert ch.tone_decode == "74.4"
             assert ch.tone_encode == "254.1"
+        if require_valid_tone:
+            assert ch.name != "restricted-in"
+            assert ch.name != "restricted-out"
+            assert ch.name != "sixty-nine"
+        else:
+            if ch.name == "restricted-in":
+                assert ch.tone_decode == "restricted"
+                assert ch.tone_encode is None
+            elif ch.name == "restricted-out":
+                assert ch.tone_decode is None
+                assert ch.tone_encode == "restricted"
+            elif ch.name == "sixty-nine":
+                assert ch.tone_decode == "69.0"
+                assert ch.tone_encode == "69.0"
 
 
 def test_digital_repeaters_private_contacts():

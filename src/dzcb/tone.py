@@ -1,5 +1,11 @@
 """All valid PL / DCS tones"""
 
+from .util import getenv_bool
+
+# set REQUIRE_VALID_TONE=0 in the environment to write non-valid tones
+# into codeplug output files
+REQUIRE_VALID_TONE = getenv_bool("REQUIRE_VALID_TONE", default=True)
+
 VALID_TONES = [
     "67.0",
     "69.3",
