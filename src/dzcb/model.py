@@ -159,6 +159,14 @@ class Power(ConvertibleEnum):
             "No known powers are allowed {!r} from {!r}".format(self, allowed_powers)
         )
 
+    @classmethod
+    def from_any(cls, v):
+        """Passable as an attr converter."""
+        if isinstance(v, str):
+            # use title case string
+            v = v.title()
+        return super(Power, cls).from_any(v)
+
 
 class Bandwidth(ConvertibleEnum):
     _125 = "12.5"
