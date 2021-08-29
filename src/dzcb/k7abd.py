@@ -37,6 +37,7 @@ from dzcb.model import (
     Talkgroup,
     Zone,
 )
+import dzcb.tone
 
 
 logger = logging.getLogger(__name__)
@@ -321,6 +322,10 @@ def Codeplug_from_k7abd(input_dir):
     talkgroups = {}
     all_talkgroups_by_name = {}
     total_files = 0
+    if not dzcb.tone.REQUIRE_VALID_TONE:
+        logger.warning(
+            "REQUIRE_VALID_TONE=0: resulting codeplug files may contain invalid entries"
+        )
     for p in sorted(d.glob("Analog__*.csv")):
         update_zones_channels(
             zones, Analog_from_csv(p.read_text().splitlines()), log_filename=p
