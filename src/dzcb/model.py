@@ -234,9 +234,13 @@ class Channel:
 
 def _tone_validator(instance, attribute, value):
     if value is not None and value not in dzcb.tone.VALID_TONES:
-        raise ValueError(
-            "field {!r} has unknown tone {!r}".format(attribute.name, value)
+        message = "field {!r} for {} has unknown tone {!r}".format(
+            attribute.name, instance.name, value
         )
+        if dzcb.tone.REQUIRE_VALID_TONE:
+            raise ValueError(message)
+        else:
+            logger.warning(message)
 
 
 def _tone_converter(value):
