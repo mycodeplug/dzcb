@@ -120,7 +120,20 @@ def filter_repeaters(repeaters, zone):
         if radius:
             # repeater must be within radius of poi
             repeater_coords = (r["Lat"], r["Long"])
-            distance = geopy.distance.distance(poi_coords, repeater_coords)
+            try:
+                distance = geopy.distance.distance(poi_coords, repeater_coords)
+            except ValueError:
+                repeater_id = (
+                    r.get("State ID", "Unknown state"),
+                    r.get("Rptr ID", "Unknown repeater"),
+                )
+                logger.warning(
+                    "Ignore repeater {!r} with bogus coordinates: {!r}".format(
+                        repeater_id,
+                        repeater_coords,
+                    )
+                )
+                continue
             if getattr(distance, dunit) > radius:
                 continue
         if bands:
