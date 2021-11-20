@@ -38,6 +38,7 @@ from dzcb.model import (
     Zone,
 )
 import dzcb.tone
+from dzcb.util import unique_name
 
 
 logger = logging.getLogger(__name__)
@@ -97,7 +98,7 @@ def Codeplug_from_zone_dicts(zone_dicts):
     def update_static_talkgroups(ch):
         contacts.update(ch.static_talkgroups)
         grouplist = GroupList(
-            name="{} TGS".format(ch.code),
+            name="{} TGS".format(ch.code or ch.name[:5]),
             contacts=ch.static_talkgroups,
         )
         grouplists.append(grouplist)
@@ -126,9 +127,7 @@ def Codeplug_from_zone_dicts(zone_dicts):
                 ch = attr.evolve(ch, dedup_key=ch._dedup_key + 1)
             all_channels[ch.short_name] = ch
             updated_channels.append(ch)
-        scanlists.append(
-            attr.evolve(zscanlist, channels=updated_channels)
-        )
+        scanlists.append(attr.evolve(zscanlist, channels=updated_channels))
         zones.append(
             Zone(
                 name=zname,
@@ -308,8 +307,8 @@ def update_zones_channels(zones_dict, in_zones, log_filename=None):
     :param log_filename: used for logging only
     """
     _log_zones_channels(in_zones, log_filename)
-    # XXX: instead, consider combining channels from same-named zones in different CSV files?
-    zones_dict.update(in_zones)
+    for zname, zchannels in in_zones.items():
+        zones_dict[unique_name(zname, zones_dict)] = zchannels
 
 
 def Codeplug_from_k7abd(input_dir):
