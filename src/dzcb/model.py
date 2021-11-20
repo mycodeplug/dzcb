@@ -15,6 +15,7 @@ import dzcb.data
 import dzcb.exceptions
 import dzcb.munge
 import dzcb.tone
+from dzcb.util import unique_name
 
 # XXX: i hate this
 NAME_MAX = 16
@@ -845,14 +846,16 @@ class Codeplug:
         if static_talkgroup_order is None:
             static_talkgroup_order = []
         zones = list(self.zones)
+        zone_names = set(z.name for z in zones)
         channels = []
         exp_scanlists = []
         for ch in self.channels:
             if not isinstance(ch, DigitalChannel) or not ch.static_talkgroups:
                 channels.append(ch)
                 continue
+            exp_zone_name = unique_name(ch.short_name, zone_names)
             zscanlist = ScanList(
-                name=ch.short_name,
+                name=exp_zone_name,
                 channels=[],
             )
             zone_channels = ch.from_talkgroups(
@@ -862,7 +865,7 @@ class Codeplug:
             exp_scanlists.append(attr.evolve(zscanlist, channels=zone_channels))
             zones.append(
                 Zone(
-                    name=ch.short_name,
+                    name=exp_zone_name,
                     channels_a=zone_channels,
                     channels_b=zone_channels,
                 )
