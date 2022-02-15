@@ -26,6 +26,11 @@ def cache_repeaters(output_dir):
         if resp.status_code < 300:
             break
     resp.raise_for_status()
+    logger.info(
+        "Retrieved PNWDigital repeaters from %s (%s)",
+        dr_url,
+        resp.status_code,
+    )
     with tempfile.TemporaryFile() as tf:
         tf.write(resp.content)
         zf = ZipFile(tf, "r")
