@@ -12,14 +12,25 @@ import requests
 
 logger = logging.getLogger(__name__)
 
-PNWDIGITAL_REPEATERS = "http://www.pnwdigital.net/files/acb/PNW_Digital_Repeaters.zip"
+PNWDIGITAL_REPEATERS = [
+    "http://www.pnwdigital.net/files/acb/PNW_Digital_Repeaters.zip",
+    "https://github.com/mycodeplug/dzcb/raw/b0083a5654f173a36671f90e8734982a01d16fad/codeplug/mirror/PNW_Digital_Repeaters_2022-01-30.zip"
+]
 REPEATER_FILENAME = "Digital-Repeaters__PNWDigital.csv"
 TALKGROUPS_FILENAME = "Talkgroups__PNWDigital.csv"
 
 
 def cache_repeaters(output_dir):
-    resp = requests.get(PNWDIGITAL_REPEATERS)
+    for dr_url in PNWDIGITAL_REPEATERS:
+        resp = requests.get(dr_url)
+        if resp.status_code < 300:
+            break
     resp.raise_for_status()
+    logger.info(
+        "Retrieved PNWDigital repeaters from %s (%s)",
+        dr_url,
+        resp.status_code,
+    )
     with tempfile.TemporaryFile() as tf:
         tf.write(resp.content)
         zf = ZipFile(tf, "r")
