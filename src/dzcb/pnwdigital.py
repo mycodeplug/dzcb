@@ -13,7 +13,7 @@ import requests
 logger = logging.getLogger(__name__)
 
 PNWDIGITAL_REPEATERS = [
-    "http://www.pnwdigital.net/files/acb/PNW_Digital_Repeaters.zip",
+    "https://pnwdigital.net/wp-content/files/acb/PNW_Digital_Repeaters.zip",
     "https://github.com/mycodeplug/dzcb/raw/b0083a5654f173a36671f90e8734982a01d16fad/codeplug/mirror/PNW_Digital_Repeaters_2022-01-30.zip"
 ]
 REPEATER_FILENAME = "Digital-Repeaters__PNWDigital.csv"
