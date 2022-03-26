@@ -1,9 +1,10 @@
+import json
 import os
 from pathlib import Path
 
 import pytest
 
-from dzcb import k7abd
+from dzcb import farnsworth, k7abd
 from dzcb.model import Timeslot, ContactType
 
 
@@ -155,3 +156,48 @@ def test_digital_repeaters_private_contacts():
         ("Parrot", 9998, Timeslot.ONE, ContactType.GROUP),
         ("Private Parrot", 9998, Timeslot.ONE, ContactType.PRIVATE),
     ]
+
+
+def test_digital_repeaters_same_tg_different_ts():
+    """
+    A talkgroup may be carried on either timeslot.
+    """
+
+    cp = codeplug_from_relative_dir("digital-repeaters-same-tg-different-ts")
+    assert len(cp.zones) == 2
+    assert len(cp.contacts) == 2
+    assert len(cp.channels) == 3
+
+    expanded_cp = cp.expand_static_talkgroups()
+    assert len(expanded_cp.zones) == 3
+    assert len(expanded_cp.contacts) == 2
+    assert len(expanded_cp.channels) == 3
+
+    expect_channels = [
+        ("PNW Rgnl 2 DHS", "PNW Rgnl", Timeslot.TWO),
+        ("PNW Rgnl 2 1 MMB", "PNW Rgnl 2", Timeslot.ONE),
+        ("PNW Rgnl 2 MOF", "PNW Rgnl 2", Timeslot.TWO),
+    ]
+
+    print("EXPECT CHANNELS:\n{}".format("\n".join(str(ch) for ch in expect_channels)))
+    print(
+        "ACTUAL CHANNELS:\n{}".format("\n".join(str(ch) for ch in expanded_cp.channels))
+    )
+
+    for ch, exp_ch in zip(expanded_cp.channels, expect_channels):
+        assert ch.name == exp_ch[0]
+        assert ch.talkgroup.name == exp_ch[1]
+        assert ch.talkgroup.timeslot == exp_ch[2]
+
+    # farnsworth output collapses talkgroups by ID, so only 1 FW contact should be generated
+    # for the 2 contacts in the codeplug
+    fw_cp = json.loads(farnsworth.Codeplug_to_json(expanded_cp))
+    assert len(fw_cp["Contacts"]) == 1
+    tg_name = fw_cp["Contacts"][0]["Name"]
+    assert len(fw_cp["Channels"]) == 3
+    for channel in fw_cp["Channels"]:
+        assert channel["ContactName"] == tg_name
+
+    assert len(fw_cp["GroupLists"]) == 3
+    for grouplist in fw_cp["GroupLists"]:
+        assert grouplist["Contact"] == [tg_name]

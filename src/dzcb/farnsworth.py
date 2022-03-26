@@ -50,8 +50,14 @@ GroupList_name_maps = dict(
 )
 
 
-def GroupList_to_dict(g):
-    return {"Name": g.name, "Contact": [tg.name for tg in g.contacts]}
+def GroupList_to_dict(g, contacts_by_id):
+    return {
+        "Name": g.name,
+        "Contact": [
+            contacts_by_id.get(tg.dmrid, tg).name
+            for tg in g.contacts
+        ],
+    }
 
 
 def ScanList_to_dict(s):
@@ -168,13 +174,17 @@ DigitalChannel_name_maps = dict(
 )
 
 
-def DigitalChannel_to_dict(c, codeplug):
+def DigitalChannel_to_dict(c, codeplug, contacts_by_id):
     d = DefaultChannel.copy()
+    talkgroup_name = "Parrot 1"
+    if c.talkgroup:
+        # get the dedupe'd contact's name for the given ID
+        talkgroup_name = str(contacts_by_id.get(c.talkgroup.dmrid, c.talkgroup).name)
     d.update(
         {
             "ChannelMode": "Digital",
             "RepeaterSlot": str(c.talkgroup.timeslot) if c.talkgroup else 1,
-            "ContactName": str(c.talkgroup.name) if c.talkgroup else "Parrot 1",
+            "ContactName": talkgroup_name,
             "GroupList": str(c.grouplist_name(codeplug)) if c.grouplist else None,
             "ScanList": dzcb.munge.zone_name(c.scanlist_name(codeplug), NAME_MAX),
         }
@@ -197,12 +207,12 @@ Channel_value_replacements = {
 }
 
 
-def Channel_to_dict(c, codeplug):
+def Channel_to_dict(c, codeplug, contacts_by_id):
     d = None
     if isinstance(c, AnalogChannel):
         d = AnalogChannel_to_dict(c, codeplug)
     elif isinstance(c, DigitalChannel):
-        d = DigitalChannel_to_dict(c, codeplug)
+        d = DigitalChannel_to_dict(c, codeplug, contacts_by_id)
     if d is None:
         raise ValueError("Unknown type: {}".format(c))
     return {k: Channel_value_replacements.get(v, str(v)) for k, v in d.items()}
@@ -233,14 +243,15 @@ def Codeplug_to_json(cp, based_on=None):
         ranges.append((basic_info["LowFrequencyB"], basic_info["HighFrequencyB"]))
     if ranges:
         cp = cp.filter(ranges=ranges)
+    contacts_by_id = {
+        c.dmrid: c
+        for c in uniquify_contacts(cp.contacts, ignore_timeslot=True)
+    }
     cp_dict.update(
         dict(
-            Contacts=[
-                Contact_to_dict(c)
-                for c in uniquify_contacts(cp.contacts, ignore_timeslot=True)
-            ],
-            Channels=[Channel_to_dict(c, cp) for c in cp.channels],
-            GroupLists=[GroupList_to_dict(c) for c in cp.grouplists],
+            Contacts=[Contact_to_dict(c) for c in contacts_by_id.values()],
+            Channels=[Channel_to_dict(c, cp, contacts_by_id) for c in cp.channels],
+            GroupLists=[GroupList_to_dict(c, contacts_by_id) for c in cp.grouplists],
             ScanLists=[ScanList_to_dict(c) for c in cp.scanlists],
             Zones=[Zone_to_dict(c) for c in cp.zones],
         )
