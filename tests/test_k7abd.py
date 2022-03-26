@@ -197,3 +197,7 @@ def test_digital_repeaters_same_tg_different_ts():
     assert len(fw_cp["Channels"]) == 3
     for channel in fw_cp["Channels"]:
         assert channel["ContactName"] == tg_name
+
+    assert len(fw_cp["GroupLists"]) == 3
+    for grouplist in fw_cp["GroupLists"]:
+        assert grouplist["Contact"] == [tg_name]
