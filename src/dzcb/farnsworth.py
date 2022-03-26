@@ -50,8 +50,14 @@ GroupList_name_maps = dict(
 )
 
 
-def GroupList_to_dict(g):
-    return {"Name": g.name, "Contact": [tg.name for tg in g.contacts]}
+def GroupList_to_dict(g, contacts_by_id):
+    return {
+        "Name": g.name,
+        "Contact": [
+            contacts_by_id.get(tg.dmrid, tg).name
+            for tg in g.contacts
+        ],
+    }
 
 
 def ScanList_to_dict(s):
@@ -245,7 +251,7 @@ def Codeplug_to_json(cp, based_on=None):
         dict(
             Contacts=[Contact_to_dict(c) for c in contacts_by_id.values()],
             Channels=[Channel_to_dict(c, cp, contacts_by_id) for c in cp.channels],
-            GroupLists=[GroupList_to_dict(c) for c in cp.grouplists],
+            GroupLists=[GroupList_to_dict(c, contacts_by_id) for c in cp.grouplists],
             ScanLists=[ScanList_to_dict(c) for c in cp.scanlists],
             Zones=[Zone_to_dict(c) for c in cp.zones],
         )
