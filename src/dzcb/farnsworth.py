@@ -164,7 +164,7 @@ DigitalChannel_name_maps = dict(
     power="Power",
     rx_only="RxOnly",
     bandwidth="Bandwidth",
-    color_code="Color Code",
+    color_code="ColorCode",
 )
 
 
