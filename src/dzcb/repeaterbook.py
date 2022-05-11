@@ -138,9 +138,21 @@ def filter_repeaters(repeaters, zone):
                 continue
         if bands:
             # repeater frequency must be in the given bands
-            if AmateurBands.get_normalized(r["Frequency"]) not in bands:
+            try:
+                if AmateurBands.get_normalized(r["Frequency"]) not in bands:
+                    continue
+            except ValueError as ve:
+                repeater_id = (
+                    r.get("State ID", "Unknown state"),
+                    r.get("Rptr ID", "Unknown repeater"),
+                )
+                logger.warning(
+                    "Ignore repeater {!r} with non-amateur frequency: {!r}".format(
+                        repeater_id,
+                        r["Frequency"],
+                    )
+                )
                 continue
-
         # remaining fields in the zone list are criteria to satisfy
         if matches_criteria(r, zone):
             matching.append((distance, r))
