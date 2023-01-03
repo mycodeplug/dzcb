@@ -8,20 +8,35 @@ import requests
 
 logger = logging.getLogger(__name__)
 
+
 SEATTLE_DMR_REPEATERS = (
-    "http://seattledmr.org/ConfigBuilder/Digital-Repeaters-Seattle-addon.csv"
+    "http://seattledmr.org/ConfigBuilder/Digital-Repeaters-Seattle-addon.csv",
+    "https://github.com/mycodeplug/dzcb/raw/042788686ad192b3d7bff4da1d8c0fbca251cb6f/codeplug/mirror/Digital-Repeaters__SeattleDMR_2022_03_31.csv"
 )
 SEATTLE_DMR_TALKGROUPS = (
-    "http://seattledmr.org/ConfigBuilder/Talkgroups-Seattle-addon.csv"
+    "http://seattledmr.org/ConfigBuilder/Talkgroups-Seattle-addon.csv",
+    "https://github.com/mycodeplug/dzcb/raw/042788686ad192b3d7bff4da1d8c0fbca251cb6f/codeplug/mirror/Talkgroups__SeattleDMR_2022_03_31.csv"
 )
 REPEATER_FILENAME = "Digital-Repeaters__SeattleDMR.csv"
 TALKGROUPS_FILENAME = "Talkgroups__SeattleDMR.csv"
 
 
 def cache_repeaters(output_dir):
-    repeaters = requests.get(SEATTLE_DMR_REPEATERS)
+    for dr_url in SEATTLE_DMR_REPEATERS:
+        try:
+            repeaters = requests.get(dr_url)
+            if repeaters.status_code < 300:
+                break
+        except requests.ConnectionError:
+            pass
     repeaters.raise_for_status()
-    talkgroups = requests.get(SEATTLE_DMR_TALKGROUPS)
+    for tg_url in SEATTLE_DMR_TALKGROUPS:
+        try:
+            talkgroups = requests.get(tg_url)
+            if talkgroups.status_code < 300:
+                break
+        except requests.ConnectionError:
+            pass
     talkgroups.raise_for_status()
     outpath = Path(output_dir)
     rp_out = outpath / REPEATER_FILENAME
