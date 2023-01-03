@@ -21,7 +21,8 @@ def change_log_level(to):
 
 def ltrim_to_delimiter(d):
     def _ltrim_to_delimiter(r):
-        r.args = (r.args[0].partition(d)[2], *r.args[1:])
+        if r.args:
+            r.args = (r.args[0].partition(d)[2], *r.args[1:])
         return True
 
     return _ltrim_to_delimiter
@@ -29,7 +30,8 @@ def ltrim_to_delimiter(d):
 
 def keep_to_delimiter(d):
     def _keep_to_delimiter(r):
-        r.args = (r.args[0].partition(d)[0], *r.args[1:])
+        if r.args:
+            r.args = (r.args[0].partition(d)[0], *r.args[1:])
         return True
 
     return _keep_to_delimiter
