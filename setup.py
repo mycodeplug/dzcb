@@ -34,7 +34,7 @@ setuptools.setup(
         'attrs',
         'geopy==2.1.0',
         'importlib-resources',
-        'requests~=2.24.0',
+        'requests~=2.31',
     ],
     classifiers=[
         'Intended Audience :: Developers',
