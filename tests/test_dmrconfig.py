@@ -82,3 +82,49 @@ def test_dmrconfig_contact_integrity(same_contact_both_timeslots_codeplug, templ
     digital_channels = "\n".join(dmrconfig_cp.digital.render())
     for ch_name in exp_channel_names:
         assert ch_name.replace(" ", "_") in digital_channels
+
+@pytest.fixture
+def all_admit_criteria_codeplug():
+    """
+    Minimal code plug channels for each value of admit criteria.
+    """
+
+    ct = dzcb.model.Contact(
+        name="CT",
+        dmrid=1,
+    )
+    tg_1 = dzcb.model.Talkgroup.from_contact(ct, timeslot=dzcb.model.Timeslot.ONE)
+
+    chs = [
+        dzcb.model.DigitalChannel(
+            name=ac.value, frequency="444.444", static_talkgroups=[tg_1],
+            admit_criteria=ac,
+        )
+        for ac in dzcb.model.AdmitCriteria
+    ]
+
+    zn = dzcb.model.Zone(
+        name="ZN",
+        channels_a=chs,
+        channels_b=chs,
+    )
+
+    return dzcb.model.Codeplug(
+        contacts=[tg_1],
+        channels=chs,
+        zones=[zn],
+    )
+
+
+def test_dmrconfig_admit_criteria(all_admit_criteria_codeplug):
+    """
+    Verify that a codeplug using all admit criteria can be converted without error.
+    """
+
+    cp = all_admit_criteria_codeplug
+    assert len(cp.channels) > 0
+
+    exp_cp = cp.expand_static_talkgroups()
+    dmrconfig_cp = dzcb.output.dmrconfig.Dmrconfig_Codeplug.from_codeplug(
+        codeplug=exp_cp,
+    )
