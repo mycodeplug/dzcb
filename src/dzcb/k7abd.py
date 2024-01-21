@@ -259,6 +259,7 @@ def DigitalChannels_from_k7abd_csv(digital_others_csv, talkgroups_by_name):
         color_code = r.pop("Color Code")
         power = r.pop("Power")
         tg_name = r.pop("Talk Group")
+        tx_permit = r.pop("TX Permit")
         try:
             talkgroup = Talkgroup.from_contact(
                 talkgroups_by_name[tg_name],
@@ -281,6 +282,7 @@ def DigitalChannels_from_k7abd_csv(digital_others_csv, talkgroups_by_name):
                 color_code=color_code,
                 power=power,
                 talkgroup=talkgroup,
+                admit_criteria=tx_permit,
             )
         )
     return zones

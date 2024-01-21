@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from dzcb import farnsworth, k7abd
-from dzcb.model import Timeslot, ContactType
+from dzcb.model import Timeslot, ContactType, AdmitCriteria
 
 
 def codeplug_from_relative_dir(dname):
@@ -201,3 +201,26 @@ def test_digital_repeaters_same_tg_different_ts():
     assert len(fw_cp["GroupLists"]) == 3
     for grouplist in fw_cp["GroupLists"]:
         assert grouplist["Contact"] == [tg_name]
+
+def test_digital_channels_tx_permit():
+    """
+    Verify that the "TX Permit" column will be parsed correctly in
+    Digital-Others__*.csv.
+    """
+
+    cp = codeplug_from_relative_dir("digital-channels-tx-permit")
+    assert len(cp.zones) == 1
+    assert len(cp.contacts) == 1
+    assert len(cp.channels) == 4
+
+    assert cp.channels[0].name == "Always"
+    assert cp.channels[0].admit_criteria == AdmitCriteria.ALWAYS
+
+    assert cp.channels[1].name == "ChannelFree"
+    assert cp.channels[1].admit_criteria == AdmitCriteria.CHANNEL_FREE
+
+    assert cp.channels[2].name == "SameColor"
+    assert cp.channels[2].admit_criteria == AdmitCriteria.SAME_COLOR
+
+    assert cp.channels[3].name == "DifferentColor"
+    assert cp.channels[3].admit_criteria == AdmitCriteria.DIFFERENT_COLOR

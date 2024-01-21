@@ -1,0 +1,5 @@
+Zone,Channel Name,Power,RX Freq,TX Freq,Color Code,Talk Group,TimeSlot,Call Type,TX Permit
+Bar,Always,High,430.4375,430.4375,1,TG 2,1,Group Call,Always
+Bar,ChannelFree,High,430.4375,430.4375,1,TG 2,1,Group Call,ChannelFree
+Bar,SameColor,High,430.4375,430.4375,1,TG 2,1,Group Call,Same Color Code
+Bar,DifferentColor,High,430.4375,430.4375,1,TG 2,1,Group Call,Different Color Code

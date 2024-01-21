@@ -185,6 +185,12 @@ class Bandwidth(ConvertibleEnum):
             )
         )
 
+class AdmitCriteria(ConvertibleEnum):
+    ALWAYS = "Always"
+    CHANNEL_FREE = "ChannelFree"
+    SAME_COLOR = "Same Color Code"
+    DIFFERENT_COLOR = "Different Color Code"
+
 
 def round_frequency(freq, ndigits=5):
     return round(float(freq), ndigits)
@@ -311,6 +317,11 @@ class DigitalChannel(Channel):
         validator=attr.validators.deep_iterable(
             member_validator=attr.validators.instance_of(Talkgroup)
         ),
+    )
+    admit_criteria = attr.ib(
+        default=AdmitCriteria.SAME_COLOR,
+        validator=attr.validators.instance_of(AdmitCriteria),
+        converter=AdmitCriteria.from_any,
     )
 
     def from_talkgroups(self, talkgroups, **kwargs):
