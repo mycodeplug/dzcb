@@ -291,6 +291,27 @@ python -m dzcb \
     --dmrconfig -- /tmp/my-codeplug
 ```
 
+## Docker Container
+
+A docker container for dzcb can be built and run as follows:
+
+```
+# Build container
+tools/build_docker.sh
+
+# Run dzcb
+docker run --rm -ti \
+      -v /tmp/my-codeplug:/my-codeplug \
+      dzcb \
+      --pnwdigital \
+      --seattledmr \
+      --default-k7abd \
+      --dmrconfig \
+      -- \
+      /my-codeplug
+```
+
+
 # Complex Usage
 
 See **[WALKTHROUGH](./doc/WALKTHROUGH.md)** for a step-by-step guide
@@ -370,6 +391,21 @@ for the implementation details.
 ## Installation
 
 pip install -e ./dzcb
+
+## Development Docker Container
+
+A docker container for dzcb development can be built and run as follows:
+
+```
+# Build container
+tools/build_docker_dev.sh
+
+# Run dzcb
+docker run --rm -ti \
+      -v /tmp/my-codeplug:/my-codeplug \
+      -v .:/app/dzcb \
+      dzcb:dev
+```
 
 ## Bugs?
 
