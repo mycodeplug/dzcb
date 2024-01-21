@@ -5,6 +5,7 @@ import time
 import attr
 
 from dzcb.model import (
+    AdmitCriteria,
     AnalogChannel,
     Contact,
     DigitalChannel,
@@ -173,6 +174,11 @@ DigitalChannel_name_maps = dict(
     color_code="ColorCode",
 )
 
+AdmitCriteria_map = {
+    AdmitCriteria.ALWAYS: "Always",
+    AdmitCriteria.CHANNEL_FREE: "Channel free",
+    AdmitCriteria.SAME_COLOR: "Color code",
+}
 
 def DigitalChannel_to_dict(c, codeplug, contacts_by_id):
     d = DefaultChannel.copy()
@@ -180,8 +186,14 @@ def DigitalChannel_to_dict(c, codeplug, contacts_by_id):
     if c.talkgroup:
         # get the dedupe'd contact's name for the given ID
         talkgroup_name = str(contacts_by_id.get(c.talkgroup.dmrid, c.talkgroup).name)
+
+    admit_criteria = AdmitCriteria_map.get(c.admit_criteria, None)
+    if not admit_criteria:
+        raise ValueError("editcp does not support AdmitCriteria: {}".format(c.admit_criteria))
+
     d.update(
         {
+            "AdmitCriteria": admit_criteria,
             "ChannelMode": "Digital",
             "RepeaterSlot": str(c.talkgroup.timeslot) if c.talkgroup else 1,
             "ContactName": talkgroup_name,

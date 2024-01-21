@@ -9271,7 +9271,7 @@
       "Power": "Medium"
     },
     {
-      "AdmitCriteria": "Color code",
+      "AdmitCriteria": "Always",
       "AllowTalkaround": "Off",
       "Autoscan": "Off",
       "ColorCode": "1",
@@ -9322,7 +9322,7 @@
       "Power": "High"
     },
     {
-      "AdmitCriteria": "Color code",
+      "AdmitCriteria": "Always",
       "AllowTalkaround": "Off",
       "Autoscan": "Off",
       "ColorCode": "1",
@@ -9373,7 +9373,7 @@
       "Power": "High"
     },
     {
-      "AdmitCriteria": "Color code",
+      "AdmitCriteria": "Always",
       "AllowTalkaround": "Off",
       "Autoscan": "Off",
       "ColorCode": "1",
@@ -9424,7 +9424,7 @@
       "Power": "High"
     },
     {
-      "AdmitCriteria": "Color code",
+      "AdmitCriteria": "Always",
       "AllowTalkaround": "Off",
       "Autoscan": "Off",
       "ColorCode": "1",
@@ -9475,7 +9475,7 @@
       "Power": "High"
     },
     {
-      "AdmitCriteria": "Color code",
+      "AdmitCriteria": "Always",
       "AllowTalkaround": "Off",
       "Autoscan": "Off",
       "ColorCode": "1",
@@ -9526,7 +9526,7 @@
       "Power": "High"
     },
     {
-      "AdmitCriteria": "Color code",
+      "AdmitCriteria": "Always",
       "AllowTalkaround": "Off",
       "Autoscan": "Off",
       "ColorCode": "1",
@@ -9577,7 +9577,7 @@
       "Power": "High"
     },
     {
-      "AdmitCriteria": "Color code",
+      "AdmitCriteria": "Always",
       "AllowTalkaround": "Off",
       "Autoscan": "Off",
       "ColorCode": "1",
@@ -9628,7 +9628,7 @@
       "Power": "Low"
     },
     {
-      "AdmitCriteria": "Color code",
+      "AdmitCriteria": "Always",
       "AllowTalkaround": "Off",
       "Autoscan": "Off",
       "ColorCode": "1",
@@ -9679,7 +9679,7 @@
       "Power": "Low"
     },
     {
-      "AdmitCriteria": "Color code",
+      "AdmitCriteria": "Always",
       "AllowTalkaround": "Off",
       "Autoscan": "Off",
       "ColorCode": "1",
@@ -9730,7 +9730,7 @@
       "Power": "Low"
     },
     {
-      "AdmitCriteria": "Color code",
+      "AdmitCriteria": "Always",
       "AllowTalkaround": "Off",
       "Autoscan": "Off",
       "ColorCode": "1",
