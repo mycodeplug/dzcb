@@ -29,6 +29,7 @@ REPEATERBOOK_LAST_FETCH = 0
 REPEATERBOOK_DEFAULT_STATES = ("Washington", "Oregon")
 REPEATERBOOK_CACHE_MAX_AGE = 3600 * 12.1  # 12 hours (and some change)
 REPEATERBOOK_DEFAULT_NAME_FORMAT = "{Callsign} {Nearest City} {Landmark}"
+REPEATERBOOK_USER_AGENT = "(dzcb, https://github.com/mycodeplug/dzcb, kf7hvm@0x26.net)"
 CSV_ZONE_NAME = "Zone Name"
 CSV_LAT = "Lat"
 CSV_LONG = "Long"
@@ -49,7 +50,7 @@ def cached_json(url, max_age=REPEATERBOOK_CACHE_MAX_AGE):
         global_last_fetched = time.time() - REPEATERBOOK_LAST_FETCH
         if global_last_fetched < REPEATERBOOK_API_DELAY:
             time.sleep(REPEATERBOOK_API_DELAY - global_last_fetched)
-        resp = requests.get(url)
+        resp = requests.get(url, headers={'User-Agent': REPEATERBOOK_USER_AGENT})
         REPEATERBOOK_LAST_FETCH = time.time()
         filepath.write_bytes(resp.content)
     return filepath
@@ -67,7 +68,12 @@ def iter_cached_repeaters(states=None, max_age=REPEATERBOOK_CACHE_MAX_AGE):
         )
         cached_json_file = cached_json(url, max_age=max_age)
         with open(cached_json_file, "r") as f:
-            rb_api_resp = json.load(f)
+            try:
+                rb_api_resp = json.load(f)
+            except Exception:
+                f.seek(0)
+                print(f.read())
+                raise
             logger.info(
                 "Load cached Repeaterbook data for %s: %s records (%s)",
                 state,
