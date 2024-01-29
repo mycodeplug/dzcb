@@ -26,6 +26,7 @@ import attr
 from dzcb import __version__
 import dzcb.munge
 from dzcb.model import (
+    AdmitCriteria,
     Bandwidth,
     Codeplug,
     Power,
@@ -529,6 +530,13 @@ class AnalogChannelTable(ChannelTable):
         )
 
 
+digital_admit_criteria = {
+    AdmitCriteria.ALWAYS: "-",
+    AdmitCriteria.CHANNEL_FREE: "Free",
+    AdmitCriteria.SAME_COLOR: "Color",
+    AdmitCriteria.DIFFERENT_COLOR: "NColor",
+}
+
 class DigitalChannelTable(ChannelTable):
     """
     # Table of digital channels.
@@ -600,7 +608,7 @@ class DigitalChannelTable(ChannelTable):
             Scan=self.scanlist_ix(ch) or "-",
             TOT=90,  # TODO: how to expose this parameter
             RO=plus_minus[ch.rx_only],
-            Admit="Color",
+            Admit=digital_admit_criteria[ch.admit_criteria],
             Color=ch.color_code,
             Slot=ch.talkgroup.timeslot.value if ch.talkgroup else 1,
             RxGL=self.grouplist_ix(ch) or "-",
